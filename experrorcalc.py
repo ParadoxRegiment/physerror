@@ -1,6 +1,5 @@
 import numpy as np
 from matplotlib import pyplot as plt
-import statsmodels.api as sm
 import scipy.stats as stats
 
 x_data = np.array([])
@@ -24,17 +23,17 @@ class Calculations:
         sigma_B: the calculated sigma of constant B
     """
     
-    def __init__(self, x_data, y_data):
-        self.N = len(x_data)
-        self.delta = self.N * sum(x_data ** 2) - (sum(x_data)) ** 2
-        self.A = ((sum(x_data ** 2) * sum(y_data)) - (sum(x_data) * sum(x_data * y_data))) / self.delta
-        self.B = (self.N * sum(x_data * y_data) - (sum(x_data) * sum(y_data))) / self.delta
-        self.x_mean = abs(np.mean(x_data))
-        self.y_mean = abs(np.mean(y_data))
-        self.sigma_y = np.sqrt((1/(self.N - 2)) * sum((y_data - self.A - (self.B * x_data)) ** 2))
-        self.sigma_A = self.sigma_y * np.sqrt(sum(x_data ** 2) / self.delta)
-        self.sigma_B = self.sigma_y * np.sqrt(self.N / self.delta)
-        self.sigma_x = np.sqrt(sum((x_data - self.x_mean) ** 2) / (self.N - 1))
+    def __init__(data, x_data, y_data):
+        data.N = len(x_data)
+        data.delta = data.N * sum(x_data ** 2) - (sum(x_data)) ** 2
+        data.A = ((sum(x_data ** 2) * sum(y_data)) - (sum(x_data) * sum(x_data * y_data))) / data.delta
+        data.B = (data.N * sum(x_data * y_data) - (sum(x_data) * sum(y_data))) / data.delta
+        data.x_mean = abs(np.mean(x_data))
+        data.y_mean = abs(np.mean(y_data))
+        data.sigma_y = np.sqrt((1/(data.N - 2)) * sum((y_data - data.A - (data.B * x_data)) ** 2))
+        data.sigma_A = data.sigma_y * np.sqrt(sum(x_data ** 2) / data.delta)
+        data.sigma_B = data.sigma_y * np.sqrt(data.N / data.delta)
+        data.sigma_x = np.sqrt(sum((x_data - data.x_mean) ** 2) / (data.N - 1))
     
     def outlier(data, x_data, y_data):
         """
