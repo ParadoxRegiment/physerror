@@ -2,9 +2,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 import scipy.stats as stats
 
-x_data = np.array([])
-y_data = np.array([])
-
 class Calculations:
     """
     To access values and functions, must do [variable] = Calculuations(ndarray, ndarray)
@@ -23,7 +20,7 @@ class Calculations:
         sigma_B: the calculated sigma of constant B
     """
     
-    def __init__(data, x_data, y_data):
+    def __init__(data, x_data: np.array, y_data: np.array):
         data.N = len(x_data)
         data.delta = data.N * sum(x_data ** 2) - (sum(x_data)) ** 2
         data.A = ((sum(x_data ** 2) * sum(y_data)) - (sum(x_data) * sum(x_data * y_data))) / data.delta
@@ -35,7 +32,7 @@ class Calculations:
         data.sigma_B = data.sigma_y * np.sqrt(data.N / data.delta)
         data.sigma_x = np.sqrt(sum((x_data - data.x_mean) ** 2) / (data.N - 1))
     
-    def outlier(data, x_data, y_data):
+    def outlier(data, x_data: np.array, y_data: np.array):
         """
             Checks for and prints out any outliers in included arrays within the 2 * sigma limit.
             
@@ -90,13 +87,19 @@ class Calculations:
         print(x_outliers)
         print(y_outliers)
         
-    def regress(data, x_data, y_data):
+    def regress(data, x_data: np.array, y_data: np.array):
+        """
+        Placeholder
+        """
         plt.title('pyplot best fit & linear regression plot')
         plt.plot(x_data, y_data, 'o')
         plt.plot(x_data, data.A + data.B * x_data)
         plt.show()
     
-    def standdist(data, x_data):
+    def standdist(data, x_data: np.array):
+        """
+        Placeholder
+        """
         gdata = x_data
 
         plt.hist(gdata, bins = len(gdata), density = True, alpha = 00.6, color = 'c', align = 'mid')
