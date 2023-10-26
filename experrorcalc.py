@@ -37,9 +37,9 @@ class Calculations:
             Checks for and prints out any outliers in included arrays within the 2 * sigma limit.
             
             Parameters:
-                x_data  :   ndarray
+                x_data  :   1darray
                     The desired x_data array
-                y_data  :   ndarray
+                y_data  :   1darray
                     The desired y_data array
             
             Returns: print()
@@ -89,7 +89,16 @@ class Calculations:
         
     def regress(data, x_data: np.array, y_data: np.array):
         """
-        Placeholder
+            Uses the given x_data and y_data arrays to create a linear regression plot.
+        
+            Parameters:
+                x_data  :   1darray
+                    The desired x_data array
+                y_data  :   1darray
+                    The desired y_data array
+            
+            Returns: plt.show()
+                        Opens an external window that shows the linear regression plot of the given data. 
         """
         plt.title('pyplot best fit & linear regression plot')
         plt.plot(x_data, y_data, 'o')
@@ -98,7 +107,15 @@ class Calculations:
     
     def standdist(data, x_data: np.array):
         """
-        Placeholder
+            Uses the given x_data array to create a standard distribution graph.
+            Currently only works for x data.
+        
+            Parameters:
+                x_data  :   1darray
+                    The desired x_data array
+                
+            Returns: plt.show()
+                        Opens an external window that shows the standard distribution graph
         """
         gdata = x_data
 
