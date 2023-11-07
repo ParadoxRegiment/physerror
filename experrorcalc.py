@@ -35,7 +35,9 @@ class Calculations:
         
         if np.array_equiv(testarray, y_data):
             y_data = np.full_like(x_data, 5)
-        
+
+        data.x_data = x_data
+        data.y_data = y_data
         data.N = len(x_data)
         data.delta = data.N * sum(x_data ** 2) - (sum(x_data)) ** 2
         data.A = ((sum(x_data ** 2) * sum(y_data)) - (sum(x_data) * sum(x_data * y_data))) / data.delta
@@ -54,7 +56,7 @@ class Calculations:
         data.sigma_y_mean = data.y_mean / np.sqrt(data.N)
         data.sigma_frac = 1 / np.sqrt(2 * (data.N - 1))
     
-    def outlier(data, x_data = np.zeros(0), y_data = np.zeros(0)):
+    def outlier(data):
         """
             Checks for and prints out any outliers in included arrays within the 2 * sigma limit.
             
@@ -67,6 +69,9 @@ class Calculations:
             Returns: print()
                         Prints out x_outliers and y_outliers in the form of ndarrays
         """
+        x_data = data.x_data
+        y_data = data.y_data
+        
         if np.array_equiv(testarray, y_data):
             y_data = np.full_like(x_data, 5)
         
@@ -114,7 +119,7 @@ class Calculations:
         print(x_outliers)
         print(y_outliers)
         
-    def regress(data, x_data = np.ones(1), y_data = np.ones(1)):
+    def regress(data):
         """
             Uses the given x_data and y_data arrays to create a linear regression plot.
         
@@ -127,6 +132,9 @@ class Calculations:
             Returns: plt.show()
                         Opens an external window that shows the linear regression plot of the given data. 
         """
+        x_data = data.x_data
+        y_data = data.y_data
+        
         if np.array_equiv(testarray, y_data):
             y_data = np.full_like(x_data, 5)
         
@@ -138,7 +146,7 @@ class Calculations:
         plt.plot(x_data, data.A + data.B * x_data)
         plt.show()
     
-    def standdistgraph(data, x_data = np.ones(1)):
+    def standdistgraph(data):
         """
             Uses the given x_data array to create a standard distribution graph.
             Currently only works for x data.
@@ -150,6 +158,8 @@ class Calculations:
             Returns: plt.show()
                         Opens an external window that shows the standard distribution graph
         """
+        x_data = data.x_data
+        y_data = data.y_data
         
         gdata = x_data
 
