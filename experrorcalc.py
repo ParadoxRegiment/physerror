@@ -60,12 +60,6 @@ class Calculations:
         """
             Checks for and prints out any outliers in included arrays within the 2 * sigma limit.
             
-            Parameters:
-                x_data  :   1darray
-                    The desired x_data array
-                y_data  :   1darray
-                    The desired y_data array
-            
             Returns: print()
                         Prints out x_outliers and y_outliers in the form of ndarrays
         """
@@ -122,12 +116,6 @@ class Calculations:
     def regress(data):
         """
             Uses the given x_data and y_data arrays to create a linear regression plot.
-        
-            Parameters:
-                x_data  :   1darray
-                    The desired x_data array
-                y_data  :   1darray
-                    The desired y_data array
             
             Returns: plt.show()
                         Opens an external window that shows the linear regression plot of the given data. 
@@ -150,10 +138,6 @@ class Calculations:
         """
             Uses the given x_data array to create a standard distribution graph.
             Currently only works for x data.
-        
-            Parameters:
-                x_data  :   1darray
-                    The desired x_data array
                 
             Returns: plt.show()
                         Opens an external window that shows the standard distribution graph
