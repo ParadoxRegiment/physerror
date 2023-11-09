@@ -1,11 +1,24 @@
+#   #####################################   #  
+#    Module written by Alexander Ritzie     #
+#   Originally created for BPHYS 312 AU23   #
+#   at University of Washington - Bothell   #
+#   #####################################   #
 import numpy as np
 from matplotlib import pyplot as plt
 import scipy.stats as stats
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
+import pandas as pd
 
 class Calculations:
     """
-    To access array values and functions, must do [variable] = Calculuations(ndarray, ndarray)
-    To access functions, do [above variable].[function name]
+    To access array values and functions do:
+    [variable] = Calculuations(ndarray[optional], ndarray[optional])
+    
+    To access methods, do:
+    [above variable].[method name]
+
+    -----------------------------------------------
     
     Available array values:
         N: size of x data
@@ -27,8 +40,46 @@ class Calculations:
         sigma_frac: the calculated fractional uncertainty
     """
     
+    def __init__(data, x_data = np.full(5,5), y_data = np.full(5,5)):
+        """
+        Initalization function. x_data and y_data are initalized to
+        arrays of size 5 filled with 5s.
+        
+        For csv data files, please make sure your x data is in the first
+        row, and y data is in the second row.
+        
+        Parameters:
+            x_data : ndarray [optional]
+                The desired x_data array. Initalized to np.full(5,5)
+            y_data : ndarray [optional]
+                The desired y_data array. Initalized to np.full(5,5)
+        """
+        
+        
+        readcsv = input("Would you like to read in a CSV? Y/N\n")
+        if readcsv.lower() == "y" or readcsv.lower() == "yes":
+            print("Please choose a csv file:")
+            tk = Tk()
+            tk.withdraw()
+            path = askopenfilename()
+            print(path)
+            with open(path, "r") as f:
+                datafile = np.array(pd.read_csv(f))
+            
+            datafile = np.delete(datafile, 0, 1)
+
+            if np.ndim(datafile) == 1:
+                print("csv read into x_data")
+                x_data = datafile
+            elif np.ndim(datafile) > 1:
+                x_data = datafile[0]
+                y_data = datafile[1]
     
-    def __init__(data, x_data = np.full(5, 5), y_data = np.full(5, 5)):
+        elif readcsv.lower() == "n" or readcsv.lower() == "no":
+            pass
+        else:
+            print("Unknown input, please restart.")
+            exit
         
         global testarray
         testarray = np.full(5,5)
@@ -155,3 +206,4 @@ class Calculations:
         title = "x data mean = %.2f, stddev x = %.2f, 2 stddev x = %.2f" % (data.x_mean, data.sigma_x, 2 * data.sigma_x)
         plt.title(title)
         plt.show()
+        
