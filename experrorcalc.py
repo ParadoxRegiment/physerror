@@ -64,7 +64,7 @@ class Calculations:
             path = askopenfilename()
             print(path)
             with open(path, "r") as f:
-                datafile = np.array(pd.read_csv(f))
+                datafile = np.array(pd.read_csv(f, header = None))
             
             datafile = np.delete(datafile, 0, 1)
 
