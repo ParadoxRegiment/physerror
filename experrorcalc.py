@@ -1,6 +1,6 @@
 #   #####################################   #  
 #    Module written by Alexander Ritzie     #
-#   Originally created for BPHYS 312 AU23   #
+#   Originally created for BPHYS 231 AU23   #
 #   at University of Washington - Bothell   #
 #   #####################################   #
 import numpy as np
