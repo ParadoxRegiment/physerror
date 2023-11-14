@@ -46,7 +46,9 @@ class Calculations:
         arrays of size 5 filled with 5s.
         
         For csv data files, please make sure your x data is in the first
-        row, and y data is in the second row.
+        row, and y data is in the second row. Also mark the first column
+        with data labels such as "x" and "y", "1" and "2", "test 1" and
+        "test 2", so on and so forth.
         
         Parameters:
             x_data : ndarray [optional]
@@ -64,9 +66,7 @@ class Calculations:
             path = askopenfilename()
             print(path)
             with open(path, "r") as f:
-                datafile = np.array(pd.read_csv(f, header = None))
-            
-            datafile = np.delete(datafile, 0, 1)
+                datafile = np.array(pd.read_csv(f, header = None, index_col = 0))
 
             if np.ndim(datafile) == 1:
                 print("csv read into x_data")
