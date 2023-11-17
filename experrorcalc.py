@@ -63,6 +63,7 @@ class DataInit:
         userdata.colname2 = input("Please type second data set's name: ")
         datafile = pd.DataFrame(np.transpose(temparray), columns = [userdata.colname1, userdata.colname2])
         datafile.index.name = 'Trial'
+        datafile.index += 1
         
         print(datafile)
 
