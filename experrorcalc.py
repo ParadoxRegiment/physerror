@@ -191,7 +191,7 @@ class Graphs:
         global calcsclass
         calcsclass = calcs()
     
-    def regress(self):
+    def linregress(self):
         """
             Uses the given x_data and y_data arrays to create a linear regression plot.
             
