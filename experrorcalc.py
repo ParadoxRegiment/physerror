@@ -13,14 +13,47 @@ from tkinter.filedialog import askopenfilename
 import pandas as pd
 
 class Data:
+    """
+    A container class that cannot be initialized directly.
+    It contains the user's x_data and y_data arrays, the
+    pandas DataFrame created from those arrays, and the
+    data name (headers) given by the user.
+    """
     def __init__(self):
         self.x_data = np.array([])
         self.y_data = np.array([])
         self.df = pd.DataFrame()
-        self.colname1 = ''
-        self.colname2 = ''
+        self.colname1 = ""
+        self.colname2 = ""
 
 class DataInit:
+    """
+    Initalization class that reads in data either directly
+    from the program or from an external csv file. The
+    user is also asked to name their data.
+    
+    Note: Although csv files of any shape can be read in,
+    it is recommended to use csv files with two columns of
+    data without a header row or index column.
+        * This is because this module was created for students
+        that may not be well versed in programming or data
+        analysis.
+    
+    Parameters:
+        x_data : ndarray [optional]
+            An optional parameter that allows the user to
+            read in data from within their program itself.
+            x_data is initalized to np.full(5,5)
+        
+        y_data : ndarray [optional]
+            An optional parameter that allows the user to
+            read in data from within their program itself.
+            y_data is initalized to np.full(5,5)
+            
+    Returns:
+        None
+    """
+    
     def __init__(self, x_data = np.full(5,5), y_data = np.full(5,5)):
         global userdata
         userdata = Data()
@@ -59,9 +92,9 @@ class DataInit:
             y_data = np.full_like(x_data, 5)
         
         temparray = np.stack((x_data, y_data))
-        userdata.colname1 = input("Please type first data set's name: ")
-        userdata.colname2 = input("Please type second data set's name: ")
-        datafile = pd.DataFrame(np.transpose(temparray), columns = [userdata.colname1, userdata.colname2])
+        self.colname1 = input("Please type first data set's name: ")
+        self.colname2 = input("Please type second data set's name: ")
+        datafile = pd.DataFrame(np.transpose(temparray), columns = [self.colname1, self.colname2])
         datafile.index.name = 'Trial'
         datafile.index += 1
         
@@ -70,14 +103,22 @@ class DataInit:
         userdata.df = datafile
         userdata.x_data = x_data
         userdata.y_data = y_data
-        self.colname1 = userdata.colname1
-        self.colname2 = userdata.colname2
+        userdata.colname1 = self.colname1
+        userdata.colname2 = self.colname2
 
 class calcs:
     """
-    To access attributes, must do [variable] = calcs(ndarray, ndarray)
-    To access methods, do [above variable].[function name]
-    
+    Available methods:
+        outlier:
+            Checks for and prints out any outliers in included arrays
+            within the 2 * sigma limit.
+            
+            Parameters: None
+            
+            Returns: print()
+                        Prints out x_outliers and y_outliers in the
+                        form of ndarrays
+
     Available attributes:
         N: size of x data
         delta: the calculated delta constant
@@ -97,21 +138,7 @@ class calcs:
         sigma_y_mean: the calculated sigma of the y data mean
         sigma_frac: the calculated fractional uncertainty
     """
-    def __init__(self):
-        """
-        Initalization function. x_data and y_data are initalized to
-        arrays of size 5 filled with 5s.
-        
-        For csv data files, please make sure your x data is in the first
-        row, and y data is in the second row.
-        
-        Parameters:
-            x_data : ndarray [optional]
-                The desired x_data array. Initalized to np.full(5,5)
-            y_data : ndarray [optional]
-                The desired y_data array. Initalized to np.full(5,5)
-        """
-        
+    def __init__(self):        
         self.df = userdata.df
         self.x_data = userdata.x_data
         self.y_data = userdata.y_data
@@ -134,17 +161,8 @@ class calcs:
         self.sigma_frac = 1 / np.sqrt(2 * (self.N - 1))
     
     def outlier(self):
-        """
-            Checks for and prints out any outliers in included arrays within the 2 * sigma limit.
-            
-            Returns: print()
-                        Prints out x_outliers and y_outliers in the form of ndarrays
-        """
         x_data = self.x_data
         y_data = self.y_data
-        
-        print("Given x data:", x_data)
-        print("Given y data:", y_data)
         
         x_outliers = np.zeros(len(x_data))
         y_outliers = np.zeros(len(y_data))
@@ -184,89 +202,120 @@ class calcs:
         if np.size(y_outliers) == 0:
             y_outliers = 'No outliers in y data'
 
-        print(x_outliers)
-        print(y_outliers)
+        print(userdata.colname1, "outliers:", x_outliers)
+        print(userdata.colname2, "outliers:", y_outliers)
 
 class Graphs:
+    """
+    Allows the user to create various graphs from the data
+    read into DataInit().
+    
+    Available methods:
+        regress:
+            Uses the given x_data and y_data arrays to create a linear
+            regression plot.
+            
+            Parameters:
+                gtitle : str [optional]
+                    The desired graph title. is initalized to "graph"
+            
+            Returns:
+                plt.show()
+                    Opens an external window that shows the linear
+                    regression plot of the given data.
+        
+        errbargraph:
+            Uses the given dataframe built from x_data and y_data during
+            initalization to create an error bar plot, making use of
+            the sigma_x value as the constant error.
+            
+            Parameters:
+                gtitle : str [optional]
+                    The desired graph title. is initalized to "graph"
+            
+            Returns:
+                plt.show()
+                    Opens an external window that displays the
+                    error bar graph.
+                        
+        datahist:
+            Uses the given dataframe built from x_data and y_data during
+            initalization to create one or two histograms. There is also
+            the option to turn the graphs into standard distribution
+            graphs (currently a WIP).
+            
+            Parameters:
+                gtitle : str [optional]
+                    The desired graph title. is initalized to "graph"
+            
+            Returns:
+                plt.show()
+                    Opens an external window that displays the
+                    histogram(s).
+    """
+    
     def __init__(self):
         global calcsclass
         calcsclass = calcs()
     
-    def linregress(self):
-        """
-            Uses the given x_data and y_data arrays to create a linear regression plot.
-            
-            Returns: plt.show()
-                        Opens an external window that shows the linear regression plot of the given data. 
-        """
+    def regress(self, gtitle = "graph"):
         x_data = userdata.x_data
         y_data = userdata.y_data
         
         if np.array_equiv(testarray, y_data):
             y_data = np.full_like(x_data, 5)
         
-        plt.title('pyplot best fit & linear regression plot', fontsize = 14)
+        plt.title(gtitle, fontsize = 11)
         plt.plot(x_data, y_data, 'o')
-        plt.xlabel(userdata.colname1, fontsize = 14)
-        plt.ylabel(userdata.colname2, fontsize = 14)
+        plt.xlabel(userdata.colname1, fontsize = 11)
+        plt.ylabel(userdata.colname2, fontsize = 11)
         plt.plot(x_data, calcsclass.A + calcsclass.B * x_data)
+        plt.title(gtitle)
         plt.show()
         
-    def standdistgraph(self):
-        """
-            Uses the given x_data array to create a standard distribution graph.
-            Currently only works for x data.
-                
-            Returns: plt.show()
-                        Opens an external window that shows the standard distribution graph
-        """
-        x_data = userdata.x_data
-        y_data = userdata.y_data
+    ##### This method is currently being integrated into datahist
+    ##### and will be officially removed upon completion.
+    # def standdistgraph(self, gtitle = "graph"):
+    #     x_data = userdata.x_data
+    #     y_data = userdata.y_data
         
-        gdata = x_data
+    #     gdata = x_data
 
-        plt.hist(gdata, bins = len(gdata), density = True, alpha = 0.6, color = 'c', align = 'mid')
-        xmin, xmax = plt.xlim()
-        x = np.linspace(xmin, xmax, 100)
-        p = stats.norm.pdf(x, calcsclass.x_mean, calcsclass.sigma_x)
-        plt.plot(x, p, 'k', linewidth = 2)
-        title = "x data mean = %.2f, stddev x = %.2f, 2 stddev x = %.2f" % (calcsclass.x_mean, calcsclass.sigma_x, 2 * calcsclass.sigma_x)
-        plt.title(title)
-        plt.show()
+    #     plt.hist(gdata, bins = len(gdata), density = True, alpha = 0.6,
+    #              color = 'c', align = 'mid')
+    #     xmin, xmax = plt.xlim()
+    #     x = np.linspace(xmin, xmax, 100)
+    #     p = stats.norm.pdf(x, calcsclass.x_mean, calcsclass.sigma_x)
+    #     plt.plot(x, p, 'k', linewidth = 2)
+    #     plt.title(gtitle)
+    #     plt.show()
     
-    def errbargraph(self, x_axis = "y_data", y_axis = "x_data", gtitle = "graph"):
-        """
-            Uses the given dataframe built from x_data and y_data during
-            initalization to create an error bar plot, making use of
-            the sigma_x value as the constant error.
-            
-            Parameters:
-                x_axis : str [optional]
-                    The desired label for the x axis. Is initalized to
-                    "y_data" (as most datasets will have the y data
-                    in the second column)
-                y_axis : str [optional]
-                    The desired label for the y axis. Is initalized to
-                    "x_data" (as most data sets will have the x data
-                    in the first column)
-                gtitle : str [optional]
-                    The desired graph title. is initalized to "graph"
-            
-            Returns: plt.show()
-                        Opens an external window that displays the
-                        error bar graph.
-        """
-        # df = data.df.set_axis(['X', 'Y'], axis = 1)
+    def errbargraph(self, gtitle = "graph"):
         df = userdata.df
         df.plot(x = userdata.colname2, y = userdata.colname1,
-                xlabel = x_axis, ylabel = y_axis, title = gtitle,
+                xlabel = userdata.colname2, ylabel = userdata.colname1, title = gtitle,
                 linestyle = "", marker = ".", yerr = calcsclass.sigma_x,
                 capthick = 1, ecolor = "red", linewidth = 1)
         plt.show()
     
-    def datahist(self):
+    def datahist(self, gtitle = "graph"):
         datafile = userdata.df
         columns = datafile.columns
+        
+        stdcheck = input("Will this a standard distribution graph? Y/N ")
+        
+        def stdcheckfunc():
+            if stdcheck.lower() == "y" or stdcheck.lower() == "yes":
+                xmin, xmax = plt.xlim()
+                x = np.linspace(xmin, xmax, 100)
+                p = stats.norm.pdf(x, calcsclass.x_mean, calcsclass.sigma_x)
+                plt.plot(x, p, 'k', linewidth = 2)
+                plt.title(gtitle)
+            elif stdcheck.lower() == "n" or stdcheck.lower() == "no":
+                pass
+            else:
+                print("Unknown input, assuming 'no'.")
+        
         histcheck = input("Do you want a histogram for 1 dataset, or 2 datasets? ")
         
         try:
@@ -275,27 +324,36 @@ class Graphs:
             print("Please input only numerical values 1 or 2.")
             exit()
             
+            # For this entire method I'm not quite sure how to get both histograms to show the
+            # gaussian line when the user chooses to show both histograms at once.
         if int(histcheck) == 1:
             print("Which dataset would you like to use?", userdata.colname1, "or", userdata.colname2,)
             histnum = input()
             if histnum == userdata.colname1:
                 datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,
-                                         column = columns[0], color = 'green')
+                                         column = columns[0], color = 'green', density = True)
+                stdcheckfunc()
             elif histnum == userdata.colname2:
                 datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,
-                                         column = columns[1], color = 'green')
+                                         column = columns[1], color = 'green', density = True)
+                stdcheckfunc()
             else:
                 print("Please input only", userdata.colname1, "or", userdata.colname2)
                 exit()
         elif int(histcheck) == 2:
             fig, axes = plt.subplots(nrows = 2, ncols = 1)
             datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,
-                                     column = columns[0], color = 'green', ax = axes[0])
+                                     column = columns[0], color = 'green', ax = axes[0],
+                                     density = True)
+            stdcheckfunc()
             datafile.hist(bins = len(datafile.axes[1]), grid = False, rwidth = .9,
-                                     column = columns[1], color = 'c', ax = axes[1])
+                                     column = columns[1], color = 'c', ax = axes[1],
+                                     density = True)
+            stdcheckfunc()
         else:
             print("Please input only 1 or 2.")
             exit
+
         plt.show()
         
     # def nonlinregress(data):
