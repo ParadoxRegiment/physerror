@@ -35,9 +35,9 @@ class DataInit:
     Note: Although csv files of any shape can be read in,
     it is recommended to use csv files with two columns of
     data without a header row or index column.
-        * This is because this module was created for students
-        that may not be well versed in programming or data
-        analysis.
+    * This is because this module was created for students
+    that may not be well versed in programming or data
+    analysis.
     
     Parameters:
         x_data : ndarray [optional]
