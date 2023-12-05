@@ -28,21 +28,21 @@ class Data():
     def __init__(self, user_x_data = np.array([]), user_y_data = np.array([])):
         self.x_data, self.y_data, self.df, self.colname1, self.colname2 = self.initfunc(user_x_data, user_y_data)
         
-        if len(user_x_data) != 0:
-            N = len(user_x_data)
-            self.delta = N * sum(user_x_data ** 2) - (sum(user_x_data)) ** 2
-            self.A = ((sum(user_x_data ** 2) * sum(user_y_data)) - (sum(user_x_data) * sum(user_x_data * user_y_data))) / self.delta
-            self.B = (N * sum(user_x_data * user_y_data) - (sum(user_x_data) * sum(user_y_data))) / self.delta
-            self.x_mean = abs(np.mean(user_x_data))
-            self.x_best = sum(user_x_data)/N
-            self.y_mean = abs(np.mean(user_y_data))
-            self.y_best = sum(user_y_data)/N
-            self.sigma_y = np.sqrt((1/(N - 2)) * sum((user_y_data - self.A - (self.B * user_x_data)) ** 2))
-            self.sigma_A = self.sigma_y * np.sqrt(sum(user_x_data ** 2) / self.delta)
+        if len(self.x_data) != 0:
+            N = len(self.x_data)
+            self.delta = N * sum(self.x_data ** 2) - (sum(self.x_data)) ** 2
+            self.A = ((sum(self.x_data ** 2) * sum(self.y_data)) - (sum(self.x_data) * sum(self.x_data * self.y_data))) / self.delta
+            self.B = (N * sum(self.x_data * self.y_data) - (sum(self.x_data) * sum(self.y_data))) / self.delta
+            self.x_mean = abs(np.mean(self.x_data))
+            self.x_best = sum(self.x_data)/N
+            self.y_mean = abs(np.mean(self.y_data))
+            self.y_best = sum(self.y_data)/N
+            self.sigma_y = np.sqrt((1/(N - 2)) * sum((self.y_data - self.A - (self.B * self.x_data)) ** 2))
+            self.sigma_A = self.sigma_y * np.sqrt(sum(self.x_data ** 2) / self.delta)
             self.sigma_B = self.sigma_y * np.sqrt(N / self.delta)
-            self.sigma_x = np.sqrt(sum((user_x_data - self.x_mean) ** 2) / (N - 1))
-            self.sigma_x_best = np.sqrt((1/(N - 1)) * sum((user_x_data - self.x_mean) ** 2))
-            self.sigma_y_best = np.sqrt((1/(N - 1)) * sum((user_y_data - self.y_mean) ** 2))
+            self.sigma_x = np.sqrt(sum((self.x_data - self.x_mean) ** 2) / (N - 1))
+            self.sigma_x_best = np.sqrt((1/(N - 1)) * sum((self.x_data - self.x_mean) ** 2))
+            self.sigma_y_best = np.sqrt((1/(N - 1)) * sum((self.y_data - self.y_mean) ** 2))
             self.sigma_x_mean = self.x_mean / np.sqrt(N)
             self.sigma_y_mean = self.y_mean / np.sqrt(N)
             self.sigma_frac = 1 / np.sqrt(2 * (N - 1))
