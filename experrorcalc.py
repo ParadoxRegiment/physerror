@@ -8,6 +8,7 @@
 #      Please direct any questions to my email:     #
 #            alexander.ritzie@gmail.com             #
 #       #####################################       #
+
 import numpy as np
 from matplotlib import pyplot as plt
 import scipy.stats as stats
@@ -24,14 +25,20 @@ class Data():
     It contains the user's x_data and y_data arrays, the
     pandas DataFrame created from those arrays, and the
     data name (headers) given by the user.
+    
+    #### Will update this soon-ish ####
     """
-    def __init__(self, user_x_data = np.array([]), user_y_data = np.array([])):
+    def __init__(self, user_x_data: np.ndarray, user_y_data: np.ndarray):
+        # Initializes various self-variables that will be reused both in this Class and
+        # the other Classes
         self.x_data, self.y_data, self.df, self.colname1, self.colname2 = self.initfunc(user_x_data, user_y_data)
         
+        # Checks that self.x_data is not an empty array. If it is, it does not calculate
+        # any of the attributes inside the if statement
         if len(self.x_data) != 0:
             N = len(self.x_data)
             self.delta = N * sum(self.x_data ** 2) - (sum(self.x_data)) ** 2
-            self.A = ((sum(self.x_data ** 2) * sum(self.y_data)) - (sum(self.x_data) * sum(self.x_data * self.y_data))) / self.delta
+            self.A = (((sum(self.x_data**2) * sum(self.y_data)) - (sum(self.x_data) * sum(self.x_data*self.y_data)))/self.delta)
             self.B = (N * sum(self.x_data * self.y_data) - (sum(self.x_data) * sum(self.y_data))) / self.delta
             self.x_mean = abs(np.mean(self.x_data))
             self.x_best = sum(self.x_data)/N
@@ -47,10 +54,16 @@ class Data():
             self.sigma_y_mean = self.y_mean / np.sqrt(N)
             self.sigma_frac = 1 / np.sqrt(2 * (N - 1))
     
-    def initfunc(self, xdata = np.full(5,5), ydata = np.full(5,5)):
+    # Initializes and returns the data that will be reused
+    def initfunc(self, xdata = np.arange(5) + 1, ydata = np.arange(5) + 1):
         readcsv = input("Would you like to read in a CSV? Y/N\n")
+        
+        # Calls for the csvreader function if the user enters a yes(-adjecent) input
         if readcsv.lower() == "y" or readcsv.lower() == "yes":
-            x_data, y_data = csvreader(xdata, ydata)
+            x_data, y_data = csvreader()
+            
+        # Assumes the user's passed in arguments are the desired data and passes them
+        # into new variables                                                                             
         elif readcsv.lower() == "n" or readcsv.lower() == "no":
             x_data = xdata
             y_data = ydata
@@ -59,67 +72,128 @@ class Data():
             print("Unknown input, please restart.")
             exit()
         
-        testarray = np.full(5,5)
-            
-        if np.array_equiv(testarray, y_data):
-            y_data = np.full_like(x_data, 5)
-        
+        # Stacks the arrays to be turned into a pandas DataFrame
         temparray = np.stack((x_data, y_data))
         colname1 = input("Please type the first data set's name: ")
         colname2 = input("Please type the second data set's name: ")
-        datafile = pd.DataFrame(np.transpose(temparray), columns = [colname1, colname2])
-        datafile.index.name = 'Trial'
-        datafile.index += 1
-        del temparray, testarray
         
+        # Creates a DataFrame using the transpose of the array stack for data and the
+        # user input data names for column names
+        datafile = pd.DataFrame(np.transpose(temparray), columns = [colname1, colname2])
+        
+        # Renames the df index name to Trial
+        datafile.index.name = 'Trial'
+        
+        # Iterates the index count by one for readability
+        datafile.index += 1
+        
+        # Deletes temparray as it will not be used again
+        del temparray
+        
+        # Prints out the df for the user to see
         print(datafile)
         
+        # Returns the given variables into the Class' self-variables
         return x_data, y_data, datafile, colname1, colname2
     
+    
+    ##### Will do docstring documentation later #####
     def outlier(self):
+        # New x_data and y_data variables for ease of use
         x_data = self.x_data
         y_data = self.y_data
         
+        # Immediately exits the program if the x_data or y_data are somehow empty arrays
         if np.size(x_data) == 0 or np.size(y_data) == 0:
-            exit
+            exit()
         
+        # Outlier variables to be used for later
         x_outliers = np.zeros(len(x_data))
         y_outliers = np.zeros(len(y_data))
-        i = 0
+        
+        # Iterater variables for x_data, x_outliers, y_data, and y_outliers respectively
+        i = 0                                               
         j = 0
         k = 0
         l = 0
         
+        # Loops through the x_data array to check for outliers
         for row in x_data:
-            if row > (self.x_mean + 2 * self.sigma_x):
-                x_outliers[j] = int(row)
-                j += 1
-                x_data = np.delete(x_data, i)
-            elif row < (self.x_mean - 2 * self.sigma_x):
-                x_outliers[j] = int(row)
-                j += 1
-                x_data = np.delete(x_data, i)
-            i += 1
             
-        for row in y_data:
-            if row > (self.y_mean + 2 * self.sigma_y):
-                y_outliers[l] = int(row)
-                l += 1
-                y_data = np.delete(y_data, k)
-            elif row < (self.y_mean - 2 * self.sigma_y):
-                y_outliers[l] = int(row)
-                l += 1
-                y_data = np.delete(y_data, k)
-            k += 1
+            # Checks if the row value is greater than the mean + 2*sigma
+            if row > (self.x_mean + 2 * self.sigma_x):      
+                
+                # If above is true, inserts the row value into the j cell of x_outliers
+                x_outliers[j] = int(row)   
+                
+                # Iterates j by one                 
+                j += 1        
+                
+                # Deletes the outlier cell from x_data                              
+                x_data = np.delete(x_data, i)               
+                
+            # Checks if the row value is less than the mean - 2*sigma
+            elif row < (self.x_mean - 2 * self.sigma_x):    
+                
+                # If above is true, inserts the row value into the j cell of x_outliers
+                x_outliers[j] = int(row)                    
+                
+                # Iterates j by one
+                j += 1                                      
+                
+                # Deletes the outlier cell from x_data
+                x_data = np.delete(x_data, i)               
+                
+            # Iterates i by one
+            i += 1                                          
+        
+        # Loops through the y_data array to check for outliers
+        for row in y_data:                                  
             
-        x_outliers.resize(j)
-        y_outliers.resize(l)
+            # Checks if the row value is greater than the mean + 2*sigma
+            if row > (self.y_mean + 2 * self.sigma_y):      
+                
+                # If above is true, inserts the row value into the l cell of y_outliers
+                y_outliers[l] = int(row)                    
+                
+                # Iterates l by one
+                l += 1                                      
+                
+                # Deletes the outlier cell from y_data
+                y_data = np.delete(y_data, k)               
+            
+            # Checks if the row value is less than the mean - 2*sigma
+            elif row < (self.y_mean - 2 * self.sigma_y):    
+                
+                # If above is true, inserts the row value into the l cell of y_outliers
+                y_outliers[l] = int(row)                    
+                
+                # Iterates j by one
+                l += 1                                      
+                
+                # Deletes the outlier cell from y_data
+                y_data = np.delete(y_data, k)
+                
+            # Iterates k by one
+            k += 1                                          
+            
+        # Resizes the x_outliers array to the size of j to remove redundant zeroes
+        x_outliers.resize(j)                                
         
-        if np.size(x_outliers) == 0:
-            x_outliers = 'No outliers in x data'
+        # Resizes the y_outliers array to the size of l to remove redundant zeroes
+        y_outliers.resize(l)                                
         
-        if np.size(y_outliers) == 0:
-            y_outliers = 'No outliers in y data'
+        # Checks if there were no outliers in x_data
+        if np.size(x_outliers) == 0:                        
+            
+            # If above is true, reinitializes x_outliers to the given string
+            x_outliers = 'No outliers in x data'            
+        
+        # Checks if there were no outliers in y_data
+        if np.size(y_outliers) == 0:                        
+            
+            # If above is true, reinitializes y_outliers to the given string
+            y_outliers = 'No outliers in y data'            
 
         return x_outliers, y_outliers
 
@@ -134,6 +208,10 @@ class Graphs:
             regression plot.
             
             Parameters:
+                USERDATA : Class Instance
+                    Requires the user to pass in an object instance of
+                    Data to make use of the user's data.
+                    
                 gtitle : str [optional]
                     The desired graph title. is initalized to "graph"
             
@@ -148,6 +226,10 @@ class Graphs:
             the sigma_x value as the constant error.
             
             Parameters:
+                USERDATA : Class Instance
+                    Requires the user to pass in an object instance of
+                    Data to make use of the user's data.
+                    
                 gtitle : str [optional]
                     The desired graph title. is initalized to "graph"
             
@@ -163,6 +245,10 @@ class Graphs:
             graphs (currently a WIP).
             
             Parameters:
+                USERDATA : Class Instance
+                    Requires the user to pass in an object instance of
+                    Data to make use of the user's data.
+                    
                 gtitle : str [optional]
                     The desired graph title. is initalized to "graph"
             
@@ -173,16 +259,28 @@ class Graphs:
     """
     
     def regress(USERDATA : Type[Data], gtitle = "graph"):
-        x_data = USERDATA.x_data
+        
+        # New x_data and y_data for ease of use
+        x_data = USERDATA.x_data                                
         y_data = USERDATA.y_data
         
-        plt.title(gtitle, fontsize = 11)
-        plt.plot(x_data, y_data, 'o')
-        plt.xlabel(USERDATA.colname1, fontsize = 11)
-        plt.ylabel(USERDATA.colname2, fontsize = 11)
-        plt.plot(x_data, USERDATA.A + USERDATA.B * x_data)
-        plt.title(gtitle)
-        plt.show()
+        # Sets the figure's title to the default (or passed in) graph title
+        plt.title(gtitle, fontsize = 11)                        
+        
+        # Sets the figure data to x_data and y_data, colored orange
+        plt.plot(x_data, y_data, 'o')                           
+        
+        # Sets the figure's xlabel to the user's entered x_data name
+        plt.xlabel(USERDATA.colname1, fontsize = 11)            
+        
+        # Sets the figure's xlabel to the user's entered y_data name
+        plt.ylabel(USERDATA.colname2, fontsize = 11)            
+        
+        # Adds the linear regression line to the plot
+        plt.plot(x_data, USERDATA.A + USERDATA.B * x_data)      
+        
+        # Displays the linear regression plot
+        plt.show()                                              
         
     ##### This method is currently being integrated into datahist
     ##### and will be officially removed upon completion.
@@ -202,95 +300,202 @@ class Graphs:
     #     plt.show()
     
     def errbargraph(USERDATA : Type[Data], gtitle = "graph"):
-        df = USERDATA.df
-        df.plot(x = USERDATA.colname2, y = USERDATA.colname1,
+        
+        # New df for ease of use
+        df = USERDATA.df                                                                    
+        
+        # Creates an errorbar graph out of the given df data. Sets x to the y_data and y
+        # to the x_data on an assumption that the y_data is the independent variable
+        # yerr is set to the userdata's sigma_x
+        df.plot(x = USERDATA.colname2, y = USERDATA.colname1,                               
                 xlabel = USERDATA.colname2, ylabel = USERDATA.colname1, title = gtitle,
                 linestyle = "", marker = ".", yerr = USERDATA.sigma_x,
                 capthick = 1, ecolor = "red", linewidth = 1)
         plt.show()
     
     def datahist(USERDATA : Type[Data], gtitle = "graph"):
-        datafile = USERDATA.df
-        columns = datafile.columns
+        
+        # New df for ease of use
+        datafile = USERDATA.df                                                                          
+        
+        # Initialized to the df's columns array for future use
+        columns = datafile.columns                                                                      
         
         stdcheck = input("Will this a standard distribution graph? Y/N ")
         
+        # Internal function used to determine what type of histogram graph will be created
         def stdcheckfunc():
+            
+            # Checks if the user entered a yes(-adjecent) input
             if stdcheck.lower() == "y" or stdcheck.lower() == "yes":
-                xmin, xmax = plt.xlim()
-                x = np.linspace(xmin, xmax, 100)
-                p = stats.norm.pdf(x, USERDATA.x_mean, USERDATA.sigma_x)
-                plt.plot(x, p, 'k', linewidth = 2)
+                
+                # Pulls the minimum and maximum for the x-axis from data later down
+                xmin, xmax = plt.xlim()                                                                 
+                
+                # Creates an x-axis array of 100 values
+                x = np.linspace(xmin, xmax, 100)                                                        
+                
+                # Calls the scipy.stats.pdf method with x as the data, userdata x_mean as the mean,
+                # and userdata sigma_x as the scale
+                p = stats.norm.pdf(x, USERDATA.x_mean, USERDATA.sigma_x)                                
+                
+                # Creates a graph with x on the x-axis and p on the y-axis
+                plt.plot(x, p, 'k', linewidth = 2)                                                      
                 plt.title(gtitle)
-            elif stdcheck.lower() == "n" or stdcheck.lower() == "no":
+                
+            # Passes the if statement if the user entered a no(-adjecent) input
+            elif stdcheck.lower() == "n" or stdcheck.lower() == "no":                                   
                 pass
             else:
-                print("Unknown input, assuming 'no'.")
+                
+                # Runs the given print statement if anything other than yes or no is given
+                print("Unknown input, assuming 'no'.")                                                  
         
-        histcheck = input("Do you want a histogram for 1 dataset, or 2 datasets? ")
-        
-        try:
-            int(histcheck)
-        except ValueError:
-            print("Please input only numerical values 1 or 2.")
-            exit()
+        # Internal check function used to repeatedly ask for an input if an unaccepted one is given
+        def histcheck():                                                                                
             
-            # For this entire method I'm not quite sure how to get both histograms to show the
-            # gaussian line when the user chooses to show both histograms at once.
-        if int(histcheck) == 1:
-            print("Which dataset would you like to use?", USERDATA.colname1, "or", USERDATA.colname2,)
-            histnum = input()
-            if histnum == USERDATA.colname1:
+            # Creates an infinite loop until a numerical response is given
+            while True:                                                                                 
+                histcount = input("Do you want a histogram for 1 dataset, or 2 datasets? ")
+                try:
+                    
+                    # Attempts to convert the histcheck input into an int variable
+                    # Breaks out of the while loop if the conversion succeeds
+                    int(histcount)
+                    
+                    # Breaks out of the while loop
+                    break
+                except ValueError:
+                    print("Please input only numerical values.\n")
+            return histcount
+        
+        # Calls for and runs the histcheck function
+        check = histcheck()
+        
+        # For this entire method I'm not quite sure how to get both histograms to show the
+        # gaussian line when the user chooses to show both histograms at once.
+        
+        # Creates a continuous loop that breaks only if an accepted input is given
+        while True:                                                                                                         
+            
+            # Checks if the histcheck value is 1
+            if int(check) == 1:                                                                                             
+                while True:
+                    
+                    # If the above is true, calls for user input with the given printed statement
+                    histnum = input(f"Which dataset would you like to use? {USERDATA.colname1} or {USERDATA.colname2}: ")   
+                    
+                    # Checks if the user input is equivalent to colname1
+                    if histnum == USERDATA.colname1:                                                                        
+                        
+                        # If the above is true, creates a histogram from the first column of the userdata DataFrame
+                        datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,                              
+                                                column = columns[0], color = 'green', density = True)
+                        
+                        # Runs stdcheckfunc to create a standard distribution graph (if user entered yes earlier)
+                        stdcheckfunc()
+                        
+                        # Breaks out of the inner while loop                                                                                 
+                        break
+                    
+                    # Checks if the user input is equivalent to colname2
+                    elif histnum == USERDATA.colname2:                                                                      
+                        
+                        # If the above is true,  creates histogram from the second column of the userdata DataFrame
+                        datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,                              
+                                                column = columns[1], color = 'green', density = True)
+                        
+                        # Runs stdcheckfunc to create a standard distribution graph (if user entered yes earlier)
+                        stdcheckfunc()    
+                        
+                        # Breaks out of the inner while loop                                                                                  
+                        break
+                    else:
+                        
+                        # If any other input is entered, prints the given statement before going back to the start of
+                        # the while loop
+                        print(f"Please input only {USERDATA.colname1} or {USERDATA.colname2}")   
+                
+                # Breaks out of the outer while loop                           
+                break
+            
+            # Checks if the histcheck instance is equal to 2
+            elif int(check) == 2:
+                
+                # Creates a subplot which is 1 graph wide and 2 graphs tall
+                fig, axes = plt.subplots(nrows = 2, ncols = 1)                        
+                
+                # Attaches the data from the first column of the df to the top plot                                      
                 datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,
-                                         column = columns[0], color = 'green', density = True)
+                                        column = columns[0], color = 'green', ax = axes[0],
+                                        density = True)
+                
+                # Runs stdcheckfunc to create a standard distribution graph (if user entered yes earlier)
                 stdcheckfunc()
-            elif histnum == USERDATA.colname2:
-                datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,
-                                         column = columns[1], color = 'green', density = True)
+                
+                # Attaches the data from the second column of the df to the bottom plot
+                datafile.hist(bins = len(datafile.axes[1]), grid = False, rwidth = .9,                                      
+                                        column = columns[1], color = 'c', ax = axes[1],
+                                        density = True)
+                
+                # Runs stdcheckfunc to create a standard distribution graph (if user entered yes earlier)
                 stdcheckfunc()
+                
+                # Breaks out of the outer while loop
+                break
             else:
-                print("Please input only", USERDATA.colname1, "or", USERDATA.colname2)
-                exit()
-        elif int(histcheck) == 2:
-            fig, axes = plt.subplots(nrows = 2, ncols = 1)
-            datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,
-                                     column = columns[0], color = 'green', ax = axes[0],
-                                     density = True)
-            stdcheckfunc()
-            datafile.hist(bins = len(datafile.axes[1]), grid = False, rwidth = .9,
-                                     column = columns[1], color = 'c', ax = axes[1],
-                                     density = True)
-            stdcheckfunc()
-        else:
-            print("Please input only 1 or 2.")
-            exit()
+                
+                # If any other value is given for the histcheck instance, prints the given statement
+                print("Please input only 1 or 2.\n")
+                
+                # Runs the histcheck function again
+                histcheck()
 
         plt.show()
-    # def nonlinregress(data):
-    #     df = data.df
-    #     # container = np.array([])
-    #     def f_model(x, a, c):
-    #         return np.log(np.array(((a + x) ** 2) / ((x - c) ** 2)))
 
-def csvreader(x_data : np.array, y_data : np.array)-> np.array:
+# External function that can be called by the user if they wish to. Is used only inside the Data class
+def csvreader()-> np.ndarray:
     print("Please choose a csv file:")
     tk = Tk()
     tk.withdraw()
+    
+    # Opens a File Explorer window where the user can visually select a csv file
     path = askopenfilename()
+    
+    # Prints the file path
     print(path)
+    
+    # Converts the csv file into a pandas DataFrame
     with open(path, "r") as f:
+        
+        # Assumes no header or index has been set in the csv file
         datafile = pd.read_csv(f, header = None, index_col = None)
+        
+        # Saves column count for later use
         colcount = len(datafile.axes[1])
+        
+        # Converts the df into a numpy array
         dataarray = np.array(datafile)
 
+    # Checks if the dimension of the array is equal to 1
     if np.ndim(dataarray) == 1:
+        
+        # Assumes given data is for the x_data and passes it into the x_data variable
         print("csv read into x_data")
         x_data = dataarray
+    
+    # Checks if the array's dimensions are greater than 1
     elif np.ndim(dataarray) > 1:
+        
+        # Repeats the above steps if colcount is equal to 1
         if colcount == 1:
             print("csv read into x_data")
             x_data = dataarray[:,0]
+        
+        # Passes the first two columns into x_data and y_data if colcount is greater than 1
         elif colcount > 1:
             x_data = dataarray[:,0]
             y_data = dataarray[:,1]
+    
+    # Returns x_data and y_data
     return x_data, y_data
