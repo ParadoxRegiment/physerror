@@ -20,11 +20,46 @@ from typing import Type
 
 @dataclass
 class Data():
-    """
-    A container class that cannot be initialized directly.
-    It contains the user's x_data and y_data arrays, the
-    pandas DataFrame created from those arrays, and the
-    data name (headers) given by the user.
+    """ An initializer and container dataclass that is initialized and reused
+        by the user and other classes, as well as their methods. There are many 
+        attributes that calculate common statistical errors, constants, and 
+        general error propagation methods, and one class Method to find, document, 
+        and delete any data points that exist outside the 2 * sigma outlier
+        "limit".
+        
+        Attributes:
+            delta : float
+                []
+            A : float
+                []
+            B : float
+                []
+            x_mean : float
+                [] 
+            x_best : float
+                []
+            y_mean : float
+                []
+            y_best : float
+                [] 
+            sigma_y : float
+                []
+            sigma_A : float
+                []
+            sigma_B : float
+                []
+            sigma_x : float
+                []
+            sigma_x_best : float
+                []
+            sigma_y_best : float
+                []
+            sigma_x_mean : float
+                []
+            sigma_y_mean : float
+                []
+            sigma_frac : float
+                []
     
     #### Will update this soon-ish ####
     """
@@ -56,6 +91,41 @@ class Data():
     
     # Initializes and returns the data that will be reused
     def initfunc(self, xdata = np.arange(5) + 1, ydata = np.arange(5) + 1):
+        """ Callable but largely useless if done so. Used to read in a csv if
+            the user so wishes, store data and their user-inputed names, then
+            returns that data back to the line where it was called. It is only
+            used inside the __init__ function of this class.
+            
+            Parameters:
+                xdata : np.ndarray
+                    The given x data. As it is used, it is the "user_x_data"
+                    passed in at the time of initialization.
+                
+                ydata : np.ndarray
+                    The given y data. As it is used, it is the "user_y_data"
+                    pass in at the time of initialization.
+        
+            Returns:
+                x_data -> np.ndarray
+                    The x_data array created from either the passed-in
+                    user_x_data or the csv file that was read in by the user.
+                
+                y_data -> np.ndarray
+                    The y_data array created from either the passed-in
+                    user_y_data or the csv file that was read in by the user.
+                
+                datafile -> pd.DataFrame
+                    The pandas DataFrame created from either the passed-in
+                    user_x_data and user_y_data or the csv file that was
+                    read in by the user.
+                
+                colname1 -> str
+                    The name entered by the user for x_data.
+                
+                colname2 -> str
+                    The name entered by the user for y_data.
+        """
+
         readcsv = input("Would you like to read in a CSV? Y/N\n")
         
         # Calls for the csvreader function if the user enters a yes(-adjecent) input
@@ -99,6 +169,22 @@ class Data():
     
     ##### Will do docstring documentation later #####
     def outlier(self):
+        """ A method that creates two empty arrays then searches the
+            self.x_data and self.y_data arrays for values that are outside
+            the standard 2
+
+            Returns:
+                x_outliers -> np.ndarray
+                    An array that contains either the outliers that were found
+                    in the user's x_data, or a string stating no outliers were
+                    found.
+                
+                y_outliers -> np.ndarray
+                    An array that contains either the outliers that were found
+                    in the user's y_data, or a string stating no outliers were
+                    found.
+        """
+        
         # New x_data and y_data variables for ease of use
         x_data = self.x_data
         y_data = self.y_data
@@ -198,13 +284,12 @@ class Data():
         return x_outliers, y_outliers
 
 class Graphs:
+    """ Allows the user to create various graphs from the userdata
+        pulled from Data.
     """
-    Allows the user to create various graphs from the data
-    read into DataInit().
     
-    Available methods:
-        regress:
-            Uses the given x_data and y_data arrays to create a linear
+    def linreg(USERDATA : Type[Data], gtitle = "graph"):
+        """ Uses the given x_data and y_data arrays to create a linear
             regression plot.
             
             Parameters:
@@ -219,46 +304,7 @@ class Graphs:
                 plt.show()
                     Opens an external window that shows the linear
                     regression plot of the given data.
-        
-        errbargraph:
-            Uses the given dataframe built from x_data and y_data during
-            initalization to create an error bar plot, making use of
-            the sigma_x value as the constant error.
-            
-            Parameters:
-                USERDATA : Class Instance
-                    Requires the user to pass in an object instance of
-                    Data to make use of the user's data.
-                    
-                gtitle : str [optional]
-                    The desired graph title. is initalized to "graph"
-            
-            Returns:
-                plt.show()
-                    Opens an external window that displays the
-                    error bar graph.
-                        
-        datahist:
-            Uses the given dataframe built from x_data and y_data during
-            initalization to create one or two histograms. There is also
-            the option to turn the graphs into standard distribution
-            graphs (currently a WIP).
-            
-            Parameters:
-                USERDATA : Class Instance
-                    Requires the user to pass in an object instance of
-                    Data to make use of the user's data.
-                    
-                gtitle : str [optional]
-                    The desired graph title. is initalized to "graph"
-            
-            Returns:
-                plt.show()
-                    Opens an external window that displays the
-                    histogram(s).
-    """
-    
-    def regress(USERDATA : Type[Data], gtitle = "graph"):
+        """
         
         # New x_data and y_data for ease of use
         x_data = USERDATA.x_data                                
@@ -300,6 +346,23 @@ class Graphs:
     #     plt.show()
     
     def errbargraph(USERDATA : Type[Data], gtitle = "graph"):
+        """ Uses the given dataframe built from x_data and y_data during
+            initalization to create an error bar plot, making use of
+            the sigma_x value as the constant error.
+            
+            Parameters:
+                USERDATA : Class Instance
+                    Requires the user to pass in an object instance of
+                    Data to make use of the user's data.
+                    
+                gtitle : str [optional]
+                    The desired graph title. is initalized to "graph"
+            
+            Returns:
+                plt.show()
+                    Opens an external window that displays the
+                    error bar graph.
+        """
         
         # New df for ease of use
         df = USERDATA.df                                                                    
@@ -314,7 +377,24 @@ class Graphs:
         plt.show()
     
     def datahist(USERDATA : Type[Data], gtitle = "graph"):
+        """ Uses the given dataframe built from x_data and y_data during
+            initalization to create one or two histograms. There is also
+            the option to turn the graphs into standard distribution
+            graphs (currently a WIP).
         
+            Parameters:
+                USERDATA : Class Instance
+                    Requires the user to pass in an object instance of
+                    Data to make use of the user's data.
+                    
+                gtitle : str [optional]
+                    The desired graph title. is initalized to "graph"
+            
+            Returns:
+                plt.show()
+                    Opens an external window that displays the
+                    histogram(s).
+        """
         # New df for ease of use
         datafile = USERDATA.df                                                                          
         
@@ -352,34 +432,42 @@ class Graphs:
                 print("Unknown input, assuming 'no'.")                                                  
         
         # Internal check function used to repeatedly ask for an input if an unaccepted one is given
-        def histcheck():                                                                                
+        def histcheck():                                                                           
             
-            # Creates an infinite loop until a numerical response is given
-            while True:                                                                                 
-                histcount = input("Do you want a histogram for 1 dataset, or 2 datasets? ")
-                try:
+            # Creates an infinite loop until a numerical response is given                                                                                
+            histcount = input("Do you want a histogram for 1 dataset, or 2 datasets? ")
+            try:
+                
+                # Attempts to convert the histcheck input into an int variable
+                histcount = int(histcount)
+                
+                # If conversion succeeds, checks if the value is not equal to 1 and/or 2
+                if histcount != 1 and histcount != 2:
+                    print("Please enter only 1 or 2.\n")
                     
-                    # Attempts to convert the histcheck input into an int variable
-                    # Breaks out of the while loop if the conversion succeeds
-                    int(histcount)
-                    
-                    # Breaks out of the while loop
-                    break
-                except ValueError:
-                    print("Please input only numerical values.\n")
-            return histcount
+                    # Returns the function to create a recursive function that will repeatedly ask for an input
+                    # until an accepted one is entered
+                    return histcheck()
+                else:
+                    return histcount
+            except ValueError:
+                print("Non-numerical entered. Please enter only 1 or 2.\n")
+                
+                # Returns the function to create a recursive function that will repeatedly ask for an input
+                # until an accepted one is entered
+                return histcheck()
         
         # Calls for and runs the histcheck function
         check = histcheck()
         
-        # For this entire method I'm not quite sure how to get both histograms to show the
-        # gaussian line when the user chooses to show both histograms at once.
+        ### For this entire method I'm not quite sure how to get both histograms to show the ###
+        ### gaussian line when the user chooses to show both histograms at once. ###
         
         # Creates a continuous loop that breaks only if an accepted input is given
         while True:                                                                                                         
             
             # Checks if the histcheck value is 1
-            if int(check) == 1:                                                                                             
+            if check == 1:                                                                                             
                 while True:
                     
                     # If the above is true, calls for user input with the given printed statement
@@ -414,13 +502,13 @@ class Graphs:
                         
                         # If any other input is entered, prints the given statement before going back to the start of
                         # the while loop
-                        print(f"Please input only {USERDATA.colname1} or {USERDATA.colname2}")   
+                        print(f"Please enter only {USERDATA.colname1} or {USERDATA.colname2}")   
                 
                 # Breaks out of the outer while loop                           
                 break
             
             # Checks if the histcheck instance is equal to 2
-            elif int(check) == 2:
+            elif check == 2:
                 
                 # Creates a subplot which is 1 graph wide and 2 graphs tall
                 fig, axes = plt.subplots(nrows = 2, ncols = 1)                        
@@ -444,12 +532,12 @@ class Graphs:
                 # Breaks out of the outer while loop
                 break
             else:
-                
+                pass
                 # If any other value is given for the histcheck instance, prints the given statement
-                print("Please input only 1 or 2.\n")
+                # print("Please input only 1 or 2.\n")
                 
-                # Runs the histcheck function again
-                histcheck()
+                # # Runs the histcheck function again
+                # histcheck()
 
         plt.show()
 
