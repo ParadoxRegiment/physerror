@@ -15,8 +15,8 @@ import scipy.stats as stats
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 import pandas as pd
-from dataclasses import dataclass
-from typing import Type
+from dataclasses import dataclass, field
+import seaborn as sns
 
 @dataclass
 class Data():
@@ -24,7 +24,7 @@ class Data():
         by the user and other classes, as well as their methods. There are many 
         attributes that calculate common statistical errors, constants, and 
         general error propagation methods, and one class Method to find, document, 
-        and delete any data points that exist outside the 2 * sigma outlier
+        and delete any data points that exist outside the standard 2 * sigma outlier
         "limit".
         
         Attributes:
@@ -63,34 +63,43 @@ class Data():
     
     #### Will update this soon-ish ####
     """
-    def __init__(self, user_x_data: np.ndarray, user_y_data: np.ndarray):
-        # Initializes various self-variables that will be reused both in this Class and
-        # the other Classes
-        self.x_data, self.y_data, self.df, self.colname1, self.colname2 = self.initfunc(user_x_data, user_y_data)
-        
-        # Checks that self.x_data is not an empty array. If it is, it does not calculate
+    user_x_data : np.ndarray
+    user_y_data : np.ndarray
+    _x_data : np.ndarray = field(init=False)
+    _y_data : np.ndarray = field(init=False)
+    _df : pd.DataFrame = field(init=False)
+    _colname1 : str = field(init=False)
+    _colname2 : str = field(init=False)
+    
+    def __post_init__(cls):
+        cls._x_data, cls._y_data, cls._df, \
+            cls._colname1, cls._colname2 = cls._initdata(cls.user_x_data, cls.user_y_data)
+        cls._initcalcs()
+
+    def _initcalcs(cls):
+        # Checks that cls._x_data is not an empty array. If it is, it does not calculate
         # any of the attributes inside the if statement
-        if len(self.x_data) != 0:
-            N = len(self.x_data)
-            self.delta = N * sum(self.x_data ** 2) - (sum(self.x_data)) ** 2
-            self.A = (((sum(self.x_data**2) * sum(self.y_data)) - (sum(self.x_data) * sum(self.x_data*self.y_data)))/self.delta)
-            self.B = (N * sum(self.x_data * self.y_data) - (sum(self.x_data) * sum(self.y_data))) / self.delta
-            self.x_mean = abs(np.mean(self.x_data))
-            self.x_best = sum(self.x_data)/N
-            self.y_mean = abs(np.mean(self.y_data))
-            self.y_best = sum(self.y_data)/N
-            self.sigma_y = np.sqrt((1/(N - 2)) * sum((self.y_data - self.A - (self.B * self.x_data)) ** 2))
-            self.sigma_A = self.sigma_y * np.sqrt(sum(self.x_data ** 2) / self.delta)
-            self.sigma_B = self.sigma_y * np.sqrt(N / self.delta)
-            self.sigma_x = np.sqrt(sum((self.x_data - self.x_mean) ** 2) / (N - 1))
-            self.sigma_x_best = np.sqrt((1/(N - 1)) * sum((self.x_data - self.x_mean) ** 2))
-            self.sigma_y_best = np.sqrt((1/(N - 1)) * sum((self.y_data - self.y_mean) ** 2))
-            self.sigma_x_mean = self.x_mean / np.sqrt(N)
-            self.sigma_y_mean = self.y_mean / np.sqrt(N)
-            self.sigma_frac = 1 / np.sqrt(2 * (N - 1))
+        if len(cls._x_data) != 0:
+            N = len(cls._x_data)
+            cls.delta = N*sum(cls._x_data**2) - (sum(cls._x_data))**2
+            cls.A = (((sum(cls._x_data**2)*sum(cls._y_data)) - (sum(cls._x_data)*sum(cls._x_data*cls._y_data)))/cls.delta)
+            cls.B = (N * sum(cls._x_data*cls._y_data) - (sum(cls._x_data)*sum(cls._y_data))) / cls.delta
+            cls.x_mean = abs(np.mean(cls._x_data))
+            cls.x_best = sum(cls._x_data)/N
+            cls.y_mean = abs(np.mean(cls._y_data))
+            cls.y_best = sum(cls._y_data)/N
+            cls.sigma_y = np.sqrt((1/(N - 2))*sum((cls._y_data - cls.A - (cls.B * cls._x_data))**2))
+            cls.sigma_A = cls.sigma_y*np.sqrt(sum(cls._x_data**2)/cls.delta)
+            cls.sigma_B = cls.sigma_y*np.sqrt(N/cls.delta)
+            cls.sigma_x = np.sqrt(sum((cls._x_data - cls.x_mean)**2)/(N - 1))
+            cls.sigma_x_best = np.sqrt((1/(N - 1))*sum((cls._x_data - cls.x_mean)**2))
+            cls.sigma_y_best = np.sqrt((1/(N - 1))*sum((cls._y_data - cls.y_mean)**2))
+            cls.sigma_x_mean = cls.x_mean/np.sqrt(N)
+            cls.sigma_y_mean = cls.y_mean/np.sqrt(N)
+            cls.sigma_frac = 1/np.sqrt(2 * (N - 1))
     
     # Initializes and returns the data that will be reused
-    def initfunc(self, xdata = np.arange(5) + 1, ydata = np.arange(5) + 1):
+    def _initdata(cls, xdata = np.arange(5) + 1, ydata = np.arange(5) + 1):
         """ Callable but largely useless if done so. Used to read in a csv if
             the user so wishes, store data and their user-inputed names, then
             returns that data back to the line where it was called. It is only
@@ -163,15 +172,15 @@ class Data():
         # Prints out the df for the user to see
         print(datafile)
         
-        # Returns the given variables into the Class' self-variables
+        # Returns the given variables into the Class' cls-variables
         return x_data, y_data, datafile, colname1, colname2
     
     
     ##### Will do docstring documentation later #####
-    def outlier(self):
+    def outlier(cls):
         """ A method that creates two empty arrays then searches the
-            self.x_data and self.y_data arrays for values that are outside
-            the standard 2
+            cls.x_data and cls.y_data arrays for values that are outside
+            the standard 2 * sigma outlier "limit".
 
             Returns:
                 x_outliers -> np.ndarray
@@ -186,8 +195,8 @@ class Data():
         """
         
         # New x_data and y_data variables for ease of use
-        x_data = self.x_data
-        y_data = self.y_data
+        x_data = cls._x_data
+        y_data = cls._y_data
         
         # Immediately exits the program if the x_data or y_data are somehow empty arrays
         if np.size(x_data) == 0 or np.size(y_data) == 0:
@@ -207,7 +216,7 @@ class Data():
         for row in x_data:
             
             # Checks if the row value is greater than the mean + 2*sigma
-            if row > (self.x_mean + 2 * self.sigma_x):      
+            if row > (cls.x_mean + 2 * cls.sigma_x):      
                 
                 # If above is true, inserts the row value into the j cell of x_outliers
                 x_outliers[j] = int(row)   
@@ -219,7 +228,7 @@ class Data():
                 x_data = np.delete(x_data, i)               
                 
             # Checks if the row value is less than the mean - 2*sigma
-            elif row < (self.x_mean - 2 * self.sigma_x):    
+            elif row < (cls.x_mean - 2*cls.sigma_x):    
                 
                 # If above is true, inserts the row value into the j cell of x_outliers
                 x_outliers[j] = int(row)                    
@@ -237,7 +246,7 @@ class Data():
         for row in y_data:                                  
             
             # Checks if the row value is greater than the mean + 2*sigma
-            if row > (self.y_mean + 2 * self.sigma_y):      
+            if row > (cls.y_mean + 2*cls.sigma_y):      
                 
                 # If above is true, inserts the row value into the l cell of y_outliers
                 y_outliers[l] = int(row)                    
@@ -249,7 +258,7 @@ class Data():
                 y_data = np.delete(y_data, k)               
             
             # Checks if the row value is less than the mean - 2*sigma
-            elif row < (self.y_mean - 2 * self.sigma_y):    
+            elif row < (cls.y_mean - 2*cls.sigma_y):    
                 
                 # If above is true, inserts the row value into the l cell of y_outliers
                 y_outliers[l] = int(row)                    
@@ -284,21 +293,21 @@ class Data():
         return x_outliers, y_outliers
 
 class Graphs:
-    """ Allows the user to create various graphs from the userdata
-        pulled from Data.
+    """ Allows the user to create various graphs from the user_data
+        pulled from Data. There is no __init__ method for this Class.
     """
     
-    def linreg(USERDATA : Type[Data], gtitle = "graph"):
+    def linreg(user_data : Data, gtitle = "Graph"):
         """ Uses the given x_data and y_data arrays to create a linear
             regression plot.
             
             Parameters:
-                USERDATA : Class Instance
-                    Requires the user to pass in an object instance of
+                user_data : Data
+                    Requires the user to pass in an instance of
                     Data to make use of the user's data.
                     
                 gtitle : str [optional]
-                    The desired graph title. is initalized to "graph"
+                    The desired graph title. Defaults to "Graph".
             
             Returns:
                 plt.show()
@@ -307,8 +316,8 @@ class Graphs:
         """
         
         # New x_data and y_data for ease of use
-        x_data = USERDATA.x_data                                
-        y_data = USERDATA.y_data
+        x_data = user_data._x_data                                
+        y_data = user_data._y_data
         
         # Sets the figure's title to the default (or passed in) graph title
         plt.title(gtitle, fontsize = 11)                        
@@ -317,22 +326,22 @@ class Graphs:
         plt.plot(x_data, y_data, 'o')                           
         
         # Sets the figure's xlabel to the user's entered x_data name
-        plt.xlabel(USERDATA.colname1, fontsize = 11)            
+        plt.xlabel(user_data._colname1, fontsize = 11)            
         
         # Sets the figure's xlabel to the user's entered y_data name
-        plt.ylabel(USERDATA.colname2, fontsize = 11)            
+        plt.ylabel(user_data._colname2, fontsize = 11)            
         
         # Adds the linear regression line to the plot
-        plt.plot(x_data, USERDATA.A + USERDATA.B * x_data)      
+        plt.plot(x_data, user_data.A + user_data.B * x_data)      
         
         # Displays the linear regression plot
         plt.show()                                              
         
     ##### This method is currently being integrated into datahist
     ##### and will be officially removed upon completion.
-    # def standdistgraph(self, gtitle = "graph"):
-    #     x_data = userdata.x_data
-    #     y_data = userdata.y_data
+    # def standdistgraph(cls, gtitle = "graph"):
+    #     x_data = user_data._x_data
+    #     y_data = user_data._y_data
         
     #     gdata = x_data
 
@@ -345,18 +354,18 @@ class Graphs:
     #     plt.title(gtitle)
     #     plt.show()
     
-    def errbargraph(USERDATA : Type[Data], gtitle = "graph"):
+    def errbargraph(user_data : Data, gtitle = "Graph"):
         """ Uses the given dataframe built from x_data and y_data during
             initalization to create an error bar plot, making use of
             the sigma_x value as the constant error.
             
             Parameters:
-                USERDATA : Class Instance
-                    Requires the user to pass in an object instance of
+                user_data : Data
+                    Requires the user to pass in an instance of
                     Data to make use of the user's data.
                     
                 gtitle : str [optional]
-                    The desired graph title. is initalized to "graph"
+                    The desired graph title. Defaults to "Graph".
             
             Returns:
                 plt.show()
@@ -365,30 +374,30 @@ class Graphs:
         """
         
         # New df for ease of use
-        df = USERDATA.df                                                                    
+        df = user_data._df                                                                    
         
         # Creates an errorbar graph out of the given df data. Sets x to the y_data and y
         # to the x_data on an assumption that the y_data is the independent variable
-        # yerr is set to the userdata's sigma_x
-        df.plot(x = USERDATA.colname2, y = USERDATA.colname1,                               
-                xlabel = USERDATA.colname2, ylabel = USERDATA.colname1, title = gtitle,
-                linestyle = "", marker = ".", yerr = USERDATA.sigma_x,
+        # yerr is set to the user_data's sigma_x
+        df.plot(x = user_data._colname2, y = user_data._colname1,                               
+                xlabel = user_data._colname2, ylabel = user_data._colname1, title = gtitle,
+                linestyle = "", marker = ".", yerr = user_data.sigma_x,
                 capthick = 1, ecolor = "red", linewidth = 1)
         plt.show()
     
-    def datahist(USERDATA : Type[Data], gtitle = "graph"):
+    def datahist(user_data : Data, gtitle = "Graph"):
         """ Uses the given dataframe built from x_data and y_data during
             initalization to create one or two histograms. There is also
             the option to turn the graphs into standard distribution
             graphs (currently a WIP).
         
             Parameters:
-                USERDATA : Class Instance
-                    Requires the user to pass in an object instance of
+                user_data : Data
+                    Requires the user to pass in an instance of
                     Data to make use of the user's data.
                     
                 gtitle : str [optional]
-                    The desired graph title. is initalized to "graph"
+                    The desired graph title. Defaults to "Graph".
             
             Returns:
                 plt.show()
@@ -396,7 +405,7 @@ class Graphs:
                     histogram(s).
         """
         # New df for ease of use
-        datafile = USERDATA.df                                                                          
+        datafile = user_data._df                                                                          
         
         # Initialized to the df's columns array for future use
         columns = datafile.columns                                                                      
@@ -415,9 +424,9 @@ class Graphs:
                 # Creates an x-axis array of 100 values
                 x = np.linspace(xmin, xmax, 100)                                                        
                 
-                # Calls the scipy.stats.pdf method with x as the data, userdata x_mean as the mean,
-                # and userdata sigma_x as the scale
-                p = stats.norm.pdf(x, USERDATA.x_mean, USERDATA.sigma_x)                                
+                # Calls the scipy.stats.pdf method with x as the data, user_data x_mean as the mean,
+                # and user_data sigma_x as the scale
+                p = stats.norm.pdf(x, user_data.x_mean, user_data.sigma_x)                                
                 
                 # Creates a graph with x on the x-axis and p on the y-axis
                 plt.plot(x, p, 'k', linewidth = 2)                                                      
@@ -429,7 +438,8 @@ class Graphs:
             else:
                 
                 # Runs the given print statement if anything other than yes or no is given
-                print("Unknown input, assuming 'no'.")                                                  
+                print("Unknown input, assuming 'no'.")
+                pass
         
         # Internal check function used to repeatedly ask for an input if an unaccepted one is given
         def histcheck():                                                                           
@@ -471,12 +481,12 @@ class Graphs:
                 while True:
                     
                     # If the above is true, calls for user input with the given printed statement
-                    histnum = input(f"Which dataset would you like to use? {USERDATA.colname1} or {USERDATA.colname2}: ")   
+                    histnum = input(f"Which dataset would you like to use? {user_data._colname1} or {user_data._colname2}: ")   
                     
                     # Checks if the user input is equivalent to colname1
-                    if histnum == USERDATA.colname1:                                                                        
+                    if histnum == user_data._colname1:                                                                        
                         
-                        # If the above is true, creates a histogram from the first column of the userdata DataFrame
+                        # If the above is true, creates a histogram from the first column of the user_data DataFrame
                         datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,                              
                                                 column = columns[0], color = 'green', density = True)
                         
@@ -487,9 +497,9 @@ class Graphs:
                         break
                     
                     # Checks if the user input is equivalent to colname2
-                    elif histnum == USERDATA.colname2:                                                                      
+                    elif histnum == user_data._colname2:                                                                      
                         
-                        # If the above is true,  creates histogram from the second column of the userdata DataFrame
+                        # If the above is true,  creates histogram from the second column of the user_data DataFrame
                         datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,                              
                                                 column = columns[1], color = 'green', density = True)
                         
@@ -502,7 +512,7 @@ class Graphs:
                         
                         # If any other input is entered, prints the given statement before going back to the start of
                         # the while loop
-                        print(f"Please enter only {USERDATA.colname1} or {USERDATA.colname2}")   
+                        print(f"Please enter only {user_data._colname1} or {user_data._colname2}")   
                 
                 # Breaks out of the outer while loop                           
                 break
@@ -532,16 +542,98 @@ class Graphs:
                 # Breaks out of the outer while loop
                 break
             else:
-                pass
                 # If any other value is given for the histcheck instance, prints the given statement
-                # print("Please input only 1 or 2.\n")
-                
-                # # Runs the histcheck function again
-                # histcheck()
+                print("Invalid value detected. Terminating program.")
+                exit()
 
         plt.show()
+    
+    def sctrplot(user_data: Data, gtitle = "Graph", marktype = "D", markc = 'c', markedge = 'k'):
+        """ Uses the given x_data and y_data to create a scatter plot
+            via matplot.pyplot's scatter method. Customization options
+            are available, similar to the original pyplot method.
 
-# External function that can be called by the user if they wish to. Is used only inside the Data class
+            Parameters:
+                user_data : Data
+                    Requires the user to pass in an instance of
+                    Data to make use of the user's data.
+                    
+                gtitle : str [optional]
+                    The desired graph title. Defaults to "Graph".
+                    
+                marktype : str [optional]
+                    The desired marker style. Defaults to "D".
+                    See link for all available matplotlib markers:
+                    https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers
+                    
+                markc : str [optional]
+                    The desired marker color. Defaults to 'c'.
+                    See link for all matplotlob colors:
+                    https://matplotlib.org/stable/gallery/color/named_colors.html
+                    
+                markedge : str [optional]
+                    The desired marker edge color. Defaults to 'k'.
+                    See link for all matplotlob colors:
+                    https://matplotlib.org/stable/gallery/color/named_colors.html
+        """
+        
+        # Local instances of user_data._x_data and user_data._y_data for ease of use
+        x_data = user_data._x_data
+        y_data = user_data._y_data
+        
+        # Sets a new pyplot figure with the 'constrained' layout
+        plt.figure(num = 1, layout = 'constrained')
+        
+        # Generates a scatter plot using the given x_data for x and y_data for y
+        # Optional customization options can be used to change the output graph
+        plt.scatter(x = x_data, y = y_data, marker = marktype, c = markc, edgecolors = markedge)
+        
+        # Pulls user_data colname1 and colname2 for the x-axis label and
+        # y-axis label respectively.
+        plt.xlabel(user_data._colname1)
+        plt.ylabel(user_data._colname2)
+        
+        # Uses the passed in gtitle argument to set the plot's title
+        plt.title(gtitle)
+        
+        print("\nDisplaying graph using user's data...")
+        
+        # Displays the generated plot
+        plt.show()
+    
+    def werr(user_data: Data, gtitle = "Graph"):
+        exit()
+        #### Will be used to generate a weighted error bar graph ####
+    
+    def resid(user_data: Data, gtitle = "Graph"):
+        """ Uses user_data._df to create a residuals scatter plot
+            via the seaborn sns.residplot method. The graph's
+            title can optionally be customized.
+
+            Parameters:
+                user_data : Data
+                    Requires the user to pass in an instance of
+                    Data to make use of the user's data.
+                    
+                gtitle : str [optional]
+                    The desired graph title. Defaults to "Graph".
+        """
+        
+        # Sets a new pyplot figure
+        plt.figure(num = 1)
+        
+        # Generates a residual scatter plot with the DataFrame created from
+        # the user's data. Sets x and y labels to user_data._colname1
+        # and user_data._colname2 respectively
+        sns.residplot(data = user_data._df, x = user_data._colname1, y = user_data._colname2)
+        
+        # Sets the plot's title to the passed in gtitle argument
+        plt.title(gtitle)
+        
+        # Displays the generated plot
+        plt.show()
+
+# External function that can be called by the user if they wish to. Is used only inside Data
 def csvreader()-> np.ndarray:
     print("Please choose a csv file:")
     tk = Tk()
@@ -571,6 +663,8 @@ def csvreader()-> np.ndarray:
         # Assumes given data is for the x_data and passes it into the x_data variable
         print("csv read into x_data")
         x_data = dataarray
+        print("Note: y_data set to np.zeros_like(x_data)")
+        y_data = np.zeros_like(x_data)
     
     # Checks if the array's dimensions are greater than 1
     elif np.ndim(dataarray) > 1:
