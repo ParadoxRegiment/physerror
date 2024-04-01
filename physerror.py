@@ -336,23 +336,6 @@ class Graphs:
         
         # Displays the linear regression plot
         plt.show()                                              
-        
-    ##### This method is currently being integrated into datahist
-    ##### and will be officially removed upon completion.
-    # def standdistgraph(cls, gtitle = "graph"):
-    #     x_data = user_data._x_data
-    #     y_data = user_data._y_data
-        
-    #     gdata = x_data
-
-    #     plt.hist(gdata, bins = len(gdata), density = True, alpha = 0.6,
-    #              color = 'c', align = 'mid')
-    #     xmin, xmax = plt.xlim()
-    #     x = np.linspace(xmin, xmax, 100)
-    #     p = stats.norm.pdf(x, calcsclass.x_mean, calcsclass.sigma_x)
-    #     plt.plot(x, p, 'k', linewidth = 2)
-    #     plt.title(gtitle)
-    #     plt.show()
     
     def errbargraph(user_data : Data, gtitle = "Graph"):
         """ Uses the given dataframe built from x_data and y_data during
@@ -600,10 +583,6 @@ class Graphs:
         
         # Displays the generated plot
         plt.show()
-    
-    def werr(user_data: Data, gtitle = "Graph"):
-        exit()
-        #### Will be used to generate a weighted error bar graph ####
     
     def resid(user_data: Data, gtitle = "Graph"):
         """ Uses user_data._df to create a residuals scatter plot
