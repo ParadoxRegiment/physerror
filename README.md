@@ -4,13 +4,40 @@ physerror is an educational/support module written by Alexander Ritzie for the u
 It was originally created for the BPHYS 231 Intro to Experimental Physics class at University of Washington
 Bothell.
 
-If you are new to coding, look below under [Usage](#usage) and [Examples](#examples) for how to initialize
+If you are new to coding, look below under [Examples](#examples) and [Usage](#usage) for how to load
 your data, pull calculated values, and generate graphs.
 
 ## Installation
 
 Download the __physerror.py__ file and save it in the same directory as your working directory. Use
 `import physerror as phyerr` to import the module into your file.
+
+## Examples
+```python
+import numpy as np
+import physerror as phyerr
+
+# Loading data
+x_1 = np.arange(5)
+y_1 = np.arange(5)
+exp_data = phyerr.Data(x_1, y_1)
+
+# Finding and printing outliers
+x_out, y_out = exp_data.outlier()
+print(x_out, "\n", y_out)
+
+# 
+
+# Generating a linear regression graph
+phyerr.Graphs.linreg(exp_data)
+### Once it's done running, the method automatically
+### outputs a plotted graph
+
+# Generating a histogram plot
+phyerr.Graphs.datahist(exp_data)
+### Once it's done running, the method automatically
+### outputs a plotted graph
+```
 
 ## Usage
 
@@ -54,33 +81,6 @@ phyerr.Graphs.resid()
 # to some students who would like to easily split their .csv files into
 # arrays.
 phyerr.csvreader()
-```
-
-## Examples
-```python
-import numpy as np
-import physerror as phyerr
-
-# Initializing data
-x_1 = np.arange(5)
-y_1 = np.arange(5)
-exp_data = phyerr.Data(x_1, y_1)
-
-# Finding and printing outliers
-x_out, y_out = exp_data.outlier()
-print(x_out, "\n", y_out)
-
-# 
-
-# Generating a linear regression graph
-phyerr.Graphs.linreg(exp_data)
-### Once it's done running, the method automatically
-### outputs a plotted graph
-
-# Generating a histogram plot
-phyerr.Graphs.datahist(exp_data)
-### Once it's done running, the method automatically
-### outputs a plotted graph
 ```
 
 ## Contributing
