@@ -27,41 +27,51 @@ class Data():
     and delete any data points that exist outside the standard 2 * sigma outlier
     "limit".
         
-        Attributes:
-            delta : float
-                []
-            A : float
-                []
-            B : float
-                []
-            x_mean : float
-                [] 
-            x_best : float
-                []
-            y_mean : float
-                []
-            y_best : float
-                [] 
-            sigma_y : float
-                []
-            sigma_A : float
-                []
-            sigma_B : float
-                []
-            sigma_x : float
-                []
-            sigma_x_best : float
-                []
-            sigma_y_best : float
-                []
-            sigma_x_mean : float
-                []
-            sigma_y_mean : float
-                []
-            sigma_frac : float
-                []
+    Attributes
+    ----------
+    delta : float
+        []
+    A : float
+        []
+    B : float
+        []
+    x_mean : float
+        [] 
+    x_best : float
+        []
+    y_mean : float
+        []
+    y_best : float
+        [] 
+    sigma_y : float
+        []
+    sigma_A : float
+        []
+    sigma_B : float
+        []
+    sigma_x : float
+        []
+    sigma_x_best : float
+        []
+    sigma_y_best : float
+        []
+    sigma_x_mean : float
+        []
+    sigma_y_mean : float
+        []
+    sigma_frac : float
+        []
     
-    #### Will update this soon-ish ####
+    Parameters
+    ----------
+    user_x_data : np.ndarray
+        []
+    user_y_data : np.ndarray
+        []
+    
+    Note
+    ----
+    Will update this soon-ish
     """
     user_x_data : np.ndarray
     user_y_data : np.ndarray
@@ -107,34 +117,36 @@ class Data():
         returns that data back to the line where it was called. It is only
         used inside the __init__ function of this class.
             
-            Parameters:
-                xdata : np.ndarray
-                    The given x data. As it is used, it is the "user_x_data"
-                    passed in at the time of initialization.
-                
-                ydata : np.ndarray
-                    The given y data. As it is used, it is the "user_y_data"
-                    pass in at the time of initialization.
+        Parameters
+        ----------
+        xdata : np.ndarray
+            The given x data. As it is used, it is the "user_x_data"
+            passed in at the time of initialization.
         
-            Returns:
-                x_data -> np.ndarray
-                    The x_data array created from either the passed-in
-                    user_x_data or the csv file that was read in by the user.
-                
-                y_data -> np.ndarray
-                    The y_data array created from either the passed-in
-                    user_y_data or the csv file that was read in by the user.
-                
-                datafile -> pd.DataFrame
-                    The pandas DataFrame created from either the passed-in
-                    user_x_data and user_y_data or the csv file that was
-                    read in by the user.
-                
-                colname1 -> str
-                    The name entered by the user for x_data.
-                
-                colname2 -> str
-                    The name entered by the user for y_data.
+        ydata : np.ndarray
+            The given y data. As it is used, it is the "user_y_data"
+            pass in at the time of initialization.
+    
+        Returns
+        -------
+        np.ndarray
+            The x_data array created from either the passed-in
+            user_x_data or the csv file that was read in by the user.
+        
+        np.ndarray
+            The y_data array created from either the passed-in
+            user_y_data or the csv file that was read in by the user.
+        
+        pd.DataFrame
+            The pandas DataFrame created from either the passed-in
+            user_x_data and user_y_data or the csv file that was
+            read in by the user.
+        
+        str
+            The name entered by the user for x_data.
+        
+        str
+            The name entered by the user for y_data.
         """
 
         readcsv = input("Would you like to read in a CSV? Y/N\n")
@@ -184,16 +196,17 @@ class Data():
         cls.x_data and cls.y_data arrays for values that are outside
         the standard 2 * sigma outlier "limit".
 
-            Returns:
-                x_outliers -> np.ndarray
-                    An array that contains either the outliers that were found
-                    in the user's x_data, or a string stating no outliers were
-                    found.
-                
-                y_outliers -> np.ndarray
-                    An array that contains either the outliers that were found
-                    in the user's y_data, or a string stating no outliers were
-                    found.
+        Returns
+        -------
+        np.ndarray
+            An array that contains either the outliers that were found
+            in the user's x_data, or a string stating no outliers were
+            found.
+        
+        np.ndarray
+            An array that contains either the outliers that were found
+            in the user's y_data, or a string stating no outliers were
+            found.
         """
         
         # New x_data and y_data variables for ease of use
@@ -303,18 +316,20 @@ class Graphs:
         """ Uses the given x_data and y_data arrays to create a linear
             regression plot.
             
-            Parameters:
-                user_data : Data
-                    Requires the user to pass in an instance of
-                    Data to make use of the user's data.
+            Parameters
+            ----------
+            user_data : Data
+                Requires the user to pass in an instance of
+                Data to make use of the user's data.
                     
-                gtitle : str [optional]
-                    The desired graph title. Defaults to "Graph".
+            gtitle : str, optional
+                The desired graph title. Defaults to "Graph".
             
-            Returns:
-                plt.show()
-                    Opens an external window that shows the linear
-                    regression plot of the given data.
+            Returns
+            -------
+            plt.show()
+                Opens an external window that shows the linear
+                regression plot of the given data.
         """
         
         # New x_data and y_data for ease of use
@@ -344,18 +359,20 @@ class Graphs:
             initalization to create an error bar plot, making use of
             the sigma_x value as the constant error.
             
-            Parameters:
-                user_data : Data
-                    Requires the user to pass in an instance of
-                    Data to make use of the user's data.
-                    
-                gtitle : str [optional]
-                    The desired graph title. Defaults to "Graph".
+            Parameters
+            ----------
+            user_data : Data
+                Requires the user to pass in an instance of
+                Data to make use of the user's data.
+                
+            gtitle : str, optional
+                The desired graph title. Defaults to "Graph".
             
-            Returns:
-                plt.show()
-                    Opens an external window that displays the
-                    error bar graph.
+            Returns
+            -------
+            plt.show()
+                Opens an external window that displays the
+                error bar graph.
         """
         
         # New df for ease of use
@@ -376,18 +393,20 @@ class Graphs:
             the option to turn the graphs into standard distribution
             graphs (currently a WIP).
         
-            Parameters:
-                user_data : Data
-                    Requires the user to pass in an instance of
-                    Data to make use of the user's data.
-                    
-                gtitle : str [optional]
-                    The desired graph title. Defaults to "Graph".
+            Parameters
+            ----------
+            user_data : Data
+                Requires the user to pass in an instance of
+                Data to make use of the user's data.
+                
+            gtitle : str, optional
+                The desired graph title. Defaults to "Graph".
             
-            Returns:
-                plt.show()
-                    Opens an external window that displays the
-                    histogram(s).
+            Returns
+            -------
+            plt.show()
+                Opens an external window that displays the
+                histogram(s).
         """
         # New df for ease of use
         datafile = user_data._df                                                                          
@@ -550,28 +569,34 @@ class Graphs:
             via matplot.pyplot's scatter method. Customization options
             are available, similar to the original pyplot method.
 
-            Parameters:
-                user_data : Data
-                    Requires the user to pass in an instance of
-                    Data to make use of the user's data.
-                    
-                gtitle : str [optional]
-                    The desired graph title. Defaults to "Graph".
-                    
-                marktype : str [optional]
-                    The desired marker style. Defaults to "D".
-                    See link for all available matplotlib markers:
-                    https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers
-                    
-                markc : str [optional]
-                    The desired marker color. Defaults to 'c'.
-                    See link for all matplotlob colors:
-                    https://matplotlib.org/stable/gallery/color/named_colors.html
-                    
-                markedge : str [optional]
-                    The desired marker edge color. Defaults to 'k'.
-                    See link for all matplotlob colors:
-                    https://matplotlib.org/stable/gallery/color/named_colors.html
+            Parameters
+            ----------
+            user_data : Data
+                Requires the user to pass in an instance of
+                Data to make use of the user's data.
+                
+            gtitle : str, optional
+                The desired graph title. Defaults to "Graph".
+                
+            marktype : str, optional
+                The desired marker style. Defaults to "D".
+                See link for all available matplotlib markers:
+                https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers
+                
+            markc : str, optional
+                The desired marker color. Defaults to 'c'.
+                See link for all matplotlob colors:
+                https://matplotlib.org/stable/gallery/color/named_colors.html
+                
+            markedge : str, optional
+                The desired marker edge color. Defaults to 'k'.
+                See link for all matplotlob colors:
+                https://matplotlib.org/stable/gallery/color/named_colors.html
+            
+            Returns
+            -------
+            plt.show()
+                Opens an external window that displays the scatter plot.
         """
         
         # Local instances of user_data._x_data and user_data._y_data for ease of use
@@ -603,13 +628,19 @@ class Graphs:
             via the seaborn sns.residplot method. The graph's
             title can optionally be customized.
 
-            Parameters:
-                user_data : Data
-                    Requires the user to pass in an instance of
-                    Data to make use of the user's data.
-                    
-                gtitle : str [optional]
-                    The desired graph title. Defaults to "Graph".
+            Parameters
+            ----------
+            user_data : Data
+                Requires the user to pass in an instance of
+                Data to make use of the user's data.
+                
+            gtitle : str, optional
+                The desired graph title. Defaults to "Graph".
+            
+            Returns
+            -------
+            plt.show()
+                Opens an external window that displays the residuals scatter plot.
         """
         
         # Sets a new pyplot figure
