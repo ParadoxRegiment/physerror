@@ -1,192 +1,143 @@
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<html lang="en" data-content_root="./">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to physerror’s documentation! &mdash; physerror  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
-    <title>Welcome to physerror’s documentation! &#8212; physerror  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
-    <script src="_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
+    <link rel="next" title="Getting Started" href="getstart.html" /> 
+</head>
 
-  
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
           
+          
+          <a href="#" class="icon icon-home">
+            physerror
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+</ul>
 
-          <div class="body" role="main">
-            
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">physerror</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to physerror’s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="welcome-to-physerror-s-documentation">
-<h1>Welcome to physerror’s documentation!<a class="headerlink" href="#welcome-to-physerror-s-documentation" title="Link to this heading">¶</a></h1>
+<h1>Welcome to physerror’s documentation!<a class="headerlink" href="#welcome-to-physerror-s-documentation" title="Link to this heading"></a></h1>
 <p>physerror is an educational/support module written by Alexander Ritzie for the use of physics students.
 It was originally created for the BPHYS 231 Intro to Experimental Physics class at University of Washington
 Bothell.</p>
-<p>If you are new to coding, look below under <a class="reference internal" href="#examples">Examples</a> and <a class="reference internal" href="#usage">Usage</a> for how to load
+<p>If you are new to coding, look below under Examples and Usage for how to load
 your data, pull calculated values, and generate graphs.</p>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
-<p>Download the <cite>physerror.py</cite> file and save it in the same directory as your working directory. Use
-<code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">physerror</span> <span class="pre">as</span> <span class="pre">phyerr</span></code> to import the module into your file.</p>
-</section>
-<section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">physerror</span> <span class="k">as</span> <span class="nn">phyerr</span>
-
-<span class="c1"># Loading data</span>
-<span class="n">x_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">y_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">exp_data</span> <span class="o">=</span> <span class="n">phyerr</span><span class="o">.</span><span class="n">Data</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">y_1</span><span class="p">)</span>
-
-<span class="c1"># Finding and printing outliers</span>
-<span class="n">x_out</span><span class="p">,</span> <span class="n">y_out</span> <span class="o">=</span> <span class="n">exp_data</span><span class="o">.</span><span class="n">outlier</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">x_out</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">y_out</span><span class="p">)</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Generating a linear regression graph</span>
-<span class="n">phyerr</span><span class="o">.</span><span class="n">Graphs</span><span class="o">.</span><span class="n">linreg</span><span class="p">(</span><span class="n">exp_data</span><span class="p">)</span>
-<span class="c1">### Once it&#39;s done running, the method automatically</span>
-<span class="c1">### outputs a plotted graph</span>
-
-<span class="c1"># Generating a histogram plot</span>
-<span class="n">phyerr</span><span class="o">.</span><span class="n">Graphs</span><span class="o">.</span><span class="n">datahist</span><span class="p">(</span><span class="n">exp_data</span><span class="p">)</span>
-<span class="c1">### Once it&#39;s done running, the method automatically</span>
-<span class="c1">### outputs a plotted graph</span>
-</pre></div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getstart.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getstart.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getstart.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getstart.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getstart.html#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getstart.html#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#physerror.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#physerror.Graphs"><code class="docutils literal notranslate"><span class="pre">Graphs</span></code></a></li>
+</ul>
+</li>
+</ul>
 </div>
-</section>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">physerror</span> <span class="k">as</span> <span class="nn">phyerr</span>
-
-<span class="c1"># Initialization class that calculates standard error information</span>
-<span class="c1"># and must be passed into any Graphs method to work</span>
-<span class="n">phyerr</span><span class="o">.</span><span class="n">Data</span><span class="p">()</span>
-<span class="c1"># This method asks the user if they would like to read in a .csv file</span>
-<span class="c1"># If the user answers yes, a File Explorer window will open so you can</span>
-<span class="c1"># directly select the file rather than type in the path. Please be sure</span>
-<span class="c1"># to know where your .csv file is located if you wish to use it.</span>
-
-<span class="c1"># Returns outliers in the passed-in x data and y data</span>
-<span class="n">phyerr</span><span class="o">.</span><span class="n">Data</span><span class="o">.</span><span class="n">outlier</span><span class="p">()</span>
-
-<span class="c1"># Generates a linear regression graph using the data passed into</span>
-<span class="c1"># phyer.Data</span>
-<span class="n">phyerr</span><span class="o">.</span><span class="n">Graphs</span><span class="o">.</span><span class="n">linreg</span><span class="p">()</span>
-
-<span class="c1"># Generates a standard error bar point graph using the data passed</span>
-<span class="c1"># into phyer.Data</span>
-<span class="n">phyerr</span><span class="o">.</span><span class="n">Graphs</span><span class="o">.</span><span class="n">errbargraph</span><span class="p">()</span>
-
-<span class="c1"># Generates a histogram graph using the data passed into phyer.Data</span>
-<span class="c1"># The user can choose whether or not the method graphs only x_data</span>
-<span class="c1"># or both x_data and y_data, and if the histograms should have a</span>
-<span class="c1"># standard distrbution line</span>
-<span class="n">phyerr</span><span class="o">.</span><span class="n">Graphs</span><span class="o">.</span><span class="n">datahist</span><span class="p">()</span>
-
-<span class="c1"># Generates a scatter plot using the data passed into phyer.Data</span>
-<span class="n">phyerr</span><span class="o">.</span><span class="n">Graphs</span><span class="o">.</span><span class="n">sctrplot</span><span class="p">()</span>
-
-<span class="c1"># Generates a residuals scatter plot using the data passed into</span>
-<span class="c1"># phyer.Data</span>
-<span class="n">phyerr</span><span class="o">.</span><span class="n">Graphs</span><span class="o">.</span><span class="n">resid</span><span class="p">()</span>
-
-<span class="c1"># An extra method used to read a csv file into two arrays. Though</span>
-<span class="c1"># not necessarily useful for data or error analysis, it may be useful</span>
-<span class="c1"># to some students who would like to easily split their .csv files into</span>
-<span class="c1"># arrays.</span>
-<span class="n">phyerr</span><span class="o">.</span><span class="n">csvreader</span><span class="p">()</span>
-</pre></div>
-</div>
-</section>
 <section id="contributing">
-<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h2>
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
 <p>Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.</p>
 <p>Please make sure to update tests as appropriate.</p>
 </section>
 <section id="license">
-<h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
+<h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
 <p><a class="reference external" href="https://choosealicense.com/licenses/mit/">MIT</a></p>
 </section>
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getstart.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Alex Ritzie.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">physerror</a></h1>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &#169;2024, Alex Ritzie.
-      
-      |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.2.6</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
-      
-      |
-      <a href="_sources/index.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

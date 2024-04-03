@@ -21,11 +21,11 @@ import seaborn as sns
 @dataclass
 class Data():
     """ An initializer and container dataclass that is initialized and reused
-        by the user and other classes, as well as their methods. There are many 
-        attributes that calculate common statistical errors, constants, and 
-        general error propagation methods, and one class Method to find, document, 
-        and delete any data points that exist outside the standard 2 * sigma outlier
-        "limit".
+    by the user and other classes, as well as their methods. There are many 
+    attributes that calculate common statistical errors, constants, and 
+    general error propagation methods, and one class Method to find, document, 
+    and delete any data points that exist outside the standard 2 * sigma outlier
+    "limit".
         
         Attributes:
             delta : float
@@ -103,9 +103,9 @@ class Data():
     # Initializes and returns the data that will be reused
     def _initdata(cls, xdata = np.arange(5) + 1, ydata = np.arange(5) + 1):
         """ Callable but largely useless if done so. Used to read in a csv if
-            the user so wishes, store data and their user-inputed names, then
-            returns that data back to the line where it was called. It is only
-            used inside the __init__ function of this class.
+        the user so wishes, store data and their user-inputed names, then
+        returns that data back to the line where it was called. It is only
+        used inside the __init__ function of this class.
             
             Parameters:
                 xdata : np.ndarray
@@ -181,8 +181,8 @@ class Data():
     ##### Will do docstring documentation later #####
     def outlier(cls):
         """ A method that creates two empty arrays then searches the
-            cls.x_data and cls.y_data arrays for values that are outside
-            the standard 2 * sigma outlier "limit".
+        cls.x_data and cls.y_data arrays for values that are outside
+        the standard 2 * sigma outlier "limit".
 
             Returns:
                 x_outliers -> np.ndarray
