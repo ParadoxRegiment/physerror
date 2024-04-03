@@ -9,21 +9,20 @@ physerror is an educational/support module written by Alexander Ritzie for the u
 It was originally created for the BPHYS 231 Intro to Experimental Physics class at University of Washington
 Bothell.
 
-If you are new to coding, look below under :ref:`examples` and :ref:`usage` for how to load
+If you are new to coding, look below under Examples_ and Usage_ for how to load
 your data, pull calculated values, and generate graphs.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-.. role:: underline
-   :class: underline
+
 .. _install:
 
 Installation
 ------------
 
-Download the :underline:`physerror.py` file and save it in the same directory as your working directory. Use
+Download the `physerror.py` file and save it in the same directory as your working directory. Use
 ``import physerror as phyerr`` to import the module into your file.
 
 .. _examples:
