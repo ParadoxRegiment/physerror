@@ -16,7 +16,6 @@ your data, pull calculated values, and generate graphs.
    :maxdepth: 2
    :caption: Contents:
 
-
 .. _install:
 Installation
 ------------
