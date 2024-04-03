@@ -12,12 +12,6 @@ Bothell.
 If you are new to coding, look below under Examples_ and Usage_ for how to load
 your data, pull calculated values, and generate graphs.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-
-.. _install:
 
 Installation
 ------------
@@ -25,7 +19,6 @@ Installation
 Download the `physerror.py` file and save it in the same directory as your working directory. Use
 ``import physerror as phyerr`` to import the module into your file.
 
-.. _examples:
 
 Examples
 --------
@@ -56,7 +49,6 @@ Examples
       ### outputs a plotted graph
    
 
-.. _usage:
 
 Usage
 -----
@@ -103,7 +95,6 @@ Usage
       phyerr.csvreader()
 
 
-.. _contr:
 
 Contributing
 ------------
@@ -113,7 +104,6 @@ to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
-.. _lisc:
 
 License
 -------
