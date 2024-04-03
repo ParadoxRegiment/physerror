@@ -74,6 +74,8 @@ class Data():
     def __post_init__(cls):
         cls._x_data, cls._y_data, cls._df, \
             cls._colname1, cls._colname2 = cls._initdata(cls.user_x_data, cls.user_y_data)
+        cls.user_x_data = cls._x_data
+        cls.user_y_data = cls._y_data
         cls._initcalcs()
 
     def _initcalcs(cls):
@@ -396,30 +398,41 @@ class Graphs:
         stdcheck = input("Will this a standard distribution graph? Y/N ")
         
         # Internal function used to determine what type of histogram graph will be created
-        def stdcheckfunc():
+        def stdcheckfunc(ax = None, index = 0):
             
             # Checks if the user entered a yes(-adjecent) input
             if stdcheck.lower() == "y" or stdcheck.lower() == "yes":
                 
                 # Pulls the minimum and maximum for the x-axis from data later down
-                xmin, xmax = plt.xlim()                                                                 
-                
+                if index == 0:
+                    xmin = np.min(user_data.user_x_data)
+                    xmax = np.max(user_data.user_x_data)
+                    mean = user_data.x_mean
+                    sigma = user_data.sigma_x
+                else:
+                    xmin = np.min(user_data.user_y_data)
+                    xmax = np.max(user_data.user_y_data)
+                    mean = user_data.y_mean
+                    sigma = user_data.sigma_y
+
                 # Creates an x-axis array of 100 values
-                x = np.linspace(xmin, xmax, 100)                                                        
+                x = np.linspace(xmin, xmax, 100)
                 
                 # Calls the scipy.stats.pdf method with x as the data, user_data x_mean as the mean,
                 # and user_data sigma_x as the scale
-                p = stats.norm.pdf(x, user_data.x_mean, user_data.sigma_x)                                
+                p = stats.norm.pdf(x, mean, sigma)
                 
                 # Creates a graph with x on the x-axis and p on the y-axis
-                plt.plot(x, p, 'k', linewidth = 2)                                                      
+                if check == 1:
+                    plt.plot(x, p, 'k', linewidth = 2)
+                else:
+                    ax.plot(x, p, 'k', linewidth = 2)
                 plt.title(gtitle)
                 
             # Passes the if statement if the user entered a no(-adjecent) input
             elif stdcheck.lower() == "n" or stdcheck.lower() == "no":                                   
                 pass
             else:
-                
                 # Runs the given print statement if anything other than yes or no is given
                 print("Unknown input, assuming 'no'.")
                 pass
@@ -502,26 +515,27 @@ class Graphs:
             
             # Checks if the histcheck instance is equal to 2
             elif check == 2:
-                
                 # Creates a subplot which is 1 graph wide and 2 graphs tall
-                fig, axes = plt.subplots(nrows = 2, ncols = 1)                        
-                
-                # Attaches the data from the first column of the df to the top plot                                      
-                datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,
-                                        column = columns[0], color = 'green', ax = axes[0],
-                                        density = True)
-                
-                # Runs stdcheckfunc to create a standard distribution graph (if user entered yes earlier)
-                stdcheckfunc()
-                
-                # Attaches the data from the second column of the df to the bottom plot
-                datafile.hist(bins = len(datafile.axes[1]), grid = False, rwidth = .9,                                      
-                                        column = columns[1], color = 'c', ax = axes[1],
-                                        density = True)
-                
-                # Runs stdcheckfunc to create a standard distribution graph (if user entered yes earlier)
-                stdcheckfunc()
-                
+                fig, axes = plt.subplots(nrows = 2, ncols = 1)
+                colordict = {
+                    0 : 'g',
+                    1 : 'cyan'
+                }
+                for i in range(check):
+                    ax = axes[i]
+                    
+                    # Attaches the data from the first column of the df to the top plot                                      
+                    datafile.hist(bins = len(datafile.axes[i]), grid = False, rwidth = .9,
+                                            column = columns[i], color = colordict[i], ax = ax,
+                                            density = True)
+                    if i == 0:
+                        # Runs stdcheckfunc to create a standard distribution graph (if user entered yes earlier)
+                        stdcheckfunc(ax=ax, index = i)
+                    elif i == 1:
+                        stdcheckfunc(ax=ax, index = i)
+                        # Breaks out of the outer while loop
+                        break
+                    
                 # Breaks out of the outer while loop
                 break
             else:

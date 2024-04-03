@@ -24,6 +24,7 @@ Examples
 --------
 
 .. code-block:: python
+
       import numpy as np
       import physerror as phyerr
 
@@ -54,6 +55,7 @@ Usage
 -----
 
 .. code-block:: python
+      
       import physerror as phyerr
 
       # Initialization class that calculates standard error information
