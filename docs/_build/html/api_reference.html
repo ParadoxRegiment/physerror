@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; physerror  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Getting Started" href="getstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            physerror
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getstart.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#physerror.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#physerror.Data.outlier"><code class="docutils literal notranslate"><span class="pre">Data.outlier()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#physerror.Graphs"><code class="docutils literal notranslate"><span class="pre">Graphs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#physerror.Graphs.datahist"><code class="docutils literal notranslate"><span class="pre">Graphs.datahist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#physerror.Graphs.errbargraph"><code class="docutils literal notranslate"><span class="pre">Graphs.errbargraph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#physerror.Graphs.linreg"><code class="docutils literal notranslate"><span class="pre">Graphs.linreg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#physerror.Graphs.resid"><code class="docutils literal notranslate"><span class="pre">Graphs.resid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#physerror.Graphs.sctrplot"><code class="docutils literal notranslate"><span class="pre">Graphs.sctrplot()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">physerror</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api_reference.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-physerror">
+<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-physerror" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="physerror.Data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">physerror.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_x_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_y_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#physerror.Data" title="Link to this definition"></a></dt>
+<dd><p>An initializer and container dataclass that is initialized and reused
+by the user and other classes, as well as their methods. There are many
+attributes that calculate common statistical errors, constants, and
+general error propagation methods, and one class Method to find, document,
+and delete any data points that exist outside the standard 2 * sigma outlier
+“limit”.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>delta<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>A<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>B<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>x_mean<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>x_best<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>y_mean<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>y_best<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_y<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_A<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_B<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_x<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_x_best<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_y_best<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_x_mean<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_y_mean<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_frac<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>#### Will update this soon-ish ####</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="physerror.Data.outlier">
+<span class="sig-name descname"><span class="pre">outlier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#physerror.Data.outlier" title="Link to this definition"></a></dt>
+<dd><p>A method that creates two empty arrays then searches the
+cls.x_data and cls.y_data arrays for values that are outside
+the standard 2 * sigma outlier “limit”.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>x_outliers -&gt; np.ndarray</dt><dd><p>An array that contains either the outliers that were found
+in the user’s x_data, or a string stating no outliers were
+found.</p>
+</dd>
+<dt>y_outliers -&gt; np.ndarray</dt><dd><p>An array that contains either the outliers that were found
+in the user’s y_data, or a string stating no outliers were
+found.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="physerror.Graphs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">physerror.</span></span><span class="sig-name descname"><span class="pre">Graphs</span></span><a class="headerlink" href="#physerror.Graphs" title="Link to this definition"></a></dt>
+<dd><p>Allows the user to create various graphs from the user_data
+pulled from Data. There is no __init__ method for this Class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="physerror.Graphs.datahist">
+<span class="sig-name descname"><span class="pre">datahist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gtitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Graph'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#physerror.Graphs.datahist" title="Link to this definition"></a></dt>
+<dd><p>Uses the given dataframe built from x_data and y_data during
+initalization to create one or two histograms. There is also
+the option to turn the graphs into standard distribution
+graphs (currently a WIP).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_data</strong> – Data
+Requires the user to pass in an instance of
+Data to make use of the user’s data.</p></li>
+<li><p><strong>gtitle</strong> – str [optional]
+The desired graph title. Defaults to “Graph”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>plt.show()</dt><dd><p>Opens an external window that displays the
+histogram(s).</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="physerror.Graphs.errbargraph">
+<span class="sig-name descname"><span class="pre">errbargraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gtitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Graph'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#physerror.Graphs.errbargraph" title="Link to this definition"></a></dt>
+<dd><p>Uses the given dataframe built from x_data and y_data during
+initalization to create an error bar plot, making use of
+the sigma_x value as the constant error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_data</strong> – Data
+Requires the user to pass in an instance of
+Data to make use of the user’s data.</p></li>
+<li><p><strong>gtitle</strong> – str [optional]
+The desired graph title. Defaults to “Graph”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>plt.show()</dt><dd><p>Opens an external window that displays the
+error bar graph.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="physerror.Graphs.linreg">
+<span class="sig-name descname"><span class="pre">linreg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gtitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Graph'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#physerror.Graphs.linreg" title="Link to this definition"></a></dt>
+<dd><p>Uses the given x_data and y_data arrays to create a linear
+regression plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_data</strong> – Data
+Requires the user to pass in an instance of
+Data to make use of the user’s data.</p></li>
+<li><p><strong>gtitle</strong> – str [optional]
+The desired graph title. Defaults to “Graph”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>plt.show()</dt><dd><p>Opens an external window that shows the linear
+regression plot of the given data.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="physerror.Graphs.resid">
+<span class="sig-name descname"><span class="pre">resid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gtitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Graph'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#physerror.Graphs.resid" title="Link to this definition"></a></dt>
+<dd><p>Uses user_data._df to create a residuals scatter plot
+via the seaborn sns.residplot method. The graph’s
+title can optionally be customized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_data</strong> – Data
+Requires the user to pass in an instance of
+Data to make use of the user’s data.</p></li>
+<li><p><strong>gtitle</strong> – str [optional]
+The desired graph title. Defaults to “Graph”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="physerror.Graphs.sctrplot">
+<span class="sig-name descname"><span class="pre">sctrplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gtitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Graph'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marktype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'D'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'c'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markedge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'k'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#physerror.Graphs.sctrplot" title="Link to this definition"></a></dt>
+<dd><p>Uses the given x_data and y_data to create a scatter plot
+via matplot.pyplot’s scatter method. Customization options
+are available, similar to the original pyplot method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_data</strong> – Data
+Requires the user to pass in an instance of
+Data to make use of the user’s data.</p></li>
+<li><p><strong>gtitle</strong> – str [optional]
+The desired graph title. Defaults to “Graph”.</p></li>
+<li><p><strong>marktype</strong> – str [optional]
+The desired marker style. Defaults to “D”.
+See link for all available matplotlib markers:
+<a class="reference external" href="https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers">https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers</a></p></li>
+<li><p><strong>markc</strong> – str [optional]
+The desired marker color. Defaults to ‘c’.
+See link for all matplotlob colors:
+<a class="reference external" href="https://matplotlib.org/stable/gallery/color/named_colors.html">https://matplotlib.org/stable/gallery/color/named_colors.html</a></p></li>
+<li><p><strong>markedge</strong> – str [optional]
+The desired marker edge color. Defaults to ‘k’.
+See link for all matplotlob colors:
+<a class="reference external" href="https://matplotlib.org/stable/gallery/color/named_colors.html">https://matplotlib.org/stable/gallery/color/named_colors.html</a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getstart.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Alex Ritzie.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
