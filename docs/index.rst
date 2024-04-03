@@ -16,16 +16,14 @@ your data, pull calculated values, and generate graphs.
    :maxdepth: 2
    :caption: Contents:
 
-.. _install:
-Installation
-------------
 .. role:: underline
    :class: underline
+.. _install: Installation
+------------
 Download the :underline:`physerror.py` file and save it in the same directory as your working directory. Use
 ``import physerror as phyerr`` to import the module into your file.
 
-.. _examples:
-Examples
+.. _examples: Examples
 --------
 .. code-block:: python
       import numpy as np
