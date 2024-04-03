@@ -8,7 +8,7 @@ If you are new to coding, look below under [Examples](#examples) and [Usage](#us
 your data, pull calculated values, and generate graphs.
 
 ## Documentation
-To view all the documentation here as well as a full API reference, please visit the [Documentation Pages]('C:\Users\Alexander\Documents\GIT Repos\physerror\docs\_build\html\index.html')
+To view all the documentation here as well as a full API reference, please visit the [Documentation Pages](docs/_build/html/index.html)
 
 ## Installation
 
