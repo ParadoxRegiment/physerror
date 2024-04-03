@@ -7,6 +7,9 @@ Bothell.
 If you are new to coding, look below under [Examples](#examples) and [Usage](#usage) for how to load
 your data, pull calculated values, and generate graphs.
 
+## Documentation
+To view all the documentation here as well as a full API reference, please visit the [Documentation Pages]('C:\Users\Alexander\Documents\GIT Repos\physerror\docs\_build\html\index.html')
+
 ## Installation
 
 Download the __physerror.py__ file and save it in the same directory as your working directory. Use
