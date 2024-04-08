@@ -1,6 +1,6 @@
 # API Reference
 
-### *class* physerror.Data(user_x_data: ndarray, user_y_data: ndarray)
+## *class* physerror.Data(user_x_data: ndarray, user_y_data: ndarray)
 
 An initializer and container dataclass that is initialized and reused
 by the user and other classes, as well as their methods. There are many
@@ -9,6 +9,11 @@ general error propagation methods, and one class Method to find, document,
 and delete any data points that exist outside the standard 2 \* sigma outlier
 “limit”.
 
+* **Parameters:**
+  * **user_x_data** (*np.ndarray*) – []
+  * **user_y_data** (*np.ndarray*) – []
+
+### Attributes
 #### delta
 
 []
@@ -121,13 +126,10 @@ and delete any data points that exist outside the standard 2 \* sigma outlier
 * **Type:**
   float
 
-* **Parameters:**
-  * **user_x_data** (*np.ndarray*) – []
-  * **user_y_data** (*np.ndarray*) – []
-
 #### NOTE
 Will update this soon-ish
 
+### Methods
 #### outlier()
 
 A method that creates two empty arrays then searches the
@@ -142,11 +144,12 @@ the standard 2 \* sigma outlier “limit”.
     in the user’s y_data, or a string stating no outliers were
     found.
 
-### *class* physerror.Graphs
+## *class* physerror.Graphs
 
 Allows the user to create various graphs from the user_data
 pulled from Data. There is no \_\_init_\_ method for this Class.
 
+### Methods
 #### datahist(gtitle='Graph')
 
 Uses the given dataframe built from x_data and y_data during
