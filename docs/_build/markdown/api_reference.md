@@ -144,7 +144,7 @@ the standard 2 \* sigma outlier “limit”.
     in the user’s y_data, or a string stating no outliers were
     found.
 
-## *class* physerror.Graphs
+## *class* physerror.Graphs()
 
 Allows the user to create various graphs from the user_data
 pulled from Data. There is no \_\_init_\_ method for this Class.
