@@ -3,7 +3,7 @@
 #       Originally created for BPHYS 312 AU23       #
 #       at University of Washington - Bothell       #
 #                   GitHub Repo:                    #
-#    https://github.com/ParadoxRegiment/BPHYS231    #
+#    https://github.com/ParadoxRegiment/physerror   #
 #                                                   #
 #      Please direct any questions to my email:     #
 #            alexander.ritzie@gmail.com             #
@@ -12,6 +12,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import scipy.stats as stats
+from scipy.integrate import solve_ivp 
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 import pandas as pd
@@ -655,6 +656,105 @@ class Graphs:
         plt.title(gtitle)
         
         # Displays the generated plot
+        plt.show()
+        
+    def dbl_pend(theta_0 : float, phi_0 : float, theta_dot_0 = 0, phi_dot_0 = 0, anim_type = 0):
+        import matplotlib.animation as animation
+        gravity = 9.81      # m/s^2
+        
+        print('Program defaults to generating a point-mass double pendulum animation.\n'
+              'If you want a bar-mass double pendulum animation, make sure anim_type = 1\n')
+        
+        len_1 = float(input('Enter the length of the top pendulum in meters: '))
+        len_2 = float(input('Enter the length of the bottom pendulum in meters: '))
+        tot_len = len_1 + len_2
+        mass_1 = float(input('Enter the mass of the top pendulum in kg: '))
+        mass_2 = float(input('Enter the mass of the bottom pendulum in kg: '))
+        time_lim = float(input('Enter the time limit in seconds: '))
+        
+        def point_mass(time, state):
+            dydx = np.zeros_like(state)
+            
+            dydx[0] = state[1]
+            
+            ang_delta = state[2] - state[0]
+            den1 = (mass_1 + mass_2) * len_1 - mass_2 * len_1 * np.cos(ang_delta) * np.cos(ang_delta)
+            
+            dydx[1] = ((mass_2 * len_1 * state[1] * state[1] * np.sin(ang_delta) * np.cos(ang_delta) + mass_2 * gravity * np.sin(state[2]) * np.cos(ang_delta)
+                        + mass_2 * len_2 * state[3] * state[3] * np.sin(ang_delta) - (mass_1 + mass_2) * gravity * np.sin(state[0])) / den1)
+            
+            dydx[2] = state[3]
+
+            den2 = (len_2/len_1) * den1
+            dydx[3] = ((- mass_2 * len_2 * state[3] * state[3] * np.sin(ang_delta) * np.cos(ang_delta) + (mass_1 + mass_2) * gravity * np.sin(state[0]) * np.cos(ang_delta)
+                        - (mass_1 + mass_2) * len_1 * state[1] * state[1] * np.sin(ang_delta) - (mass_1 + mass_2) * gravity * np.sin(state[2])) / den2)
+            
+            return dydx
+
+        def bar_mass(time, state):
+            dydx = np.zeros_like(state)
+            
+            dydx[0] = state[1]
+            
+            ang_delta = state[2] - state[0]
+            mu = 1 + (mass_1/mass_2)
+            den1 = len_1*(mu - np.cos(ang_delta)**2)
+
+            dydx[1] = (gravity*(np.sin(state[2])*np.cos(ang_delta) - mu*np.sin(state[0])) -
+                        (len_2*(state[3]**2) + len_1*(state[1]**2)*np.cos(ang_delta))*np.sin(ang_delta))/den1
+            
+            dydx[2] = state[3]
+
+            den2 = (len_2/len_1) * den1
+            dydx[3] = (gravity*mu*(np.sin(state[0])*np.cos(ang_delta) - np.sin(state[2])) -
+                        (mu*len_1*(state[1]**2) + len_2*(state[3]**2)*np.cos(ang_delta))*np.sin(ang_delta))/den2
+            
+            return dydx
+        
+        state = np.radians([theta_0, theta_dot_0, phi_0, phi_dot_0])
+        dt = 0.03
+        time = np.arange(0, time_lim, dt)
+        
+        if anim_type == 0:
+            output = solve_ivp(point_mass, time[[0, -1]], state, t_eval=time).y.T
+            anim_type = 'point'
+        elif anim_type == 1:
+            output = solve_ivp(bar_mass, time[[0, -1]], state, t_eval=time).y.T
+            anim_type = 'bar'
+        else:
+            print('Invalid input, exiting program')
+            exit()
+        
+        out_x1 = len_1 * np.sin(output[:, 0])
+        out_y1 = -len_1 * np.cos(output[:, 0])
+        out_x2 = len_2 * np.sin(output[:, 2]) + out_x1
+        out_y2 = -len_2 * np.cos(output[:, 2]) + out_y1
+
+        fig = plt.figure(figsize=(5, 4))
+        ax = fig.add_subplot(autoscale_on=False, xlim=(-tot_len, tot_len), ylim=(-tot_len, tot_len))
+        ax.set_aspect('equal')
+        ax.grid()
+
+        line, = ax.plot([], [], 'o-', color='lime', lw=2)
+        trace, = ax.plot([], [], 'k.-', lw=1, ms=2)
+        time_template = 'time = %.2fs'
+        time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
+        
+        def animate(i):
+            thisx = [0, out_x1[i], out_x2[i]]
+            thisy = [0, out_y1[i], out_y2[i]]
+
+            history_x = out_x2[:i]
+            history_y = out_y2[:i]
+
+            line.set_data(thisx, thisy)
+            trace.set_data(history_x, history_y)
+            time_text.set_text(time_template % (i*dt))
+            return line, trace, time_text
+
+
+        ani = animation.FuncAnimation(fig, animate, len(output), interval=dt*1000, blit=True)
+        ani.save(f'{theta_0}{phi_0}{anim_type}anim.gif', writer='imagemagick', fps=20)
         plt.show()
 
 # External function that can be called by the user if they wish to. Is used only inside Data

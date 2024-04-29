@@ -1,5 +1,6 @@
-.venv
+*venv
 test*
 __pycache__/
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+*anim*
