@@ -19,6 +19,7 @@ from tkinter.filedialog import askopenfilename
 import pandas as pd
 from dataclasses import dataclass, field
 import seaborn as sns
+import os
 
 @dataclass
 class Data():
@@ -314,18 +315,19 @@ class Data():
 
 class Graphs:
     """ Allows the user to create various graphs from the user_data
-        pulled from Data. There is no __init__ method for this Class.
+        pulled from Data.
     """
     def __init__(cls):
         cls.graph_title = "Graph"
-        
         cls.title_size = 11
-        
-        cls.x_label = ""
-        
-        cls.y_label = ""
-        
+        cls.x_label = "x label"
+        cls.y_label = "y label"
         cls.p_color = 'cyan'
+        cls.line_color = 'black'
+        cls.errbar_color = 'red'
+        cls.dist_check = 'No'
+        cls.dataset_check = 1
+        cls.hist_color = 'green'
     
     def linreg(cls, user_data : Data):
         """ Uses the given x_data and y_data arrays to create a linear
@@ -350,26 +352,24 @@ class Graphs:
         # New x_data and y_data for ease of use
         x_data = user_data._y_data                                
         y_data = user_data._x_data
-        x_label = user_data._colname2
-        y_label = user_data._colname1
         
         # Sets the figure's title to the default (or passed in) graph title
-        plt.title(cls.graph_title, fontsize = cls.title_size)                        
+        plt.title(cls.graph_title, fontsize = cls.title_size)
         
         # Sets the figure data to x_data and y_data, colored orange
-        plt.plot(x_data, y_data, 'o', color = cls.p_color)                           
+        plt.plot(x_data, y_data, 'o', color = cls.p_color)
         
         # Sets the figure's xlabel to the user's entered x_data name
-        plt.xlabel(x_label, fontsize = 11)            
+        plt.xlabel(cls.x_label, fontsize = 11)
         
         # Sets the figure's xlabel to the user's entered y_data name
-        plt.ylabel(y_label, fontsize = 11)            
+        plt.ylabel(cls.y_label, fontsize = 11)
         
         # Adds the linear regression line to the plot
-        plt.plot(x_data, user_data.A + user_data.B * x_data)      
+        plt.plot(x_data, user_data.A + user_data.B * x_data)
         
         # Displays the linear regression plot
-        plt.show()                                              
+        plt.show()
     
     def errbargraph(cls, user_data : Data):
         """ Uses the given dataframe built from x_data and y_data during
@@ -399,12 +399,12 @@ class Graphs:
         # to the x_data on an assumption that the y_data is the independent variable
         # yerr is set to the user_data's sigma_x
         df.plot(x = user_data._colname2, y = user_data._colname1,                               
-                xlabel = user_data._colname2, ylabel = user_data._colname1, title = cls.graph_title,
+                xlabel = cls.x_label, ylabel = cls.y_label, title = cls.graph_title,
                 linestyle = "", marker = ".", yerr = user_data.sigma_x,
-                capsize = 3, ecolor = "red", linewidth = 1)
+                capsize = 3, ecolor = cls.errbar_color, linewidth = 1)
         plt.show()
     
-    def datahist(user_data : Data, gtitle = "Graph"):
+    def datahist(cls, user_data : Data):
         """ Uses the given dataframe built from x_data and y_data during
             initalization to create one or two histograms. There is also
             the option to turn the graphs into standard distribution
@@ -431,7 +431,7 @@ class Graphs:
         # Initialized to the df's columns array for future use
         columns = datafile.columns                                                                      
         
-        stdcheck = input("Will this a standard distribution graph? Y/N ")
+        stdcheck = cls.dist_check
         
         # Internal function used to determine what type of histogram graph will be created
         def stdcheckfunc(ax = None, index = 0):
@@ -463,7 +463,7 @@ class Graphs:
                     plt.plot(x, p, 'k', linewidth = 2)
                 else:
                     ax.plot(x, p, 'k', linewidth = 2)
-                plt.title(gtitle)
+                plt.title(cls.graph_title)
                 
             # Passes the if statement if the user entered a no(-adjecent) input
             elif stdcheck.lower() == "n" or stdcheck.lower() == "no":                                   
@@ -473,34 +473,8 @@ class Graphs:
                 print("Unknown input, assuming 'no'.")
                 pass
         
-        # Internal check function used to repeatedly ask for an input if an unaccepted one is given
-        def histcheck():                                                                           
-            
-            # Creates an infinite loop until a numerical response is given                                                                                
-            histcount = input("Do you want a histogram for 1 dataset, or 2 datasets? ")
-            try:
-                
-                # Attempts to convert the histcheck input into an int variable
-                histcount = int(histcount)
-                
-                # If conversion succeeds, checks if the value is not equal to 1 and/or 2
-                if histcount != 1 and histcount != 2:
-                    print("Please enter only 1 or 2.\n")
-                    
-                    # Returns the function to create a recursive function that will repeatedly ask for an input
-                    # until an accepted one is entered
-                    return histcheck()
-                else:
-                    return histcount
-            except ValueError:
-                print("Non-numerical entered. Please enter only 1 or 2.\n")
-                
-                # Returns the function to create a recursive function that will repeatedly ask for an input
-                # until an accepted one is entered
-                return histcheck()
-        
         # Calls for and runs the histcheck function
-        check = histcheck()
+        check = cls.dataset_check
         
         ### For this entire method I'm not quite sure how to get both histograms to show the ###
         ### gaussian line when the user chooses to show both histograms at once. ###
@@ -553,16 +527,12 @@ class Graphs:
             elif check == 2:
                 # Creates a subplot which is 1 graph wide and 2 graphs tall
                 fig, axes = plt.subplots(nrows = 2, ncols = 1)
-                colordict = {
-                    0 : 'g',
-                    1 : 'cyan'
-                }
                 for i in range(check):
                     ax = axes[i]
                     
                     # Attaches the data from the first column of the df to the top plot                                      
                     datafile.hist(bins = len(datafile.axes[i]), grid = False, rwidth = .9,
-                                            column = columns[i], color = colordict[i], ax = ax,
+                                            column = columns[i], color = cls.hist_color[i], ax = ax,
                                             density = True)
                     if i == 0:
                         # Runs stdcheckfunc to create a standard distribution graph (if user entered yes earlier)
@@ -581,7 +551,7 @@ class Graphs:
 
         plt.show()
     
-    def sctrplot(user_data: Data, gtitle = "Graph", marktype = "D", markc = 'c', markedge = 'k'):
+    def sctrplot(cls, user_data: Data):
         """ Uses the given x_data and y_data to create a scatter plot
             via matplot.pyplot's scatter method. Customization options
             are available, similar to the original pyplot method.
@@ -625,7 +595,7 @@ class Graphs:
         
         # Generates a scatter plot using the given x_data for x and y_data for y
         # Optional customization options can be used to change the output graph
-        plt.scatter(x = x_data, y = y_data, marker = marktype, c = markc, edgecolors = markedge)
+        plt.scatter(x = x_data, y = y_data, marker = "D", c = cls.p_color, edgecolors = 'k')
         
         # Pulls user_data colname1 and colname2 for the x-axis label and
         # y-axis label respectively.
@@ -633,14 +603,14 @@ class Graphs:
         plt.ylabel(user_data._colname2)
         
         # Uses the passed in gtitle argument to set the plot's title
-        plt.title(gtitle)
+        plt.title(cls.graph_title)
         
         print("\nDisplaying graph using user's data...")
         
         # Displays the generated plot
         plt.show()
     
-    def resid(user_data: Data, gtitle = "Graph"):
+    def resid(cls, user_data: Data):
         """ Uses user_data._df to create a residuals scatter plot
             via the seaborn sns.residplot method. The graph's
             title can optionally be customized.
@@ -666,10 +636,10 @@ class Graphs:
         # Generates a residual scatter plot with the DataFrame created from
         # the user's data. Sets x and y labels to user_data._colname1
         # and user_data._colname2 respectively
-        sns.residplot(data = user_data._df, x = user_data._colname1, y = user_data._colname2)
+        sns.residplot(data = user_data._df, x = cls.x_label, y = cls.y_label)
         
         # Sets the plot's title to the passed in gtitle argument
-        plt.title(gtitle)
+        plt.title(cls.graph_title)
         
         # Displays the generated plot
         plt.show()
@@ -776,6 +746,16 @@ class Graphs:
 class _InquirePrompts:
     def __init__(cls):
         cls.graphs_obj = Graphs()
+        
+        cls._title_prompt = f"Title - {cls.graphs_obj.graph_title}"
+        cls._title_size_prompt = f"Title Size - {cls.graphs_obj.title_size}"
+        cls._x_label_prompt = f"x-label - {cls.graphs_obj.x_label}"
+        cls._y_label_prompt = f"y-label - {cls.graphs_obj.y_label}"
+        cls._point_colors_prompt = f"Point Colors - {cls.graphs_obj.p_color}"
+        cls._line_color_prompt = f"Line Color - {cls.graphs_obj.line_color}"
+        cls._errbar_color_prompt = f"Error Bar Color - {cls.graphs_obj.errbar_color}"
+        cls._hist_color_prompt = f"Histogram Color(s) - {cls.graphs_obj.hist_color}"
+        
         cls.data_q = [
                 inquirer.List(
                     "data",
@@ -787,14 +767,15 @@ class _InquirePrompts:
             inquirer.List(
                 "function",
                 message="Select a function to modify and/or run",
-                choices=["Data.outlier", "Graphs.linreg", "Graphs.errbargraph", "Graphs.datahist", "Graphs.sctrplot",
-                        "Graphs.resid", "Graphs.dbl_pend"],
+                choices=["Data.outlier",
+                         "Graphs.linreg",
+                         "Graphs.errbargraph",
+                         "Graphs.datahist",
+                         "Graphs.sctrplot",
+                         "Graphs.resid",
+                         "Graphs.dbl_pend",
+                         "Exit/Quit"],
                 ),
-        ]
-        cls.gtitle_q = [
-            inquirer.Text(
-                "title",
-                message="Enter a graph title"),
         ]
         
         ufunc_msg = "Select a property to change, or 'Run' to run the function. Select 'Back' to return to the function select menu."
@@ -802,64 +783,127 @@ class _InquirePrompts:
             inquirer.List(
                 "linreg",
                 message="Graphs.linreg -- " + ufunc_msg,
-                choices=["Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Line Color", "Run", "Back"],
+                choices=[cls._title_prompt,
+                         cls._title_size_prompt,
+                         cls._x_label_prompt,
+                         cls._y_label_prompt,
+                         cls._point_colors_prompt,
+                         cls._line_color_prompt,
+                         "Run", "Back", "Exit/Quit"],
                 ),
         ]
         cls.errbar_q = [
             inquirer.List(
                 "errbar",
                 message="Graphs.errbargraph -- " + ufunc_msg,
-                choices=["Title", "Title Size", "x-label", "y-label", "Point Colors", "Error Bar Color(s)", "Run", "Back"],
+                choices=[cls._title_prompt,
+                         cls._title_size_prompt,
+                         cls._x_label_prompt,
+                         cls._y_label_prompt,
+                         cls._point_colors_prompt,
+                         cls._errbar_color_prompt,
+                         "Run", "Back", "Exit/Quit"],
                 ),
         ]
         cls.datahist_q = [
             inquirer.List(
                 "datahist",
                 message="Graphs.datahist -- " + ufunc_msg,
-                choices=["Title", "Title Size", "Normal Distribution", "Bar Color", "Dataset Count", "Run", "Back"],
+                choices=[cls._title_prompt,
+                         cls._title_size_prompt,
+                         "Normal Distribution",
+                         cls._hist_color_prompt,
+                         "Dataset Count",
+                         "Run", "Back", "Exit/Quit"],
                 ),
+        ]
+        cls.datahist_count = [
+            inquirer.List(
+                "datahist_count",
+                message="Select a number of data sets to use",
+                choices=['1',
+                         '2']
+            ),
         ]
         cls.sctrplot_q = [
             inquirer.List(
                 "sctrplot",
                 message="Graphs.sctrplot -- " + ufunc_msg,
-                choices=["Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Run", "Back"],
+                choices=[cls._title_prompt,
+                         cls._title_size_prompt,
+                         cls._x_label_prompt,
+                         cls._y_label_prompt,
+                         cls._point_colors_prompt,
+                         "Run", "Back", "Exit/Quit"],
                 ),
         ]
         cls.resid_q = [
             inquirer.List(
-                "linreg",
-                message="Graphs.linreg -- " + ufunc_msg,
-                choices=["Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Line Color", "Run", "Back"],
+                "resid",
+                message="Graphs.resid -- " + ufunc_msg,
+                choices=[cls._title_prompt,
+                         cls._title_size_prompt,
+                         cls._x_label_prompt,
+                         cls._y_label_prompt,
+                         cls._point_colors_prompt,
+                         "Run", "Back", "Exit/Quit"],
                 ),
         ]
         
-    def inqtest(cls):
+    def _inq_prompt(cls):
         data_ans = inquirer.prompt(cls.data_q)
         tempdata = Data()
         # "Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Line Color", "Run", "Back"
-        def linreg_prompts():
+        def linreg_prompts(graph_obj):
             match inquirer.prompt(cls.linreg_q)["linreg"]:
                 case "Title":
-                    cls.graphs_obj.graph_title = inquirer.prompt(cls.gtitle_q)["title"]
-                    print(cls.graphs_obj.graph_title)
+                    graph_obj.graph_title = input("Enter a graph title: ")
+                    # print(cls.graphs_obj.graph_title)
+                    
                     return linreg_prompts()
                 case "Run":
                     cls.graphs_obj.linreg(tempdata)
                 case "Back":
                     func_prompts()
+                case "Exit/Quit":
+                    sys.exit()
                 case _:
                     print('WIP section')
         
-        # "Data.outlier", "Graphs.linreg", "Graphs.errbargraph", "Graphs.datahist", "Graphs.sctrplot",
-        #                "Graphs.resid", "Graphs.dbl_pend"
         def errbar_prompts():
             match inquirer.prompt(cls.errbar_q)["errbar"]:
-                case "Title":
-                    cls.graphs_obj.graph_title = inquirer.prompt(cls.gtitle_q)["title"]
+                case cls._title_prompt:
+                    cls.graphs_obj.graph_title = input("Enter a graph title: ")
                     return errbar_prompts()
-                case "Title Size":
+                case cls._title_size_prompt:
                     print("WIP")
+                case cls._x_label_prompt:
+                    print("WIP")
+                case cls._y_label_prompt:
+                    print("WIP")
+                case cls._point_colors_prompt:
+                    print("WIP")
+                case cls._errbar_color_prompt:
+                    print("WIP")
+                case "Run":
+                    cls.graphs_obj.errbargraph(tempdata)
+                case "Back":
+                    func_prompts()
+                case "Exit/Quit":
+                    sys.exit()
+        
+        # "Title", "Title Size", "Normal Distribution", "Bar Color", "Dataset Count", "Run", "Back"
+        def datahist_prompts():
+            match inquirer.prompt(cls.datahist_q)["datahist"]:
+                case "Title":
+                    cls.graphs_obj.graph_title = input("Enter a new graph title: ")
+                    return datahist_prompts()
+                case "Title Size":
+                    try:
+                        cls.graphs_obj.title_size = float(input("Enter a new title size: "))
+                    except ValueError as e:
+                        e.add_note("Only numerical values are accepted")
+                        return datahist_prompts()
                 case "x-label":
                     print("WIP")
                 case "y-label":
@@ -872,6 +916,19 @@ class _InquirePrompts:
                     cls.graphs_obj.errbargraph(tempdata)
                 case "Back":
                     func_prompts()
+                case "Exit/Quit":
+                    sys.exit()
+        
+        # "Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Run", "Back"
+        def sctrplot_prompts():
+            return
+        
+        # "Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Line Color", "Run", "Back"
+        def resid_prompts():
+            return
+        
+        def dbl_pend_prompts():
+            return
         
         def func_prompts():
             funcs_ans = inquirer.prompt(cls.funcs_q)
@@ -884,20 +941,21 @@ class _InquirePrompts:
                 case "Graphs.errbargraph":
                     errbar_prompts()
                 case "Graphs.datahist":
-                    gtitle = inquirer.prompt(cls.gtitle_q)
-                    print(gtitle["title"])
+                    datahist_prompts()
                 case "Graphs.sctrplot":
-                    gtitle = inquirer.prompt(cls.gtitle_q)
-                    print(gtitle["title"])
+                    sctrplot_prompts()
                 case "Graphs.resid":
-                    gtitle = inquirer.prompt(cls.gtitle_q)
-                    print(gtitle["title"])
+                    resid_prompts()
                 case "Graphs.dbl_pend":
-                    gtitle = inquirer.prompt(cls.gtitle_q)
-                    print(gtitle["title"])
+                    dbl_pend_prompts()
+                case "Exit/Quit":
+                    sys.exit()
             
         func_prompts()
     
+def user_cli():
+    inq = _InquirePrompts()
+    inq._inq_prompt()
 
 # External function that can be called by the user if they wish to. Is used only inside Data
 def csvreader()-> np.ndarray:
@@ -979,5 +1037,4 @@ if __name__ == "__main__":
     installed_packages = check_install()
     print(f"\nInstalled packages w/ dependencies:\n{installed_packages}\n")
     
-    inq_prompts = _InquirePrompts()
-    inq_prompts.inqtest()
+    user_cli()
