@@ -10,6 +10,7 @@
 #       #####################################       #
 
 import numpy as np
+from numpy.typing import ArrayLike
 from matplotlib import pyplot as plt
 import scipy.stats as stats
 from scipy.integrate import solve_ivp 
@@ -74,8 +75,8 @@ class Data():
     ----
     Will update this soon-ish
     """
-    user_x_data : np.ndarray
-    user_y_data : np.ndarray
+    user_x_data : ArrayLike = field(default_factory = lambda : [1,2,3,4,5])
+    user_y_data : ArrayLike = field(default_factory = lambda : [1,2,3,4,5])
     _x_data : np.ndarray = field(init=False)
     _y_data : np.ndarray = field(init=False)
     _df : pd.DataFrame = field(init=False)
@@ -107,8 +108,8 @@ class Data():
             cls.sigma_x = np.sqrt(sum((cls._x_data - cls.x_mean)**2)/(N - 1))
             cls.sigma_x_best = np.sqrt((1/(N - 1))*sum((cls._x_data - cls.x_mean)**2))
             cls.sigma_y_best = np.sqrt((1/(N - 1))*sum((cls._y_data - cls.y_mean)**2))
-            cls.sigma_x_mean = cls.x_mean/np.sqrt(N)
-            cls.sigma_y_mean = cls.y_mean/np.sqrt(N)
+            cls.sigma_x_mean = cls.sigma_x/np.sqrt(N)
+            cls.sigma_y_mean = cls.sigma_y/np.sqrt(N)
             cls.sigma_frac = 1/np.sqrt(2 * (N - 1))
     
     # Initializes and returns the data that will be reused
@@ -159,9 +160,12 @@ class Data():
         # Assumes the user's passed in arguments are the desired data and passes them
         # into new variables                                                                             
         elif readcsv.lower() == "n" or readcsv.lower() == "no":
-            x_data = xdata
-            y_data = ydata
-            pass
+            if type(xdata) == np.ndarray:
+                x_data = xdata
+                y_data = ydata
+            else:
+                x_data = np.array(xdata)
+                y_data = np.array(xdata)
         else:
             print("Unknown input, please restart.")
             exit()
@@ -312,8 +316,18 @@ class Graphs:
     """ Allows the user to create various graphs from the user_data
         pulled from Data. There is no __init__ method for this Class.
     """
+    def __init__(cls):
+        cls.graph_title = "Graph"
+        
+        cls.title_size = 11
+        
+        cls.x_label = ""
+        
+        cls.y_label = ""
+        
+        cls.p_color = 'cyan'
     
-    def linreg(user_data : Data, gtitle = "Graph"):
+    def linreg(cls, user_data : Data):
         """ Uses the given x_data and y_data arrays to create a linear
             regression plot.
             
@@ -334,20 +348,22 @@ class Graphs:
         """
         
         # New x_data and y_data for ease of use
-        x_data = user_data._x_data                                
-        y_data = user_data._y_data
+        x_data = user_data._y_data                                
+        y_data = user_data._x_data
+        x_label = user_data._colname2
+        y_label = user_data._colname1
         
         # Sets the figure's title to the default (or passed in) graph title
-        plt.title(gtitle, fontsize = 11)                        
+        plt.title(cls.graph_title, fontsize = cls.title_size)                        
         
         # Sets the figure data to x_data and y_data, colored orange
-        plt.plot(x_data, y_data, 'o')                           
+        plt.plot(x_data, y_data, 'o', color = cls.p_color)                           
         
         # Sets the figure's xlabel to the user's entered x_data name
-        plt.xlabel(user_data._colname1, fontsize = 11)            
+        plt.xlabel(x_label, fontsize = 11)            
         
         # Sets the figure's xlabel to the user's entered y_data name
-        plt.ylabel(user_data._colname2, fontsize = 11)            
+        plt.ylabel(y_label, fontsize = 11)            
         
         # Adds the linear regression line to the plot
         plt.plot(x_data, user_data.A + user_data.B * x_data)      
@@ -355,7 +371,7 @@ class Graphs:
         # Displays the linear regression plot
         plt.show()                                              
     
-    def errbargraph(user_data : Data, gtitle = "Graph"):
+    def errbargraph(cls, user_data : Data):
         """ Uses the given dataframe built from x_data and y_data during
             initalization to create an error bar plot, making use of
             the sigma_x value as the constant error.
@@ -383,9 +399,9 @@ class Graphs:
         # to the x_data on an assumption that the y_data is the independent variable
         # yerr is set to the user_data's sigma_x
         df.plot(x = user_data._colname2, y = user_data._colname1,                               
-                xlabel = user_data._colname2, ylabel = user_data._colname1, title = gtitle,
+                xlabel = user_data._colname2, ylabel = user_data._colname1, title = cls.graph_title,
                 linestyle = "", marker = ".", yerr = user_data.sigma_x,
-                capthick = 1, ecolor = "red", linewidth = 1)
+                capsize = 3, ecolor = "red", linewidth = 1)
         plt.show()
     
     def datahist(user_data : Data, gtitle = "Graph"):
@@ -757,6 +773,132 @@ class Graphs:
         ani.save(f'{theta_0}{phi_0}{anim_type}anim.gif', writer='imagemagick', fps=20)
         plt.show()
 
+class _InquirePrompts:
+    def __init__(cls):
+        cls.graphs_obj = Graphs()
+        cls.data_q = [
+                inquirer.List(
+                    "data",
+                    message="Select a data file type",
+                    choices=["CSV", "Excel", "XML - WIP", "JSON - WIP"],
+                    ),
+            ]
+        cls.funcs_q = [
+            inquirer.List(
+                "function",
+                message="Select a function to modify and/or run",
+                choices=["Data.outlier", "Graphs.linreg", "Graphs.errbargraph", "Graphs.datahist", "Graphs.sctrplot",
+                        "Graphs.resid", "Graphs.dbl_pend"],
+                ),
+        ]
+        cls.gtitle_q = [
+            inquirer.Text(
+                "title",
+                message="Enter a graph title"),
+        ]
+        
+        ufunc_msg = "Select a property to change, or 'Run' to run the function. Select 'Back' to return to the function select menu."
+        cls.linreg_q = [
+            inquirer.List(
+                "linreg",
+                message="Graphs.linreg -- " + ufunc_msg,
+                choices=["Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Line Color", "Run", "Back"],
+                ),
+        ]
+        cls.errbar_q = [
+            inquirer.List(
+                "errbar",
+                message="Graphs.errbargraph -- " + ufunc_msg,
+                choices=["Title", "Title Size", "x-label", "y-label", "Point Colors", "Error Bar Color(s)", "Run", "Back"],
+                ),
+        ]
+        cls.datahist_q = [
+            inquirer.List(
+                "datahist",
+                message="Graphs.datahist -- " + ufunc_msg,
+                choices=["Title", "Title Size", "Normal Distribution", "Bar Color", "Dataset Count", "Run", "Back"],
+                ),
+        ]
+        cls.sctrplot_q = [
+            inquirer.List(
+                "sctrplot",
+                message="Graphs.sctrplot -- " + ufunc_msg,
+                choices=["Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Run", "Back"],
+                ),
+        ]
+        cls.resid_q = [
+            inquirer.List(
+                "linreg",
+                message="Graphs.linreg -- " + ufunc_msg,
+                choices=["Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Line Color", "Run", "Back"],
+                ),
+        ]
+        
+    def inqtest(cls):
+        data_ans = inquirer.prompt(cls.data_q)
+        tempdata = Data()
+        # "Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Line Color", "Run", "Back"
+        def linreg_prompts():
+            match inquirer.prompt(cls.linreg_q)["linreg"]:
+                case "Title":
+                    cls.graphs_obj.graph_title = inquirer.prompt(cls.gtitle_q)["title"]
+                    print(cls.graphs_obj.graph_title)
+                    return linreg_prompts()
+                case "Run":
+                    cls.graphs_obj.linreg(tempdata)
+                case "Back":
+                    func_prompts()
+                case _:
+                    print('WIP section')
+        
+        # "Data.outlier", "Graphs.linreg", "Graphs.errbargraph", "Graphs.datahist", "Graphs.sctrplot",
+        #                "Graphs.resid", "Graphs.dbl_pend"
+        def errbar_prompts():
+            match inquirer.prompt(cls.errbar_q)["errbar"]:
+                case "Title":
+                    cls.graphs_obj.graph_title = inquirer.prompt(cls.gtitle_q)["title"]
+                    return errbar_prompts()
+                case "Title Size":
+                    print("WIP")
+                case "x-label":
+                    print("WIP")
+                case "y-label":
+                    print("WIP")
+                case "Point Color(s)":
+                    print("WIP")
+                case "Line Color":
+                    print("WIP")
+                case "Run":
+                    cls.graphs_obj.errbargraph(tempdata)
+                case "Back":
+                    func_prompts()
+        
+        def func_prompts():
+            funcs_ans = inquirer.prompt(cls.funcs_q)
+            match funcs_ans["function"]:
+                case "Data.outlier":
+                    cls.graphs_obj.graph_title = inquirer.prompt(cls.gtitle_q)["title"]
+                    print(cls.graphs_obj.graph_title)
+                case "Graphs.linreg":
+                    linreg_prompts()
+                case "Graphs.errbargraph":
+                    errbar_prompts()
+                case "Graphs.datahist":
+                    gtitle = inquirer.prompt(cls.gtitle_q)
+                    print(gtitle["title"])
+                case "Graphs.sctrplot":
+                    gtitle = inquirer.prompt(cls.gtitle_q)
+                    print(gtitle["title"])
+                case "Graphs.resid":
+                    gtitle = inquirer.prompt(cls.gtitle_q)
+                    print(gtitle["title"])
+                case "Graphs.dbl_pend":
+                    gtitle = inquirer.prompt(cls.gtitle_q)
+                    print(gtitle["title"])
+            
+        func_prompts()
+    
+
 # External function that can be called by the user if they wish to. Is used only inside Data
 def csvreader()-> np.ndarray:
     print("Please choose a csv file:")
@@ -764,7 +906,7 @@ def csvreader()-> np.ndarray:
     tk.withdraw()
     
     # Opens a File Explorer window where the user can visually select a csv file
-    path = askopenfilename()
+    path = askopenfilename(title="Select file", filetypes=(("CSV Files", '*.csv'),))
     
     # Prints the file path
     print(path)
@@ -805,3 +947,37 @@ def csvreader()-> np.ndarray:
     
     # Returns x_data and y_data
     return x_data, y_data
+
+if __name__ == "__main__":
+    import sys
+    import subprocess
+    import inquirer
+
+    def install(package):
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', package])
+
+    def check_install():
+        reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
+        installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
+        
+        return installed_packages
+
+    
+    req_packages = ['numpy', 'pandas', 'matplotlib', 'tk', 'scipy', 'seaborn', 'inquirer']
+    installed_packages = check_install()
+    print(f"Checking for required packages: {req_packages}\n")
+    
+    for pkg in req_packages:
+        if pkg in installed_packages:
+            print(f"{pkg} is already installed, continuing...")
+            continue
+        else:
+            print(f"Installing {pkg}...\n")
+            install(pkg)
+    
+    print("Required packages check complete.")
+    installed_packages = check_install()
+    print(f"\nInstalled packages w/ dependencies:\n{installed_packages}\n")
+    
+    inq_prompts = _InquirePrompts()
+    inq_prompts.inqtest()

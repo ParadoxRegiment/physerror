@@ -14,6 +14,10 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('..'))
+
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
@@ -28,7 +32,14 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'sphinx_rtd_theme'
 # html_theme_options = 
+html_theme = 'sphinx_rtd_theme'
+# html_theme_options = 
 html_static_path = ['_static']
+html_sidebars = {
+   '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],
+   'using/windows': ['windowssidebar.html', 'searchbox.html'],
+}
+# sidebar_header = 'physerror'
 html_sidebars = {
    '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],
    'using/windows': ['windowssidebar.html', 'searchbox.html'],

@@ -48,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="getstart.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#physerror.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a><ul>
+<<<<<<< HEAD
 <li class="toctree-l3"><a class="reference internal" href="#physerror.Data.delta"><code class="docutils literal notranslate"><span class="pre">Data.delta</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#physerror.Data.A"><code class="docutils literal notranslate"><span class="pre">Data.A</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#physerror.Data.B"><code class="docutils literal notranslate"><span class="pre">Data.B</span></code></a></li>
@@ -64,6 +65,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#physerror.Data.sigma_x_mean"><code class="docutils literal notranslate"><span class="pre">Data.sigma_x_mean</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#physerror.Data.sigma_y_mean"><code class="docutils literal notranslate"><span class="pre">Data.sigma_y_mean</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#physerror.Data.sigma_frac"><code class="docutils literal notranslate"><span class="pre">Data.sigma_frac</span></code></a></li>
+=======
+>>>>>>> dev
 <li class="toctree-l3"><a class="reference internal" href="#physerror.Data.outlier"><code class="docutils literal notranslate"><span class="pre">Data.outlier()</span></code></a></li>
 </ul>
 </li>
@@ -75,7 +78,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#physerror.Graphs.sctrplot"><code class="docutils literal notranslate"><span class="pre">Graphs.sctrplot()</span></code></a></li>
 </ul>
 </li>
+<<<<<<< HEAD
 <li class="toctree-l2"><a class="reference internal" href="#physerror.csvreader"><code class="docutils literal notranslate"><span class="pre">csvreader()</span></code></a></li>
+=======
+>>>>>>> dev
 </ul>
 </li>
 </ul>
@@ -115,6 +121,7 @@ attributes that calculate common statistical errors, constants, and
 general error propagation methods, and one class Method to find, document,
 and delete any data points that exist outside the standard 2 * sigma outlier
 “limit”.</p>
+<<<<<<< HEAD
 <dl class="py attribute">
 <dt class="sig sig-object py" id="physerror.Data.delta">
 <span class="sig-name descname"><span class="pre">delta</span></span><a class="headerlink" href="#physerror.Data.delta" title="Link to this definition"></a></dt>
@@ -303,12 +310,55 @@ and delete any data points that exist outside the standard 2 * sigma outlier
 <p class="admonition-title">Note</p>
 <p>Will update this soon-ish</p>
 </div>
+=======
+<blockquote>
+<div><dl class="simple">
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>delta<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>A<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>B<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>x_mean<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>x_best<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>y_mean<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>y_best<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_y<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_A<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_B<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_x<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_x_best<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_y_best<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_x_mean<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_y_mean<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>sigma_frac<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>#### Will update this soon-ish ####</p>
+>>>>>>> dev
 <dl class="py method">
 <dt class="sig sig-object py" id="physerror.Data.outlier">
 <span class="sig-name descname"><span class="pre">outlier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#physerror.Data.outlier" title="Link to this definition"></a></dt>
 <dd><p>A method that creates two empty arrays then searches the
 cls.x_data and cls.y_data arrays for values that are outside
 the standard 2 * sigma outlier “limit”.</p>
+<<<<<<< HEAD
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
@@ -322,6 +372,23 @@ found.</p></li>
 </p>
 </dd>
 </dl>
+=======
+<blockquote>
+<div><dl class="simple">
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>x_outliers -&gt; np.ndarray</dt><dd><p>An array that contains either the outliers that were found
+in the user’s x_data, or a string stating no outliers were
+found.</p>
+</dd>
+<dt>y_outliers -&gt; np.ndarray</dt><dd><p>An array that contains either the outliers that were found
+in the user’s y_data, or a string stating no outliers were
+found.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+>>>>>>> dev
 </dd></dl>
 
 </dd></dl>
@@ -341,6 +408,7 @@ graphs (currently a WIP).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<<<<<<< HEAD
 <li><p><strong>user_data</strong> (<a class="reference internal" href="#physerror.Data" title="physerror.Data"><em>Data</em></a>) – Requires the user to pass in an instance of
 Data to make use of the user’s data.</p></li>
 <li><p><strong>gtitle</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired graph title. Defaults to “Graph”.</p></li>
@@ -352,6 +420,22 @@ histogram(s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>plt.show()</p>
+=======
+<li><p><strong>user_data</strong> – Data
+Requires the user to pass in an instance of
+Data to make use of the user’s data.</p></li>
+<li><p><strong>gtitle</strong> – str [optional]
+The desired graph title. Defaults to “Graph”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>plt.show()</dt><dd><p>Opens an external window that displays the
+histogram(s).</p>
+</dd>
+</dl>
+</p>
+>>>>>>> dev
 </dd>
 </dl>
 </dd></dl>
@@ -365,6 +449,7 @@ the sigma_x value as the constant error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<<<<<<< HEAD
 <li><p><strong>user_data</strong> (<a class="reference internal" href="#physerror.Data" title="physerror.Data"><em>Data</em></a>) – Requires the user to pass in an instance of
 Data to make use of the user’s data.</p></li>
 <li><p><strong>gtitle</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired graph title. Defaults to “Graph”.</p></li>
@@ -376,6 +461,22 @@ error bar graph.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>plt.show()</p>
+=======
+<li><p><strong>user_data</strong> – Data
+Requires the user to pass in an instance of
+Data to make use of the user’s data.</p></li>
+<li><p><strong>gtitle</strong> – str [optional]
+The desired graph title. Defaults to “Graph”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>plt.show()</dt><dd><p>Opens an external window that displays the
+error bar graph.</p>
+</dd>
+</dl>
+</p>
+>>>>>>> dev
 </dd>
 </dl>
 </dd></dl>
@@ -388,6 +489,7 @@ regression plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<<<<<<< HEAD
 <li><p><strong>user_data</strong> (<a class="reference internal" href="#physerror.Data" title="physerror.Data"><em>Data</em></a>) – Requires the user to pass in an instance of
 Data to make use of the user’s data.</p></li>
 <li><p><strong>gtitle</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired graph title. Defaults to “Graph”.</p></li>
@@ -399,6 +501,22 @@ regression plot of the given data.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>plt.show()</p>
+=======
+<li><p><strong>user_data</strong> – Data
+Requires the user to pass in an instance of
+Data to make use of the user’s data.</p></li>
+<li><p><strong>gtitle</strong> – str [optional]
+The desired graph title. Defaults to “Graph”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>plt.show()</dt><dd><p>Opens an external window that shows the linear
+regression plot of the given data.</p>
+</dd>
+</dl>
+</p>
+>>>>>>> dev
 </dd>
 </dl>
 </dd></dl>
@@ -412,6 +530,7 @@ title can optionally be customized.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<<<<<<< HEAD
 <li><p><strong>user_data</strong> (<a class="reference internal" href="#physerror.Data" title="physerror.Data"><em>Data</em></a>) – Requires the user to pass in an instance of
 Data to make use of the user’s data.</p></li>
 <li><p><strong>gtitle</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired graph title. Defaults to “Graph”.</p></li>
@@ -423,6 +542,15 @@ Data to make use of the user’s data.</p></li>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>plt.show()</p>
 </dd>
+=======
+<li><p><strong>user_data</strong> – Data
+Requires the user to pass in an instance of
+Data to make use of the user’s data.</p></li>
+<li><p><strong>gtitle</strong> – str [optional]
+The desired graph title. Defaults to “Graph”.</p></li>
+</ul>
+</dd>
+>>>>>>> dev
 </dl>
 </dd></dl>
 
@@ -435,6 +563,7 @@ are available, similar to the original pyplot method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<<<<<<< HEAD
 <li><p><strong>user_data</strong> (<a class="reference internal" href="#physerror.Data" title="physerror.Data"><em>Data</em></a>) – Requires the user to pass in an instance of
 Data to make use of the user’s data.</p></li>
 <li><p><strong>gtitle</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired graph title. Defaults to “Graph”.</p></li>
@@ -445,26 +574,49 @@ See link for all available matplotlib markers:
 See link for all matplotlob colors:
 <a class="reference external" href="https://matplotlib.org/stable/gallery/color/named_colors.html">https://matplotlib.org/stable/gallery/color/named_colors.html</a></p></li>
 <li><p><strong>markedge</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired marker edge color. Defaults to ‘k’.
+=======
+<li><p><strong>user_data</strong> – Data
+Requires the user to pass in an instance of
+Data to make use of the user’s data.</p></li>
+<li><p><strong>gtitle</strong> – str [optional]
+The desired graph title. Defaults to “Graph”.</p></li>
+<li><p><strong>marktype</strong> – str [optional]
+The desired marker style. Defaults to “D”.
+See link for all available matplotlib markers:
+<a class="reference external" href="https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers">https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers</a></p></li>
+<li><p><strong>markc</strong> – str [optional]
+The desired marker color. Defaults to ‘c’.
+See link for all matplotlob colors:
+<a class="reference external" href="https://matplotlib.org/stable/gallery/color/named_colors.html">https://matplotlib.org/stable/gallery/color/named_colors.html</a></p></li>
+<li><p><strong>markedge</strong> – str [optional]
+The desired marker edge color. Defaults to ‘k’.
+>>>>>>> dev
 See link for all matplotlob colors:
 <a class="reference external" href="https://matplotlib.org/stable/gallery/color/named_colors.html">https://matplotlib.org/stable/gallery/color/named_colors.html</a></p></li>
 </ul>
 </dd>
+<<<<<<< HEAD
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Opens an external window that displays the scatter plot.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>plt.show()</p>
 </dd>
+=======
+>>>>>>> dev
 </dl>
 </dd></dl>
 
 </dd></dl>
 
+<<<<<<< HEAD
 <dl class="py function">
 <dt class="sig sig-object py" id="physerror.csvreader">
 <span class="sig-prename descclassname"><span class="pre">physerror.</span></span><span class="sig-name descname"><span class="pre">csvreader</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#physerror.csvreader" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+=======
+>>>>>>> dev
 </section>
 
 

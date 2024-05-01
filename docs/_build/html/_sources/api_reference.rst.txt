@@ -1,6 +1,10 @@
 API Reference
 =============
 .. automodule:: physerror
+<<<<<<< HEAD
     :members:
 
 .. autofunction:: physerror.csvreader
+=======
+    :members:
+>>>>>>> dev
