@@ -19,7 +19,6 @@ from tkinter.filedialog import askopenfilename
 import pandas as pd
 from dataclasses import dataclass, field
 import seaborn as sns
-import os
 
 @dataclass
 class Data():
@@ -218,10 +217,12 @@ class Data():
         # New x_data and y_data variables for ease of use
         x_data = cls._x_data
         y_data = cls._y_data
+        print(x_data)
+        print(y_data)
         
         # Immediately exits the program if the x_data or y_data are somehow empty arrays
         if np.size(x_data) == 0 or np.size(y_data) == 0:
-            exit()
+            sys.exit()
         
         # Outlier variables to be used for later
         x_outliers = np.zeros(len(x_data))
@@ -312,6 +313,10 @@ class Data():
             y_outliers = 'No outliers in y data'            
 
         return x_outliers, y_outliers
+    
+    def export(cls):
+        # Will be written to allow for the exportation of data various formats.
+        return
 
 class Graphs:
     """ Allows the user to create various graphs from the user_data
@@ -357,7 +362,11 @@ class Graphs:
         plt.title(cls.graph_title, fontsize = cls.title_size)
         
         # Sets the figure data to x_data and y_data, colored orange
-        plt.plot(x_data, y_data, 'o', color = cls.p_color)
+        if np.size(cls.p_color) == 1: 
+            plt.plot(x_data[i], y_data[i], 'o', color = cls.p_color)
+        elif np.size(cls.p_color) != 1:
+            for i in range(np.size(cls.p_color)):
+                plt.plot(x_data[i], y_data[i], 'o', color = cls.p_color[i])
         
         # Sets the figure's xlabel to the user's entered x_data name
         plt.xlabel(cls.x_label, fontsize = 11)
@@ -366,7 +375,7 @@ class Graphs:
         plt.ylabel(cls.y_label, fontsize = 11)
         
         # Adds the linear regression line to the plot
-        plt.plot(x_data, user_data.A + user_data.B * x_data)
+        plt.plot(x_data, user_data.A + user_data.B * x_data, color = cls.line_color)
         
         # Displays the linear regression plot
         plt.show()
@@ -398,10 +407,19 @@ class Graphs:
         # Creates an errorbar graph out of the given df data. Sets x to the y_data and y
         # to the x_data on an assumption that the y_data is the independent variable
         # yerr is set to the user_data's sigma_x
-        df.plot(x = user_data._colname2, y = user_data._colname1,                               
-                xlabel = cls.x_label, ylabel = cls.y_label, title = cls.graph_title,
-                linestyle = "", marker = ".", yerr = user_data.sigma_x,
-                capsize = 3, ecolor = cls.errbar_color, linewidth = 1)
+        if np.size(cls.p_color) == 1: 
+            df.plot(x = user_data._colname2, y = user_data._colname1,
+                    xlabel = cls.x_label, ylabel = cls.y_label,
+                    linestyle = "", marker = ".", yerr = user_data.sigma_x,
+                    capsize = 3, ecolor = cls.errbar_color, linewidth = 1)
+            plt.title(cls.graph_title, fontsize = cls.title_size)
+        elif np.size(cls.p_color) != 1:
+            for i in range(np.size(cls.p_color)):
+                df.plot(x = user_data._colname2, y = user_data._colname1,
+                    xlabel = cls.x_label, ylabel = cls.y_label,
+                    linestyle = "", marker = ".", yerr = user_data.sigma_x,
+                    color = cls.p_color[i], capsize = 3, ecolor = cls.errbar_color, linewidth = 1)
+                plt.title(cls.graph_title, fontsize = cls.title_size)
         plt.show()
     
     def datahist(cls, user_data : Data):
@@ -595,12 +613,16 @@ class Graphs:
         
         # Generates a scatter plot using the given x_data for x and y_data for y
         # Optional customization options can be used to change the output graph
-        plt.scatter(x = x_data, y = y_data, marker = "D", c = cls.p_color, edgecolors = 'k')
+        if np.size(cls.p_color) == 1:
+            plt.scatter(x = x_data, y = y_data, marker = "D", c = cls.p_color, edgecolors = 'k')
+        elif np.size(cls.p_color) != 1:
+            for i in range(np.size(cls.p_color)):
+                plt.scatter(x = x_data[i], y = y_data[i], marker = "D", c = cls.p_color[i], edgecolors = 'k')
         
         # Pulls user_data colname1 and colname2 for the x-axis label and
         # y-axis label respectively.
-        plt.xlabel(user_data._colname1)
-        plt.ylabel(user_data._colname2)
+        plt.xlabel(cls.x_label)
+        plt.ylabel(cls.y_label)
         
         # Uses the passed in gtitle argument to set the plot's title
         plt.title(cls.graph_title)
@@ -747,14 +769,14 @@ class _InquirePrompts:
     def __init__(cls):
         cls.graphs_obj = Graphs()
         
-        cls._title_prompt = f"Title - {cls.graphs_obj.graph_title}"
-        cls._title_size_prompt = f"Title Size - {cls.graphs_obj.title_size}"
-        cls._x_label_prompt = f"x-label - {cls.graphs_obj.x_label}"
-        cls._y_label_prompt = f"y-label - {cls.graphs_obj.y_label}"
-        cls._point_colors_prompt = f"Point Colors - {cls.graphs_obj.p_color}"
-        cls._line_color_prompt = f"Line Color - {cls.graphs_obj.line_color}"
-        cls._errbar_color_prompt = f"Error Bar Color - {cls.graphs_obj.errbar_color}"
-        cls._hist_color_prompt = f"Histogram Color(s) - {cls.graphs_obj.hist_color}"
+        cls._title_prompt = "Title"
+        cls._title_size_prompt = "Title Size"
+        cls._x_label_prompt = "x-label"
+        cls._y_label_prompt = "y-label"
+        cls._point_colors_prompt = "Point Colors"
+        cls._line_color_prompt = "Line Color"
+        cls._errbar_color_prompt = "Error Bar Color"
+        cls._hist_color_prompt = "Histogram Color(s)"
         
         cls.data_q = [
                 inquirer.List(
@@ -762,7 +784,8 @@ class _InquirePrompts:
                     message="Select a data file type",
                     choices=["CSV", "Excel", "XML - WIP", "JSON - WIP"],
                     ),
-            ]
+        ]
+        
         cls.funcs_q = [
             inquirer.List(
                 "function",
@@ -792,6 +815,7 @@ class _InquirePrompts:
                          "Run", "Back", "Exit/Quit"],
                 ),
         ]
+        
         cls.errbar_q = [
             inquirer.List(
                 "errbar",
@@ -805,6 +829,7 @@ class _InquirePrompts:
                          "Run", "Back", "Exit/Quit"],
                 ),
         ]
+        
         cls.datahist_q = [
             inquirer.List(
                 "datahist",
@@ -817,6 +842,7 @@ class _InquirePrompts:
                          "Run", "Back", "Exit/Quit"],
                 ),
         ]
+        
         cls.datahist_count = [
             inquirer.List(
                 "datahist_count",
@@ -825,6 +851,7 @@ class _InquirePrompts:
                          '2']
             ),
         ]
+        
         cls.sctrplot_q = [
             inquirer.List(
                 "sctrplot",
@@ -837,6 +864,7 @@ class _InquirePrompts:
                          "Run", "Back", "Exit/Quit"],
                 ),
         ]
+        
         cls.resid_q = [
             inquirer.List(
                 "resid",
@@ -850,47 +878,165 @@ class _InquirePrompts:
                 ),
         ]
         
+        cls.val_change_q = [
+            inquirer.List(
+                "val_change",
+                message="Would you like to edit this property?",
+                choices=["Yes",
+                         "No",
+                         "Back", "Exit/Quit"],
+                ),
+        ]
+        
+        cls.p_color_q = [
+            inquirer.List(
+                "p_color",
+                message="Single color or multiple colors?",
+                choices=["Single",
+                         "Multiple",
+                         "Back", "Exit/Quit"],
+                ),
+        ]
+        
+        cls.cont_check = [
+            inquirer.List(
+                "cont_check",
+                message="Would you like to run another function?",
+                choices=["Yes",
+                         "No"],
+                ),
+        ]
+        
     def _inq_prompt(cls):
         data_ans = inquirer.prompt(cls.data_q)
         tempdata = Data()
+        
+        def run_func(func_name):
+            return_func = func_name()
+            return return_func
+        
+        def cont_check_prompt():
+            match inquirer.prompt(cls.cont_check)["cont_check"]:
+                case "Yes":
+                    func_prompts()
+                case "No":
+                    sys.exit("Closing program...")
+        
+        def val_change_prompt(val_type : str, curr_val):
+            match inquirer.prompt(cls.val_change_q)["val_change"]:
+                case "Yes":
+                    match val_type:
+                        case "title" | "label":  
+                            return input("New title value: ")
+                        case "size":
+                            new_val = input("New size value: ")
+                            try:
+                                int(new_val)
+                                return new_val
+                            except ValueError:
+                                print("\nOnly numerical values are accepted. Resetting to previous value.\n")
+                                return curr_val
+                        case "line":
+                            return input("New color value: ")
+                        case "point":
+                            match inquirer.prompt(cls.p_color_q)["p_color"]:
+                                case "Single":
+                                    return input("New color value: ")
+                                case "Multiple":
+                                    p_color_list = input(f"Choose {np.size(tempdata._x_data)} colors, separated by a comma\
+                                                         and space. Repeat colors are allowed:\n").split(', ')
+                                    if np.size(p_color_list) > np.size(tempdata._x_data):
+                                        print('\nToo many values entered. Resetting to last value.\n')
+                                        return curr_val
+                                    else:
+                                        return p_color_list
+                case "No":
+                    return curr_val
+                case "Exit/Quit":
+                    sys.exit("Closing program...")
+
         # "Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Line Color", "Run", "Back"
-        def linreg_prompts(graph_obj):
+        def linreg_prompts():
             match inquirer.prompt(cls.linreg_q)["linreg"]:
-                case "Title":
-                    graph_obj.graph_title = input("Enter a graph title: ")
-                    # print(cls.graphs_obj.graph_title)
-                    
+                case cls._title_prompt:
+                    curr_title = cls.graphs_obj.graph_title
+                    print(f"Current title: {curr_title}")
+                    cls.graphs_obj.graph_title = val_change_prompt('title', curr_title)
+                    return linreg_prompts()
+                case cls._title_size_prompt:
+                    curr_size = cls.graphs_obj.title_size
+                    print(f"Current size: {curr_size}")
+                    cls.graphs_obj.title_size = val_change_prompt('size', curr_size)
+                    return linreg_prompts()
+                case cls._x_label_prompt:
+                    curr_label = cls.graphs_obj.x_label
+                    print(f"Current label: {curr_label}")
+                    cls.graphs_obj.x_label = val_change_prompt('label', curr_label)
+                    return linreg_prompts()
+                case cls._y_label_prompt:
+                    curr_label = cls.graphs_obj.y_label
+                    print(f"Current label: {curr_label}")
+                    cls.graphs_obj.y_label = val_change_prompt('label', curr_label)
+                    return linreg_prompts()
+                case cls._point_colors_prompt:
+                    curr_p_color = cls.graphs_obj.p_color
+                    print(f"Current color(s): {curr_p_color}")
+                    cls.graphs_obj.p_color = val_change_prompt('point', curr_p_color)
+                    return linreg_prompts()
+                case cls._line_color_prompt:
+                    curr_line_color = cls.graphs_obj.line_color
+                    print(f"Current line color: {curr_line_color}")
+                    cls.graphs_obj.line_color = val_change_prompt('line', curr_line_color)
                     return linreg_prompts()
                 case "Run":
                     cls.graphs_obj.linreg(tempdata)
+                    cont_check_prompt()
                 case "Back":
                     func_prompts()
                 case "Exit/Quit":
-                    sys.exit()
+                    sys.exit("Closing program...")
                 case _:
                     print('WIP section')
         
         def errbar_prompts():
             match inquirer.prompt(cls.errbar_q)["errbar"]:
                 case cls._title_prompt:
-                    cls.graphs_obj.graph_title = input("Enter a graph title: ")
+                    curr_title = cls.graphs_obj.graph_title
+                    print(f"Current title: {curr_title}")
+                    cls.graphs_obj.graph_title = val_change_prompt('title', curr_title)
                     return errbar_prompts()
                 case cls._title_size_prompt:
-                    print("WIP")
+                    curr_size = cls.graphs_obj.title_size
+                    print(f"Current size: {curr_size}")
+                    cls.graphs_obj.title_size = val_change_prompt('size', curr_size)
+                    return errbar_prompts()
                 case cls._x_label_prompt:
-                    print("WIP")
+                    curr_label = cls.graphs_obj.x_label
+                    print(f"Current label: {curr_label}")
+                    cls.graphs_obj.x_label = val_change_prompt('label', curr_label)
+                    return errbar_prompts
                 case cls._y_label_prompt:
-                    print("WIP")
+                    curr_label = cls.graphs_obj.y_label
+                    print(f"Current label: {curr_label}")
+                    cls.graphs_obj.y_label = val_change_prompt('label', curr_label)
+                    return errbar_prompts()
                 case cls._point_colors_prompt:
-                    print("WIP")
+                    curr_p_color = cls.graphs_obj.p_color
+                    print(f"Current color(s): {curr_p_color}")
+                    cls.graphs_obj.p_color = val_change_prompt('point', curr_p_color)
+                    return errbar_prompts()
                 case cls._errbar_color_prompt:
-                    print("WIP")
+                    curr_errbar_color = cls.graphs_obj.errbar_color
+                    print(f"Current line color: {curr_errbar_color}")
+                    cls.graphs_obj.errbar_color = val_change_prompt('line', curr_errbar_color)
+                    return errbar_prompts()
                 case "Run":
                     cls.graphs_obj.errbargraph(tempdata)
+                    cont_check_prompt()
                 case "Back":
                     func_prompts()
                 case "Exit/Quit":
-                    sys.exit()
+                    sys.exit("Closing program...")
         
         # "Title", "Title Size", "Normal Distribution", "Bar Color", "Dataset Count", "Run", "Back"
         def datahist_prompts():
@@ -914,10 +1060,11 @@ class _InquirePrompts:
                     print("WIP")
                 case "Run":
                     cls.graphs_obj.errbargraph(tempdata)
+                    cont_check_prompt()
                 case "Back":
                     func_prompts()
                 case "Exit/Quit":
-                    sys.exit()
+                    sys.exit("Closing program...")
         
         # "Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Run", "Back"
         def sctrplot_prompts():
@@ -934,8 +1081,10 @@ class _InquirePrompts:
             funcs_ans = inquirer.prompt(cls.funcs_q)
             match funcs_ans["function"]:
                 case "Data.outlier":
-                    cls.graphs_obj.graph_title = inquirer.prompt(cls.gtitle_q)["title"]
-                    print(cls.graphs_obj.graph_title)
+                    xout, yout = tempdata.outlier()
+                    print(f"x outliers: {xout}")
+                    print(f"y outliers: {yout}")
+                    cont_check_prompt()
                 case "Graphs.linreg":
                     linreg_prompts()
                 case "Graphs.errbargraph":
@@ -949,7 +1098,7 @@ class _InquirePrompts:
                 case "Graphs.dbl_pend":
                     dbl_pend_prompts()
                 case "Exit/Quit":
-                    sys.exit()
+                    sys.exit("Closing program...")
             
         func_prompts()
     
