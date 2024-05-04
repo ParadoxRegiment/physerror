@@ -22,6 +22,7 @@ your data, pull calculated values, and generate graphs.
   * [`Data`](api_reference.md#physerror.Data)
   * [`Graphs`](api_reference.md#physerror.Graphs)
   * [`csvreader()`](api_reference.md#physerror.csvreader)
+  * [`csvreader()`](api_reference.md#id0)
 
 ## Contributing
 

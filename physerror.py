@@ -66,9 +66,9 @@ class Data():
     
     Parameters
     ----------
-    user_x_data : np.ndarray
+    user_x_data : ArrayLike[float | int]
         []
-    user_y_data : np.ndarray
+    user_y_data : ArrayLike[float | int]
         []
     
     Note
@@ -116,8 +116,7 @@ class Data():
     def _initdata(cls, xdata = np.arange(5) + 1, ydata = np.arange(5) + 1):
         """ Callable but largely useless if done so. Used to read in a csv if
         the user so wishes, store data and their user-inputed names, then
-        returns that data back to the line where it was called. It is only
-        used inside the __init__ function of this class.
+        returns that data back to the line where it was called.
             
         Parameters
         ----------
@@ -320,7 +319,60 @@ class Data():
 
 class Graphs:
     """ Allows the user to create various graphs from the user_data
-        pulled from Data.
+    pulled from Data.
+        
+    Attributes
+    ----------
+    graph_title : str = "Graph"
+        String used as the title for any graphing function that is run.
+        Defaults to "Graph".
+    
+    title_size : int = 11 | float
+        Numerical value used as the title font size for any graphing
+        function that is run. Defaults to 11.
+    
+    x_label : str = "x label"
+        String used as the x-axis label for any graphing function with
+        points that is run. Defaults to "x label"
+    
+    y_label : str = "y label"
+        String used as the y-axis label for any graphing function with
+        points that is run. Defaults to "y label".
+        
+    p_color : str = "cyan" | list[str] | ArrayLike[str]
+        Either a single string, list, or ArrayLike of strings that is used
+        to color the points in any graphing function with points that is run.
+        Defaults to "cyan".
+    
+    line_color : str = "black"
+        A string used to color the line in the linreg and resid functions.
+        Defaults to "black".
+    
+    errbar_color : str = "red"
+        A string used to color the error bars in the errbargraph function.
+        Defaults to "red".
+    
+    dist_check : str = "Yes" | "No"
+        A string used to determine if the datahist function will generate
+        normal distrbution histograms. Only accepts "Yes" and "No", and
+        defaults to "No".
+    
+    dataset_check : int = 1 | 2
+        An integer used to determine how many datasets will be generated
+        from the datahist function. Only accepts 1 and 2, and defaults to 1.
+    
+    hist_color : str = "green" | list[str] | ArrayLike[str]
+        Either a single string, list, or ArrayLike of strings to determine
+        the color of the the histogram(s) from the datahist function. Defaults
+        to "green".
+    
+    dbl_pend_line : str = "lime"
+        A string used to change the color of specifically the double pendulum
+        function's line color. Defaults to "lime".
+    
+    dbl_pend_trace : str = "black"
+        A string used to change the color of specifically the double pendulum
+        function's trace line color. Defaults to "black".
     """
     def __init__(cls):
         cls.graph_title = "Graph"
@@ -333,25 +385,18 @@ class Graphs:
         cls.dist_check = 'No'
         cls.dataset_check = 1
         cls.hist_color = 'green'
+        cls.dbl_pend_line = 'lime'
+        cls.dbl_pend_trace = 'black'
     
     def linreg(cls, user_data : Data):
         """ Uses the given x_data and y_data arrays to create a linear
-            regression plot.
+        regression plot.
             
-            Parameters
-            ----------
-            user_data : Data
-                Requires the user to pass in an instance of
-                Data to make use of the user's data.
-                    
-            gtitle : str, optional
-                The desired graph title. Defaults to "Graph".
-            
-            Returns
-            -------
-            plt.show()
-                Opens an external window that shows the linear
-                regression plot of the given data.
+        Parameters
+        ----------
+        user_data : Data
+            Requires the user to pass in an instance of
+            Data to make use of the user's data.
         """
         
         # New x_data and y_data for ease of use
@@ -381,67 +426,47 @@ class Graphs:
         plt.show()
     
     def errbargraph(cls, user_data : Data):
-        """ Uses the given dataframe built from x_data and y_data during
-            initalization to create an error bar plot, making use of
-            the sigma_x value as the constant error.
+        """ Uses the x data and y data from Data to create a point-based
+        with error bars on each point. Error size is the sigma_x value
+        calculated in Data.
             
             Parameters
             ----------
             user_data : Data
                 Requires the user to pass in an instance of
                 Data to make use of the user's data.
-                
-            gtitle : str, optional
-                The desired graph title. Defaults to "Graph".
-            
-            Returns
-            -------
-            plt.show()
-                Opens an external window that displays the
-                error bar graph.
         """
         
         # New df for ease of use
-        df = user_data._df                                                                    
+        # df = user_data._df
+        x_data = user_data._x_data
+        y_data = user_data._y_data
         
-        # Creates an errorbar graph out of the given df data. Sets x to the y_data and y
-        # to the x_data on an assumption that the y_data is the independent variable
-        # yerr is set to the user_data's sigma_x
-        if np.size(cls.p_color) == 1: 
-            df.plot(x = user_data._colname2, y = user_data._colname1,
-                    xlabel = cls.x_label, ylabel = cls.y_label,
-                    linestyle = "", marker = ".", yerr = user_data.sigma_x,
-                    capsize = 3, ecolor = cls.errbar_color, linewidth = 1)
-            plt.title(cls.graph_title, fontsize = cls.title_size)
-        elif np.size(cls.p_color) != 1:
-            for i in range(np.size(cls.p_color)):
-                df.plot(x = user_data._colname2, y = user_data._colname1,
-                    xlabel = cls.x_label, ylabel = cls.y_label,
-                    linestyle = "", marker = ".", yerr = user_data.sigma_x,
-                    color = cls.p_color[i], capsize = 3, ecolor = cls.errbar_color, linewidth = 1)
-                plt.title(cls.graph_title, fontsize = cls.title_size)
+        plt.title(cls.graph_title, fontsize = cls.title_size)
+        plt.xlabel(cls.x_label, fontsize=11)
+        plt.ylabel(cls.y_label, fontsize=11)
+            
+        # Checks the size of the p_color attribute and plots the graph depending on if it's
+        # greater than 1.
+        if np.size(cls.p_color) == 1:
+            plt.errorbar(x=y_data, y=x_data, yerr=user_data.sigma_x, marker=".",
+                         capsize=3, ecolor=cls.errbar_color, linewidth=1, color=cls.p_color,
+                         linestyle="")
+        elif np.size(cls.p_color) > 1:
+            for i in range(np.size(x_data)):
+                plt.errorbar(x=y_data[i], y=x_data[i], yerr=user_data.sigma_x, marker=".",
+                            capsize=3, ecolor=cls.errbar_color, linewidth=1, color=cls.p_color[i])
         plt.show()
     
     def datahist(cls, user_data : Data):
-        """ Uses the given dataframe built from x_data and y_data during
-            initalization to create one or two histograms. There is also
-            the option to turn the graphs into standard distribution
-            graphs (currently a WIP).
+        """Generates a histogram of one or two sets of data pulled
+        from the Data class using pandas' DataFrame.hist method.
         
-            Parameters
-            ----------
-            user_data : Data
-                Requires the user to pass in an instance of
-                Data to make use of the user's data.
-                
-            gtitle : str, optional
-                The desired graph title. Defaults to "Graph".
-            
-            Returns
-            -------
-            plt.show()
-                Opens an external window that displays the
-                histogram(s).
+        Parameters
+        ----------
+        user_data : Data
+            Requires the user to pass in an instance of
+            Data to make use of the user's data.
         """
         # New df for ease of use
         datafile = user_data._df                                                                          
@@ -571,37 +596,14 @@ class Graphs:
     
     def sctrplot(cls, user_data: Data):
         """ Uses the given x_data and y_data to create a scatter plot
-            via matplot.pyplot's scatter method. Customization options
-            are available, similar to the original pyplot method.
+        via matplot.pyplot's scatter method. Customization options
+        are available, similar to the original pyplot method.
 
-            Parameters
-            ----------
-            user_data : Data
-                Requires the user to pass in an instance of
-                Data to make use of the user's data.
-                
-            gtitle : str, optional
-                The desired graph title. Defaults to "Graph".
-                
-            marktype : str, optional
-                The desired marker style. Defaults to "D".
-                See link for all available matplotlib markers:
-                https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers
-                
-            markc : str, optional
-                The desired marker color. Defaults to 'c'.
-                See link for all matplotlob colors:
-                https://matplotlib.org/stable/gallery/color/named_colors.html
-                
-            markedge : str, optional
-                The desired marker edge color. Defaults to 'k'.
-                See link for all matplotlob colors:
-                https://matplotlib.org/stable/gallery/color/named_colors.html
-            
-            Returns
-            -------
-            plt.show()
-                Opens an external window that displays the scatter plot.
+        Parameters
+        ----------
+        user_data : Data
+            Requires the user to pass in an instance of
+            Data to make use of the user's data.
         """
         
         # Local instances of user_data._x_data and user_data._y_data for ease of use
@@ -634,22 +636,14 @@ class Graphs:
     
     def resid(cls, user_data: Data):
         """ Uses user_data._df to create a residuals scatter plot
-            via the seaborn sns.residplot method. The graph's
-            title can optionally be customized.
+        via the seaborn sns.residplot method. The graph's title
+        can optionally be customized.
 
-            Parameters
-            ----------
-            user_data : Data
-                Requires the user to pass in an instance of
-                Data to make use of the user's data.
-                
-            gtitle : str, optional
-                The desired graph title. Defaults to "Graph".
-            
-            Returns
-            -------
-            plt.show()
-                Opens an external window that displays the residuals scatter plot.
+        Parameters
+        ----------
+        user_data : Data
+            Requires the user to pass in an instance of
+            Data to make use of the user's data.
         """
         
         # Sets a new pyplot figure
@@ -666,18 +660,39 @@ class Graphs:
         # Displays the generated plot
         plt.show()
         
-    def dbl_pend(theta_0 : float, phi_0 : float, theta_dot_0 = 0, phi_dot_0 = 0, anim_type = 0):
+    def dbl_pend(cls, theta_0 : float, phi_0 : float, theta_dot_0 = 0, phi_dot_0 = 0, anim_type = 0):
+        """Generates either a point mass or bar mass double pendulum
+        animation based on the pass in initial values. Angles are read
+        as the angle between the bar/string and an imaginary horizontal
+        line going through the point. 
+
+        Parameters
+        ----------
+        theta_0 : float
+            Initial angle of the top bar/string.
+            
+        phi_0 : float
+            Initial angle of the bottom bar/string.
+            
+        theta_dot_0 : int = 0 (optional)
+            Initial velocity of the top bar/string. Defaults to 0.
+            
+        phi_dot_0 : int = 0 (optional)
+            Initial velocity of the bottom bar/string. Defaults to 0.
+            
+        anim_type : int = 0 | 1 (optional)
+            Optional variable that determines the type of double
+            pendulum that will be used. Defaults to 0 for Point Mass,
+            accepts 1 for Bar Mass.
+        """
         import matplotlib.animation as animation
         gravity = 9.81      # m/s^2
-        
-        print('Program defaults to generating a point-mass double pendulum animation.\n'
-              'If you want a bar-mass double pendulum animation, make sure anim_type = 1\n')
         
         len_1 = float(input('Enter the length of the top pendulum in meters: '))
         len_2 = float(input('Enter the length of the bottom pendulum in meters: '))
         tot_len = len_1 + len_2
-        mass_1 = float(input('Enter the mass of the top pendulum in kg: '))
-        mass_2 = float(input('Enter the mass of the bottom pendulum in kg: '))
+        mass_1 = float(input('Enter the mass of the top pendulum in g: '))
+        mass_2 = float(input('Enter the mass of the bottom pendulum in g: '))
         time_lim = float(input('Enter the time limit in seconds: '))
         
         def point_mass(time, state):
@@ -743,8 +758,8 @@ class Graphs:
         ax.set_aspect('equal')
         ax.grid()
 
-        line, = ax.plot([], [], 'o-', color='lime', lw=2)
-        trace, = ax.plot([], [], 'k.-', lw=1, ms=2)
+        line, = ax.plot([], [], 'o-', color=cls.dbl_pend_line, lw=2)
+        trace, = ax.plot([], [], 'k.-', color=cls.dbl_pend_trace, lw=1, ms=2)
         time_template = 'time = %.2fs'
         time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
         
@@ -760,12 +775,16 @@ class Graphs:
             time_text.set_text(time_template % (i*dt))
             return line, trace, time_text
 
-
+        plt.title(cls.graph_title, fontsize=cls.title_size)
         ani = animation.FuncAnimation(fig, animate, len(output), interval=dt*1000, blit=True)
-        ani.save(f'{theta_0}{phi_0}{anim_type}anim.gif', writer='imagemagick', fps=20)
+        print(f"Saving gif as {theta_0}{phi_0}{anim_type}anim.gif")
+        ani.save(f'{str(theta_0).strip('.')}{str(phi_0).strip('.')}{anim_type}anim.gif', writer='imagemagick', fps=20)
         plt.show()
 
 class _InquirePrompts:
+    """A private class that contains all the methods and functions needed
+    to create and run the command-line-interface.
+    """
     def __init__(cls):
         cls.graphs_obj = Graphs()
         
@@ -777,6 +796,11 @@ class _InquirePrompts:
         cls._line_color_prompt = "Line Color"
         cls._errbar_color_prompt = "Error Bar Color"
         cls._hist_color_prompt = "Histogram Color(s)"
+        cls._theta_0 = 122
+        cls._phi_0 = 122
+        cls._theta_0_dot = 0
+        cls._phi_0_dot = 0
+        cls._pend_type = 0
         
         cls.data_q = [
                 inquirer.List(
@@ -878,13 +902,48 @@ class _InquirePrompts:
                 ),
         ]
         
+        cls.dbl_pend_q = [
+            inquirer.List(
+                "dblpend",
+                message="Graphs.dbl_pend -- " + ufunc_msg,
+                choices=[cls._title_prompt,
+                         cls._title_size_prompt,
+                         "Line Color",
+                         "Trace Color",
+                         "Initial Values",
+                         "Pendulum Type",
+                         "Run", "Back", "Exit/Quit"],
+                ),
+        ]
+        
+        cls.dbl_pend_init_q = [
+            inquirer.List(
+                "dblpend_init",
+                message="Choose an initial value to change",
+                choices=["Theta 0",
+                         "Theta 0 Dot",
+                         "Phi 0",
+                         "Phi 0 Dot",
+                         "Back", "Exit/Quit"],
+                ),
+        ]
+        
+        cls.dbl_pend_type_q = [
+            inquirer.List(
+                "dblpend_type",
+                message="Choose an pendulum type",
+                choices=["Point Mass",
+                         "Bar Mass"],
+                ),
+        ]
+        
         cls.val_change_q = [
             inquirer.List(
                 "val_change",
                 message="Would you like to edit this property?",
                 choices=["Yes",
                          "No",
-                         "Back", "Exit/Quit"],
+                        "Exit/Quit"],
                 ),
         ]
         
@@ -907,15 +966,20 @@ class _InquirePrompts:
                 ),
         ]
         
-    def _inq_prompt(cls):
+    def inq_prompt(cls):
+        """Large set of inquiry prompt functions that interconnect to create
+        a smooth, cohesive command-line-interface for ease of use, particularly
+        for users with little to no coding experience.
+        """
+        # data_ans will later be used to check what type of data file will be
+        # read into the Data class
         data_ans = inquirer.prompt(cls.data_q)
         tempdata = Data()
         
-        def run_func(func_name):
-            return_func = func_name()
-            return return_func
-        
         def cont_check_prompt():
+            """Used to verify whether or not the user wants to keep the program
+            running to use other functions.
+            """
             match inquirer.prompt(cls.cont_check)["cont_check"]:
                 case "Yes":
                     func_prompts()
@@ -923,6 +987,11 @@ class _InquirePrompts:
                     sys.exit("Closing program...")
         
         def val_change_prompt(val_type : str, curr_val):
+            """Function used to check against what type of variable is being
+            changed so the proper variable type can be returned. i.e. making
+            sure that the title size is returned as a numerical rather than
+            a string.
+            """
             match inquirer.prompt(cls.val_change_q)["val_change"]:
                 case "Yes":
                     match val_type:
@@ -931,7 +1000,7 @@ class _InquirePrompts:
                         case "size":
                             new_val = input("New size value: ")
                             try:
-                                int(new_val)
+                                float(new_val)
                                 return new_val
                             except ValueError:
                                 print("\nOnly numerical values are accepted. Resetting to previous value.\n")
@@ -950,12 +1019,19 @@ class _InquirePrompts:
                                         return curr_val
                                     else:
                                         return p_color_list
+                        case "angle" | "velocity":
+                            new_val = input(f"New {val_type} value. If this is an angle, use in degrees: ")
+                            try:
+                                float(new_val)
+                                return new_val
+                            except ValueError:
+                                print("\nOnly numerical values are accepted. Resetting to previous value.\n")
+                                return curr_val
                 case "No":
                     return curr_val
                 case "Exit/Quit":
                     sys.exit("Closing program...")
 
-        # "Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Line Color", "Run", "Back"
         def linreg_prompts():
             match inquirer.prompt(cls.linreg_q)["linreg"]:
                 case cls._title_prompt:
@@ -995,8 +1071,6 @@ class _InquirePrompts:
                     func_prompts()
                 case "Exit/Quit":
                     sys.exit("Closing program...")
-                case _:
-                    print('WIP section')
         
         def errbar_prompts():
             match inquirer.prompt(cls.errbar_q)["errbar"]:
@@ -1041,19 +1115,26 @@ class _InquirePrompts:
         # "Title", "Title Size", "Normal Distribution", "Bar Color", "Dataset Count", "Run", "Back"
         def datahist_prompts():
             match inquirer.prompt(cls.datahist_q)["datahist"]:
-                case "Title":
-                    cls.graphs_obj.graph_title = input("Enter a new graph title: ")
+                case cls._title_prompt:
+                    curr_title = cls.graphs_obj.graph_title
+                    print(f"Current title: {curr_title}")
+                    cls.graphs_obj.graph_title = val_change_prompt('title', curr_title)
                     return datahist_prompts()
-                case "Title Size":
-                    try:
-                        cls.graphs_obj.title_size = float(input("Enter a new title size: "))
-                    except ValueError as e:
-                        e.add_note("Only numerical values are accepted")
-                        return datahist_prompts()
-                case "x-label":
-                    print("WIP")
-                case "y-label":
-                    print("WIP")
+                case cls._title_size_prompt:
+                    curr_size = cls.graphs_obj.title_size
+                    print(f"Current size: {curr_size}")
+                    cls.graphs_obj.title_size = val_change_prompt('size', curr_size)
+                    return datahist_prompts()
+                case cls._x_label_prompt:
+                    curr_label = cls.graphs_obj.x_label
+                    print(f"Current label: {curr_label}")
+                    cls.graphs_obj.x_label = val_change_prompt('label', curr_label)
+                    return errbar_prompts
+                case cls._y_label_prompt:
+                    curr_label = cls.graphs_obj.y_label
+                    print(f"Current label: {curr_label}")
+                    cls.graphs_obj.y_label = val_change_prompt('label', curr_label)
+                    return errbar_prompts()
                 case "Point Color(s)":
                     print("WIP")
                 case "Line Color":
@@ -1068,14 +1149,156 @@ class _InquirePrompts:
         
         # "Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Run", "Back"
         def sctrplot_prompts():
-            return
+            match inquirer.prompt(cls.linreg_q)["linreg"]:
+                case cls._title_prompt:
+                    curr_title = cls.graphs_obj.graph_title
+                    print(f"Current title: {curr_title}")
+                    cls.graphs_obj.graph_title = val_change_prompt('title', curr_title)
+                    return sctrplot_prompts()
+                case cls._title_size_prompt:
+                    curr_size = cls.graphs_obj.title_size
+                    print(f"Current size: {curr_size}")
+                    cls.graphs_obj.title_size = val_change_prompt('size', curr_size)
+                    return sctrplot_prompts()
+                case cls._x_label_prompt:
+                    curr_label = cls.graphs_obj.x_label
+                    print(f"Current label: {curr_label}")
+                    cls.graphs_obj.x_label = val_change_prompt('label', curr_label)
+                    return sctrplot_prompts()
+                case cls._y_label_prompt:
+                    curr_label = cls.graphs_obj.y_label
+                    print(f"Current label: {curr_label}")
+                    cls.graphs_obj.y_label = val_change_prompt('label', curr_label)
+                    return sctrplot_prompts()
+                case cls._point_colors_prompt:
+                    curr_p_color = cls.graphs_obj.p_color
+                    print(f"Current color(s): {curr_p_color}")
+                    cls.graphs_obj.p_color = val_change_prompt('point', curr_p_color)
+                    return sctrplot_prompts()
+                case "Run":
+                    cls.graphs_obj.sctrplot(tempdata)
+                    cont_check_prompt()
+                case "Back":
+                    func_prompts()
+                case "Exit/Quit":
+                    sys.exit("Closing program...")
         
         # "Title", "Title Size", "x-label", "y-label", "Point Color(s)", "Line Color", "Run", "Back"
         def resid_prompts():
-            return
+            match inquirer.prompt(cls.linreg_q)["linreg"]:
+                case cls._title_prompt:
+                    curr_title = cls.graphs_obj.graph_title
+                    print(f"Current title: {curr_title}")
+                    cls.graphs_obj.graph_title = val_change_prompt('title', curr_title)
+                    return linreg_prompts()
+                case cls._title_size_prompt:
+                    curr_size = cls.graphs_obj.title_size
+                    print(f"Current size: {curr_size}")
+                    cls.graphs_obj.title_size = val_change_prompt('size', curr_size)
+                    return linreg_prompts()
+                case cls._x_label_prompt:
+                    curr_label = cls.graphs_obj.x_label
+                    print(f"Current label: {curr_label}")
+                    cls.graphs_obj.x_label = val_change_prompt('label', curr_label)
+                    return linreg_prompts()
+                case cls._y_label_prompt:
+                    curr_label = cls.graphs_obj.y_label
+                    print(f"Current label: {curr_label}")
+                    cls.graphs_obj.y_label = val_change_prompt('label', curr_label)
+                    return linreg_prompts()
+                case cls._point_colors_prompt:
+                    curr_p_color = cls.graphs_obj.p_color
+                    print(f"Current color(s): {curr_p_color}")
+                    cls.graphs_obj.p_color = val_change_prompt('point', curr_p_color)
+                    return linreg_prompts()
+                case cls._line_color_prompt:
+                    curr_line_color = cls.graphs_obj.line_color
+                    print(f"Current line color: {curr_line_color}")
+                    cls.graphs_obj.line_color = val_change_prompt('line', curr_line_color)
+                    return linreg_prompts()
+                case "Run":
+                    cls.graphs_obj.linreg(tempdata)
+                    cont_check_prompt()
+                case "Back":
+                    func_prompts()
+                case "Exit/Quit":
+                    sys.exit("Closing program...")
         
         def dbl_pend_prompts():
-            return
+            print("Note: This menu will allow you to change the initial angles and velocities",
+                  "\nand graph properties. When you run the function it will ask you to manually",
+                  "\nenter multiple other initial values, such as length and weight.\n")
+            
+            match inquirer.prompt(cls.dbl_pend_q)["dblpend"]:
+                case cls._title_prompt:
+                    curr_title = cls.graphs_obj.graph_title
+                    print(f"Current title: {curr_title}")
+                    cls.graphs_obj.graph_title = val_change_prompt('title', curr_title)
+                    return dbl_pend_prompts()
+                case cls._title_size_prompt:
+                    curr_size = cls.graphs_obj.title_size
+                    print(f"Current size: {curr_size}")
+                    cls.graphs_obj.title_size = val_change_prompt('size', curr_size)
+                    return dbl_pend_prompts()
+                case "Line Color":
+                    curr_pend_line_color = cls.graphs_obj.dbl_pend_line
+                    print(f"Current line color: {curr_pend_line_color}")
+                    cls.graphs_obj.dbl_pend_line = val_change_prompt('line', curr_pend_line_color)
+                    return dbl_pend_prompts()
+                case "Trace Color":
+                    curr_trace_color = cls.graphs_obj.dbl_pend_trace
+                    print(f"Current trace: {curr_trace_color}")
+                    cls.graphs_obj.dbl_pend_trace = val_change_prompt('line', curr_trace_color)
+                    return dbl_pend_prompts()
+                case "Initial Values":
+                    dbl_pend_init_prompts()
+                case "Pendulum Type":
+                    if cls._pend_type == 0:
+                        curr_pend_type = "Point Mass"
+                    elif cls._pend_type == 1:
+                        curr_pend_type = "Bar Mass"
+                    print(f"Current pendulum type: {curr_pend_type}")
+                    match inquirer.prompt(cls.dbl_pend_type_q)["dblpend_type"]:
+                        case "Point Mass":
+                            cls._pend_type = 0
+                            return dbl_pend_prompts()
+                        case "Bar Mass":
+                            cls._pend_type = 1
+                            return dbl_pend_prompts()
+                case "Run":
+                    cls.graphs_obj.dbl_pend(cls._theta_0, cls._phi_0, cls._theta_0_dot, cls._phi_0_dot)
+                    cont_check_prompt()
+                case "Back":
+                    func_prompts()
+                case "Exit/Quit":
+                    sys.exit("Closing program...")
+        
+        def dbl_pend_init_prompts():
+            match inquirer.prompt(cls.dbl_pend_init_q)["dblpend_init"]:
+                case "Theta 0":
+                    curr_theta = cls._theta_0
+                    print(f"Current theta 0: {curr_theta}")
+                    cls._theta_0 = val_change_prompt('angle', curr_theta)
+                    return dbl_pend_init_prompts()
+                case "Theta 0 Dot":
+                    curr_theta_dot = cls._theta_0_dot
+                    print(f"Current theta 0 dot: {curr_theta_dot}")
+                    cls._theta_0_dot = val_change_prompt('velocity', curr_theta_dot)
+                    return dbl_pend_init_prompts()
+                case "Phi 0":
+                    curr_phi = cls._phi_0
+                    print(f"Current phi 0: {curr_phi}")
+                    cls._phi_0 = val_change_prompt('angle', curr_phi)
+                    return dbl_pend_init_prompts()
+                case "Phi 0 Dot":
+                    curr_phi_dot = cls._phi_0_dot
+                    print(f"Current phi 0 dot: {curr_phi_dot}")
+                    cls._phi_0_dot = val_change_prompt('velocity', curr_phi_dot)
+                    return dbl_pend_init_prompts()
+                case "Back":
+                    return dbl_pend_prompts()
+                case "Exit/Quit":
+                    sys.exit("Closing program...")
         
         def func_prompts():
             funcs_ans = inquirer.prompt(cls.funcs_q)
@@ -1101,13 +1324,20 @@ class _InquirePrompts:
                     sys.exit("Closing program...")
             
         func_prompts()
-    
-def user_cli():
-    inq = _InquirePrompts()
-    inq._inq_prompt()
 
 # External function that can be called by the user if they wish to. Is used only inside Data
-def csvreader()-> np.ndarray:
+def csvreader():
+    """Reads in a csv file selected via a tkinter file explorer window.
+    Assumes there is no header row or index column. Data should be organized
+    into columns rather than rows.
+
+    Returns
+    -------
+    ndarray : x data read in from the selected csv file
+    
+    ndarray : y data read in from the selected csv file OR an array of zeroes
+    the same size as the x data array.
+    """
     print("Please choose a csv file:")
     tk = Tk()
     tk.withdraw()
@@ -1155,6 +1385,13 @@ def csvreader()-> np.ndarray:
     # Returns x_data and y_data
     return x_data, y_data
 
+def _user_cli():
+    """Initializes and calls the command-line-interface menus that can be used to
+    make preset modifications and run functions.
+    """
+    inq = _InquirePrompts()
+    inq.inq_prompt()
+
 if __name__ == "__main__":
     import sys
     import subprocess
@@ -1186,4 +1423,4 @@ if __name__ == "__main__":
     installed_packages = check_install()
     print(f"\nInstalled packages w/ dependencies:\n{installed_packages}\n")
     
-    user_cli()
+    _user_cli()

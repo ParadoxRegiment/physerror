@@ -1,6 +1,6 @@
 # API Reference
 
-## *class* physerror.Data(user_x_data: ndarray, user_y_data: ndarray)
+### *class* physerror.Data(user_x_data: ArrayLike[int | float] = [1,2,3,4,5], user_y_data: ArrayLike[int | float] = [1,2,3,4,5])
 
 An initializer and container dataclass that is initialized and reused
 by the user and other classes, as well as their methods. There are many
@@ -9,11 +9,6 @@ general error propagation methods, and one class Method to find, document,
 and delete any data points that exist outside the standard 2 \* sigma outlier
 “limit”.
 
-* **Parameters:**
-  * **user_x_data** (*np.ndarray*) – []
-  * **user_y_data** (*np.ndarray*) – []
-
-### Attributes
 #### delta
 
 []
@@ -126,10 +121,13 @@ and delete any data points that exist outside the standard 2 \* sigma outlier
 * **Type:**
   float
 
+* **Parameters:**
+  * **user_x_data** (*ArrayLike* *[**float* *|* *int* *]*) – []
+  * **user_y_data** (*ArrayLike* *[**float* *|* *int* *]*) – []
+
 #### NOTE
 Will update this soon-ish
 
-### Methods
 #### outlier()
 
 A method that creates two empty arrays then searches the
@@ -144,97 +142,192 @@ the standard 2 \* sigma outlier “limit”.
     in the user’s y_data, or a string stating no outliers were
     found.
 
-## *class* physerror.Graphs()
+### *class* physerror.Graphs
 
 Allows the user to create various graphs from the user_data
-pulled from Data. There is no \_\_init_\_ method for this Class.
+pulled from Data.
 
-### Methods
-#### datahist(gtitle='Graph')
+#### graph_title
 
-Uses the given dataframe built from x_data and y_data during
-initalization to create one or two histograms. There is also
-the option to turn the graphs into standard distribution
-graphs (currently a WIP).
+String used as the title for any graphing function that is run.
+Defaults to “Graph”.
+
+* **Type:**
+  str = “Graph”
+
+#### title_size
+
+Numerical value used as the title font size for any graphing
+function that is run. Defaults to 11.
+
+* **Type:**
+  int = 11 | float
+
+#### x_label
+
+String used as the x-axis label for any graphing function with
+points that is run. Defaults to “x label”
+
+* **Type:**
+  str = “x label”
+
+#### y_label
+
+String used as the y-axis label for any graphing function with
+points that is run. Defaults to “y label”.
+
+* **Type:**
+  str = “y label”
+
+#### p_color
+
+Either a single string, list, or ArrayLike of strings that is used
+to color the points in any graphing function with points that is run.
+Defaults to “cyan”.
+
+* **Type:**
+  str = “cyan” | list[str] | ArrayLike[str]
+
+#### line_color
+
+A string used to color the line in the linreg and resid functions.
+Defaults to “black”.
+
+* **Type:**
+  str = “black”
+
+#### errbar_color
+
+A string used to color the error bars in the errbargraph function.
+Defaults to “red”.
+
+* **Type:**
+  str = “red”
+
+#### dist_check
+
+A string used to determine if the datahist function will generate
+normal distrbution histograms. Only accepts “Yes” and “No”, and
+defaults to “No”.
+
+* **Type:**
+  str = “Yes” | “No”
+
+#### dataset_check
+
+An integer used to determine how many datasets will be generated
+from the datahist function. Only accepts 1 and 2, and defaults to 1.
+
+* **Type:**
+  int = 1 | 2
+
+#### hist_color
+
+Either a single string, list, or ArrayLike of strings to determine
+the color of the the histogram(s) from the datahist function. Defaults
+to “green”.
+
+* **Type:**
+  str = “green” | list[str] | ArrayLike[str]
+
+#### dbl_pend_line
+
+A string used to change the color of specifically the double pendulum
+function’s line color. Defaults to “lime”.
+
+* **Type:**
+  str = “lime”
+
+#### dbl_pend_trace
+
+A string used to change the color of specifically the double pendulum
+function’s trace line color. Defaults to “black”.
+
+* **Type:**
+  str = “black”
+
+#### datahist(user_data: [Data](#physerror.Data))
+
+Generates a histogram of one or two sets of data pulled
+from the Data class using pandas’ DataFrame.hist method.
 
 * **Parameters:**
-  * **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
-    Data to make use of the user’s data.
-  * **gtitle** (*str* *,* *optional*) – The desired graph title. Defaults to “Graph”.
-* **Returns:**
-  Opens an external window that displays the
-  histogram(s).
-* **Return type:**
-  plt.show()
+  **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
+  Data to make use of the user’s data.
 
-#### errbargraph(gtitle='Graph')
+#### dbl_pend(theta_0: float, phi_0: float, theta_dot_0=0, phi_dot_0=0, anim_type=0)
 
-Uses the given dataframe built from x_data and y_data during
-initalization to create an error bar plot, making use of
-the sigma_x value as the constant error.
+Generates either a point mass or bar mass double pendulum
+animation based on the pass in initial values. Angles are read
+as the angle between the bar/string and an imaginary horizontal
+line going through the point.
 
 * **Parameters:**
-  * **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
-    Data to make use of the user’s data.
-  * **gtitle** (*str* *,* *optional*) – The desired graph title. Defaults to “Graph”.
-* **Returns:**
-  Opens an external window that displays the
-  error bar graph.
-* **Return type:**
-  plt.show()
+  * **theta_0** (*float*) – Initial angle of the top bar/string.
+  * **phi_0** (*float*) – Initial angle of the bottom bar/string.
+  * **theta_dot_0** (*int = 0* *(**optional* *)*) – Initial velocity of the top bar/string. Defaults to 0.
+  * **phi_dot_0** (*int = 0* *(**optional* *)*) – Initial velocity of the bottom bar/string. Defaults to 0.
+  * **anim_type** (*int = 0* *|* *1* *(**optional* *)*) – Optional variable that determines the type of double
+    pendulum that will be used. Defaults to 0 for Point Mass,
+    accepts 1 for Bar Mass.
 
-#### linreg(gtitle='Graph')
+#### errbargraph(user_data: [Data](#physerror.Data))
+
+Uses the x data and y data from Data to create a point-based
+with error bars on each point. Error size is the sigma_x value
+calculated in Data.
+
+> user_data
+> : Requires the user to pass in an instance of
+>   Data to make use of the user’s data.
+
+#### linreg(user_data: [Data](#physerror.Data))
 
 Uses the given x_data and y_data arrays to create a linear
 regression plot.
 
 * **Parameters:**
-  * **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
-    Data to make use of the user’s data.
-  * **gtitle** (*str* *,* *optional*) – The desired graph title. Defaults to “Graph”.
-* **Returns:**
-  Opens an external window that shows the linear
-  regression plot of the given data.
-* **Return type:**
-  plt.show()
+  **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
+  Data to make use of the user’s data.
 
-#### resid(gtitle='Graph')
+#### resid(user_data: [Data](#physerror.Data))
 
 Uses user_data._df to create a residuals scatter plot
-via the seaborn sns.residplot method. The graph’s
-title can optionally be customized.
+via the seaborn sns.residplot method. The graph’s title
+can optionally be customized.
 
 * **Parameters:**
-  * **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
-    Data to make use of the user’s data.
-  * **gtitle** (*str* *,* *optional*) – The desired graph title. Defaults to “Graph”.
-* **Returns:**
-  Opens an external window that displays the residuals scatter plot.
-* **Return type:**
-  plt.show()
+  **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
+  Data to make use of the user’s data.
 
-#### sctrplot(gtitle='Graph', marktype='D', markc='c', markedge='k')
+#### sctrplot(user_data: [Data](#physerror.Data))
 
 Uses the given x_data and y_data to create a scatter plot
 via matplot.pyplot’s scatter method. Customization options
 are available, similar to the original pyplot method.
 
 * **Parameters:**
-  * **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
-    Data to make use of the user’s data.
-  * **gtitle** (*str* *,* *optional*) – The desired graph title. Defaults to “Graph”.
-  * **marktype** (*str* *,* *optional*) – The desired marker style. Defaults to “D”.
-    See link for all available matplotlib markers:
-    [https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers](https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers)
-  * **markc** (*str* *,* *optional*) – The desired marker color. Defaults to ‘c’.
-    See link for all matplotlob colors:
-    [https://matplotlib.org/stable/gallery/color/named_colors.html](https://matplotlib.org/stable/gallery/color/named_colors.html)
-  * **markedge** (*str* *,* *optional*) – The desired marker edge color. Defaults to ‘k’.
-    See link for all matplotlob colors:
-    [https://matplotlib.org/stable/gallery/color/named_colors.html](https://matplotlib.org/stable/gallery/color/named_colors.html)
-* **Returns:**
-  Opens an external window that displays the scatter plot.
-* **Return type:**
-  plt.show()
+  **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
+  Data to make use of the user’s data.
 
 ### physerror.csvreader()
+
+Reads in a csv file selected via a tkinter file explorer window.
+Assumes there is no header row or index column. Data should be organized
+into columns rather than rows.
+
+* **Returns:**
+  * **ndarray** (*x data read in from the selected csv file*)
+  * **ndarray** (*y data read in from the selected csv file OR an array of zeroes*)
+  * *the same size as the x data array.*
+
+### physerror.csvreader()
+
+Reads in a csv file selected via a tkinter file explorer window.
+Assumes there is no header row or index column. Data should be organized
+into columns rather than rows.
+
+* **Returns:**
+  * **ndarray** (*x data read in from the selected csv file*)
+  * **ndarray** (*y data read in from the selected csv file OR an array of zeroes*)
+  * *the same size as the x data array.*
