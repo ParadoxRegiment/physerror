@@ -420,7 +420,7 @@ class Graphs:
         cls.title_size = 11
         cls.x_label = "x label"
         cls.y_label = "y label"
-        cls.p_color = 'cyan'
+        cls.p_color = 'red'
         cls.line_color = 'black'
         cls.errbar_color = 'red'
         cls.dist_check = 'No'
@@ -449,7 +449,7 @@ class Graphs:
         
         # Sets the figure data to x_data and y_data, colored orange
         if np.size(cls.p_color) == 1: 
-            plt.plot(x_data[i], y_data[i], 'o', color = cls.p_color)
+            plt.plot(x_data, y_data, 'o', color = cls.p_color, linestyle="")
         elif np.size(cls.p_color) != 1:
             for i in range(np.size(cls.p_color)):
                 plt.plot(x_data[i], y_data[i], 'o', color = cls.p_color[i])
@@ -851,7 +851,7 @@ class _InquirePrompts:
                 inquirer.List(
                     "data",
                     message="Select a data file type",
-                    choices=["CSV", "Excel", "XML - WIP", "JSON - WIP"],
+                    choices=["CSV", "Excel", "JSON - WIP"],
                     ),
         ]
         

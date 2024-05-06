@@ -1,6 +1,6 @@
 # API Reference
 
-### *class* physerror.Data(user_x_data: ArrayLike[int | float] = [1,2,3,4,5], user_y_data: ArrayLike[int | float] = [1,2,3,4,5])
+### *class* physerror.Data(user_x_data: ~collections.abc.Buffer | ~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]] | ~numpy._typing._nested_sequence._NestedSequence[~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]]] | bool | int | float | complex | str | bytes | ~numpy._typing._nested_sequence._NestedSequence[bool | int | float | complex | str | bytes] = <factory>, user_y_data: ~collections.abc.Buffer | ~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]] | ~numpy._typing._nested_sequence._NestedSequence[~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]]] | bool | int | float | complex | str | bytes | ~numpy._typing._nested_sequence._NestedSequence[bool | int | float | complex | str | bytes] = <factory>)
 
 An initializer and container dataclass that is initialized and reused
 by the user and other classes, as well as their methods. There are many
@@ -127,6 +127,11 @@ and delete any data points that exist outside the standard 2 \* sigma outlier
 
 #### NOTE
 Will update this soon-ish
+
+#### export()
+
+Exports error analysis calculations to either an Excel workbook
+or JSON file based on user’s choice.
 
 #### outlier()
 
@@ -262,6 +267,10 @@ animation based on the pass in initial values. Angles are read
 as the angle between the bar/string and an imaginary horizontal
 line going through the point.
 
+Point mass calculations and animation code were taken from
+matplotlib’s documentation:
+[https://matplotlib.org/stable/gallery/animation/double_pendulum.html](https://matplotlib.org/stable/gallery/animation/double_pendulum.html)
+
 * **Parameters:**
   * **theta_0** (*float*) – Initial angle of the top bar/string.
   * **phi_0** (*float*) – Initial angle of the bottom bar/string.
@@ -309,17 +318,6 @@ are available, similar to the original pyplot method.
 * **Parameters:**
   **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
   Data to make use of the user’s data.
-
-### physerror.csvreader()
-
-Reads in a csv file selected via a tkinter file explorer window.
-Assumes there is no header row or index column. Data should be organized
-into columns rather than rows.
-
-* **Returns:**
-  * **ndarray** (*x data read in from the selected csv file*)
-  * **ndarray** (*y data read in from the selected csv file OR an array of zeroes*)
-  * *the same size as the x data array.*
 
 ### physerror.csvreader()
 
