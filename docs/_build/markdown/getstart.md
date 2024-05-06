@@ -54,27 +54,27 @@ the Graphs.linreg() method. The example screenshots are, for the most part, appl
 
 **Selecting a file type**
 
-![image](docs_screenshots/file_select.png)
+![image](docs/docs_screenshots/file_select.png)
 
 **Reading in a CSV file**
 
-![image](docs_screenshots/csv_read.png)
+![image](docs/docs_screenshots/csv_read.png)
 
 **Exporting error data to an Excel file**
 
-![image](docs_screenshots/excel_export.png)
+![image](docs/docs_screenshots/excel_export.png)
 
 **Property editing menu - Graphs.linreg() example**
 
-![image](docs_screenshots/prop_edit_linreg.png)
+![image](docs/docs_screenshots/prop_edit_linreg.png)
 
 **Editing specific values - Title example**
 
-![image](docs_screenshots/prop_edit_gen.png)
+![image](docs/docs_screenshots/prop_edit_gen.png)
 
 **Graphs.linreg() output after being run**
 
-![image](docs_screenshots/linreg_example.png)
+![image](docs/docs_screenshots/linreg_example.png)
 
 ## Usage
 
