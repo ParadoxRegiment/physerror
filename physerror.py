@@ -213,6 +213,8 @@ class Data():
             found.
         """
         
+        ### For some reason this is throwing an IndexError when deleting 
+        
         # New x_data and y_data variables for ease of use
         x_data = cls._x_data
         y_data = cls._y_data
@@ -246,7 +248,8 @@ class Data():
                 j += 1        
                 
                 # Deletes the outlier cell from x_data                              
-                x_data = np.delete(x_data, i)               
+                x_data = np.delete(x_data, i)
+                i -= 1
                 
             # Checks if the row value is less than the mean - 2*sigma
             elif row < (cls.x_mean - 2*cls.sigma_x):    
@@ -258,7 +261,8 @@ class Data():
                 j += 1                                      
                 
                 # Deletes the outlier cell from x_data
-                x_data = np.delete(x_data, i)               
+                x_data = np.delete(x_data, i)
+                i -= 1
                 
             # Iterates i by one
             i += 1                                          
@@ -276,7 +280,8 @@ class Data():
                 l += 1                                      
                 
                 # Deletes the outlier cell from y_data
-                y_data = np.delete(y_data, k)               
+                y_data = np.delete(y_data, k)
+                k -= 1
             
             # Checks if the row value is less than the mean - 2*sigma
             elif row < (cls.y_mean - 2*cls.sigma_y):    
@@ -289,12 +294,13 @@ class Data():
                 
                 # Deletes the outlier cell from y_data
                 y_data = np.delete(y_data, k)
+                k -= 1
                 
             # Iterates k by one
             k += 1                                          
             
         # Resizes the x_outliers array to the size of j to remove redundant zeroes
-        x_outliers.resize(j)                                
+        x_outliers.resize(j)
         
         # Resizes the y_outliers array to the size of l to remove redundant zeroes
         y_outliers.resize(l)                                
@@ -314,11 +320,46 @@ class Data():
         return x_outliers, y_outliers
     
     def export(cls):
-        # Will be written to allow for the exportation of data various formats.
-        return
+        """Exports error analysis calculations to either an Excel workbook
+        or JSON file based on user's choice.
+        """
+        import inquirer
+        cls_dict = vars(cls)
+        cls_dict_keys = cls_dict.keys()
+        cls_keys_list = []
+        cls_values_spliced_list = []
+        for var in cls_dict_keys:
+            if any(var_type in var for var_type in ['data', 'df', 'col']):
+                pass
+            else:
+                cls_keys_list.append(var)
+                cls_values_spliced_list.append(cls_dict[var])
+        export_df = pd.DataFrame(np.transpose([cls_values_spliced_list]), index=cls_keys_list, columns=["Error Calculations"])
+        print(export_df, "\n")
+        
+        file_type_q = [
+            inquirer.List(
+                "export_file",
+                message="Choose a file type to export to",
+                choices=["Excel",
+                         "JSON"],
+                ),
+        ]
+        
+        match inquirer.prompt(file_type_q)["export_file"]:
+            case "Excel":
+                file_name = input("Enter a file name (no extension): ")
+                file_path = file_name + ".xlsx"
+                export_df.to_excel(file_path)
+            case "JSON":
+                file_name = input("Enter a file name (no extension): ")
+                file_path = file_name + ".json"
+                export_df.to_json(file_path, orient='columns', indent=4)
+        
+        print("File exported successfully.\n")
 
 class Graphs:
-    """ Allows the user to create various graphs from the user_data
+    """Allows the user to create various graphs from the user_data
     pulled from Data.
         
     Attributes
@@ -664,7 +705,11 @@ class Graphs:
         """Generates either a point mass or bar mass double pendulum
         animation based on the pass in initial values. Angles are read
         as the angle between the bar/string and an imaginary horizontal
-        line going through the point. 
+        line going through the point.
+        
+        Point mass calculations and animation code were taken from
+        matplotlib's documentation:
+        https://matplotlib.org/stable/gallery/animation/double_pendulum.html
 
         Parameters
         ----------
@@ -814,7 +859,8 @@ class _InquirePrompts:
             inquirer.List(
                 "function",
                 message="Select a function to modify and/or run",
-                choices=["Data.outlier",
+                choices=["Export Data",
+                         "Data.outlier",
                          "Graphs.linreg",
                          "Graphs.errbargraph",
                          "Graphs.datahist",
@@ -1303,6 +1349,9 @@ class _InquirePrompts:
         def func_prompts():
             funcs_ans = inquirer.prompt(cls.funcs_q)
             match funcs_ans["function"]:
+                case "Export Data":
+                    tempdata.export()
+                    cont_check_prompt()
                 case "Data.outlier":
                     xout, yout = tempdata.outlier()
                     print(f"x outliers: {xout}")
@@ -1407,9 +1456,10 @@ if __name__ == "__main__":
         return installed_packages
 
     
-    req_packages = ['numpy', 'pandas', 'matplotlib', 'tk', 'scipy', 'seaborn', 'inquirer']
+    req_packages = ['numpy', 'pandas[excel]', 'matplotlib', 'tk', 'scipy', 'seaborn', 'inquirer']
     installed_packages = check_install()
     print(f"Checking for required packages: {req_packages}\n")
+    req_packages[1] = 'pandas'
     
     for pkg in req_packages:
         if pkg in installed_packages:
