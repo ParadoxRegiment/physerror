@@ -3,14 +3,17 @@ sphinx-quickstart on Tue Apr  2 12:58:06 2024.
 You can adapt this file completely to your liking, but it should at least
 contain the root `toctree` directive. -->
 
-# Getting Started
+Getting Started
+===============
 
-## Installation
+Installation
+------------
 
 To use physerror as a module, download the `physerror.py` file and save it in the same directory as your working directory. Use
 `import physerror as phyerr` to import the module into your file. Otherwise, download the file and save it in any given directory.
 
-## Examples ##   {#examples}
+Examples
+--------
 
 These examples apply only if you wish to import physerror into another project and use it there. If you only want to use the module
 to do error calculations and create graphs, it is highly recommended that you simply run the file itself for its built-in user menu.
@@ -76,7 +79,8 @@ the Graphs.linreg() method. The example screenshots are, for the most part, appl
 
 ![](https://i.ibb.co/DfJ9Y8j/linreg-example.png)
 
-## Usage    {#usage}
+Usage
+-----
 
 physerror can be used either as a Python module or as a self contained Python script. To see how it should
 be used as a module, see the code-block below. To use it as a script, simply run the file either in a Python
