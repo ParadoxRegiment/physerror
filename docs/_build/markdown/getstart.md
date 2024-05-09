@@ -54,27 +54,27 @@ the Graphs.linreg() method. The example screenshots are, for the most part, appl
 
 **Selecting a file type**
 
-![image](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/file_select.png)
+![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/file_select.png)
 
 **Reading in a CSV file**
 
-![image](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/csv_read.png)
+![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/csv_read.png)
 
 **Exporting error data to an Excel file**
 
-![image](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/excel_export.png)
+![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/excel_export.png)
 
 **Property editing menu - Graphs.linreg() example**
 
-![image](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/prop_edit_linreg.png)
+![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/prop_edit_linreg.png)
 
 **Editing specific values - Title example**
 
-![image](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/prop_edit_gen.png)
+![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/prop_edit_gen.png)
 
 **Graphs.linreg() output after being run**
 
-![image](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/linreg_example.png)
+![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/linreg_example.png)
 
 ## Usage
 
