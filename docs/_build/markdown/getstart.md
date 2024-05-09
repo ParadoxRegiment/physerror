@@ -76,7 +76,7 @@ the Graphs.linreg() method. The example screenshots are, for the most part, appl
 
 ![](https://i.ibb.co/DfJ9Y8j/linreg-example.png)
 
-## Usage {#usage}
+## Usage<a name="usage"></a>
 
 physerror can be used either as a Python module or as a self contained Python script. To see how it should
 be used as a module, see the code-block below. To use it as a script, simply run the file either in a Python
