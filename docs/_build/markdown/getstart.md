@@ -54,11 +54,11 @@ the Graphs.linreg() method. The example screenshots are, for the most part, appl
 
 **Selecting a file type**
 
-![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/file_select.png)
+![](https://i.ibb.co/RNKyLf6/file-select.png)
 
 **Reading in a CSV file**
 
-![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/csv_read.png)
+![](https://i.ibb.co/TMDSjrj/csv-read.png)
 
 **Exporting error data to an Excel file**
 
@@ -66,15 +66,15 @@ the Graphs.linreg() method. The example screenshots are, for the most part, appl
 
 **Property editing menu - Graphs.linreg() example**
 
-![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/prop_edit_linreg.png)
+![](https://i.ibb.co/xgY3WvS/prop-edit-linreg.png)
 
 **Editing specific values - Title example**
 
-![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/prop_edit_gen.png)
+![](https://i.ibb.co/ThhKKxq/prop-edit-gen.png)
 
 **Graphs.linreg() output after being run**
 
-![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/linreg_example.png)
+![](https://i.ibb.co/DfJ9Y8j/linreg-example.png)
 
 ## Usage
 
