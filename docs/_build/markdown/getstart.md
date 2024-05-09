@@ -10,7 +10,7 @@ contain the root `toctree` directive. -->
 To use physerror as a module, download the `physerror.py` file and save it in the same directory as your working directory. Use
 `import physerror as phyerr` to import the module into your file. Otherwise, download the file and save it in any given directory.
 
-## Examples {#examples}
+## Examples<a name="examples"></a>
 
 These examples apply only if you wish to import physerror into another project and use it there. If you only want to use the module
 to do error calculations and create graphs, it is highly recommended that you simply run the file itself for its built-in user menu.
