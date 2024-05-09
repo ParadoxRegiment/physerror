@@ -62,7 +62,7 @@ the Graphs.linreg() method. The example screenshots are, for the most part, appl
 
 **Exporting error data to an Excel file**
 
-![](https://github.com/ParadoxRegiment/physerror/tree/main/docs/docs_screenshots/excel_export.png)
+![](https://ibb.co/W5v0J0K)
 
 **Property editing menu - Graphs.linreg() example**
 
