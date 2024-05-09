@@ -95,4 +95,4 @@ Please make sure to update tests as appropriate.
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[GNU GPLv3](https://github.com/ParadoxRegiment/physerror/blob/main/LICENSE.txt)
