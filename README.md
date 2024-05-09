@@ -7,8 +7,16 @@ Bothell.
 If you are new to coding, look below under [Examples](docs/_build/markdown/getstart.md#examples) and [Usage](#usage) for how to load
 your data, pull calculated values, and generate graphs.
 
-## Documentation
-To view all the documentation here as well as a full API reference, please visit the [Documentation Pages](docs/_build/markdown/getstart.md)
+# Table of Contents
+
+* [Getting Started](docs/_build/markdown/getstart.md)
+  * [Installation](docs/_build/markdown/getstart.md#installation)
+  * [Examples](docs/_build/markdown/getstart.md#examples)
+  * [Usage](docs/_build/markdown/getstart.md#usage)
+* [API Reference](docs/_build/markdown/api_reference.md)
+  * [`Data`](docs/_build/markdown/api_reference.md#physerror.Data)
+  * [`Graphs`](docs/_build/markdown/api_reference.md#physerror.Graphs)
+  * [`csvreader()`](docs/_build/markdown/api_reference.md#physerror.csvreader)
 
 ## Authors
 If you contribute to this project, please list your name here.
