@@ -4,7 +4,7 @@ physerror is an educational/support module written by Alexander Ritzie for the u
 It was originally created for the BPHYS 231 Intro to Experimental Physics class at University of Washington
 Bothell.
 
-If you are new to coding, look below under [Examples]([docs/_build/markdown/getstart.md](#Examples)) and [Usage](#usage) for how to load
+If you are new to coding, look below under [Examples](docs/_build/markdown/getstart.md#examples) and [Usage](#usage) for how to load
 your data, pull calculated values, and generate graphs.
 
 ## Documentation
