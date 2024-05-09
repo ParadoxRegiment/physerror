@@ -62,7 +62,7 @@ the Graphs.linreg() method. The example screenshots are, for the most part, appl
 
 **Exporting error data to an Excel file**
 
-![](https://ibb.co/W5v0J0K)
+![](https://i.ibb.co/B32GMGs/excel-export.png)
 
 **Property editing menu - Graphs.linreg() example**
 
