@@ -19,6 +19,8 @@ from tkinter.filedialog import askopenfilename
 import pandas as pd
 from dataclasses import dataclass, field
 import seaborn as sns
+import sys
+import inquirer
 
 @dataclass
 class Data():
@@ -1442,35 +1444,4 @@ def _user_cli():
     inq.inq_prompt()
 
 if __name__ == "__main__":
-    import sys
-    import subprocess
-    import inquirer
-
-    def install(package):
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', package])
-
-    def check_install():
-        reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
-        installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
-        
-        return installed_packages
-
-    
-    req_packages = ['numpy', 'pandas[excel]', 'matplotlib', 'tk', 'scipy', 'seaborn', 'inquirer']
-    installed_packages = check_install()
-    print(f"Checking for required packages: {req_packages}\n")
-    req_packages[1] = 'pandas'
-    
-    for pkg in req_packages:
-        if pkg in installed_packages:
-            print(f"{pkg} is already installed, continuing...")
-            continue
-        else:
-            print(f"Installing {pkg}...\n")
-            install(pkg)
-    
-    print("Required packages check complete.")
-    installed_packages = check_install()
-    print(f"\nInstalled packages w/ dependencies:\n{installed_packages}\n")
-    
     _user_cli()
