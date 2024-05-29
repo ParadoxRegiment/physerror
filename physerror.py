@@ -823,7 +823,7 @@ class Graphs:
         plt.title(cls.graph_title, fontsize=cls.title_size)
         ani = animation.FuncAnimation(fig, animate, len(output), interval=dt*1000, blit=True)
         print(f"Saving gif as {theta_0}{phi_0}{anim_type}anim.gif")
-        ani.save(f'{str(theta_0).strip('.')}{str(phi_0).strip('.')}{anim_type}anim.gif', writer='imagemagick', fps=20)
+        ani.save(f"{str(theta_0).strip('.')}{str(phi_0).strip('.')}{anim_type}anim.gif", writer='imagemagick', fps=20)
         plt.show()
 
 class _InquirePrompts:
