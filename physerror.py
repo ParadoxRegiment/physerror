@@ -1170,7 +1170,7 @@ class _InquirePrompts:
                 case "Line Color":
                     print("WIP")
                 case "Run":
-                    cls.graphs_obj.datahist()
+                    cls.graphs_obj.datahist(tempdata)
                     cont_check_prompt()
                 case "Back":
                     func_prompts()
