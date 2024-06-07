@@ -858,6 +858,7 @@ class _InquirePrompts:
                          "Graphs.sctrplot",
                          "Graphs.resid",
                          "Graphs.dbl_pend",
+                         "Change File/Data",
                          "Exit/Quit"],
                 ),
         ]
@@ -1353,6 +1354,9 @@ class _InquirePrompts:
                     resid_prompts()
                 case "Graphs.dbl_pend":
                     dbl_pend_prompts()
+                case "Change File/Data":
+                    restart = _InquirePrompts()
+                    return restart.inq_prompt()
                 case "Exit/Quit":
                     sys.exit("Closing program...")
             
