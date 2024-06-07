@@ -1,14 +1,3 @@
-#       #####################################       #  
-#        Module written by Alexander Ritzie         #
-#       Originally created for BPHYS 312 AU23       #
-#       at University of Washington - Bothell       #
-#                   GitHub Repo:                    #
-#    https://github.com/ParadoxRegiment/physerror   #
-#                                                   #
-#      Please direct any questions to my email:     #
-#            alexander.ritzie@gmail.com             #
-#       #####################################       #
-
 import numpy as np
 from numpy.typing import ArrayLike
 from matplotlib import pyplot as plt
@@ -443,8 +432,8 @@ class Graphs:
         """
         
         # New x_data and y_data for ease of use
-        x_data = user_data._y_data                                
-        y_data = user_data._x_data
+        x_data = user_data._x_data                                
+        y_data = user_data._y_data
         
         # Sets the figure's title to the default (or passed in) graph title
         plt.title(cls.graph_title, fontsize = cls.title_size)
@@ -492,12 +481,12 @@ class Graphs:
         # Checks the size of the p_color attribute and plots the graph depending on if it's
         # greater than 1.
         if np.size(cls.p_color) == 1:
-            plt.errorbar(x=y_data, y=x_data, yerr=user_data.sigma_x, marker=".",
+            plt.errorbar(x=x_data, y=y_data, yerr=user_data.sigma_x, marker=".",
                          capsize=3, ecolor=cls.errbar_color, linewidth=1, color=cls.p_color,
                          linestyle="")
         elif np.size(cls.p_color) > 1:
             for i in range(np.size(x_data)):
-                plt.errorbar(x=y_data[i], y=x_data[i], yerr=user_data.sigma_x, marker=".",
+                plt.errorbar(x=x_data[i], y=y_data[i], yerr=user_data.sigma_x, marker=".",
                             capsize=3, ecolor=cls.errbar_color, linewidth=1, color=cls.p_color[i])
         plt.show()
     
@@ -1136,7 +1125,7 @@ class _InquirePrompts:
                     curr_label = cls.graphs_obj.x_label
                     print(f"Current label: {curr_label}")
                     cls.graphs_obj.x_label = val_change_prompt('label', curr_label)
-                    return errbar_prompts
+                    return errbar_prompts()
                 case cls._y_label_prompt:
                     curr_label = cls.graphs_obj.y_label
                     print(f"Current label: {curr_label}")
@@ -1173,22 +1162,15 @@ class _InquirePrompts:
                     print(f"Current size: {curr_size}")
                     cls.graphs_obj.title_size = val_change_prompt('size', curr_size)
                     return datahist_prompts()
-                case cls._x_label_prompt:
-                    curr_label = cls.graphs_obj.x_label
-                    print(f"Current label: {curr_label}")
-                    cls.graphs_obj.x_label = val_change_prompt('label', curr_label)
-                    return errbar_prompts
-                case cls._y_label_prompt:
-                    curr_label = cls.graphs_obj.y_label
-                    print(f"Current label: {curr_label}")
-                    cls.graphs_obj.y_label = val_change_prompt('label', curr_label)
-                    return errbar_prompts()
-                case "Point Color(s)":
-                    print("WIP")
+                case cls._hist_color_prompt:
+                    curr_hist_color = cls.graphs_obj.hist_color
+                    print(f"Current color(s): {curr_hist_color}")
+                    cls.graphs_obj.hist_color = val_change_prompt('point', curr_hist_color)
+                    return datahist_prompts()
                 case "Line Color":
                     print("WIP")
                 case "Run":
-                    cls.graphs_obj.errbargraph(tempdata)
+                    cls.graphs_obj.datahist()
                     cont_check_prompt()
                 case "Back":
                     func_prompts()
@@ -1399,17 +1381,15 @@ def csvreader():
     # Prints the file path
     print(path)
     
-    # Converts the csv file into a pandas DataFrame
-    with open(path, "r") as f:
-        
-        # Assumes no header or index has been set in the csv file
-        datafile = pd.read_csv(f, header = None, index_col = None)
-        
-        # Saves column count for later use
-        colcount = len(datafile.axes[1])
-        
-        # Converts the df into a numpy array
-        dataarray = np.array(datafile)
+    # Converts the csv file into a pandas DataFrame   
+    # Assumes no header or index has been set in the csv file
+    datafile = pd.read_csv(path, header = None, index_col = None)
+    
+    # Saves column count for later use
+    colcount = len(datafile.axes[1])
+    
+    # Converts the df into a numpy array
+    dataarray = np.array(datafile)
 
     # Checks if the dimension of the array is equal to 1
     if np.ndim(dataarray) == 1:

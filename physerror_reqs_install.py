@@ -27,11 +27,11 @@ def user_install():
         installed_pkgs[i] = installed_pkgs[i].lower()
 
     warn_title = f"{'READ FULL MESSAGE BEFORE ANSWERING': ^65}\n"
-    warn_msg = """This file is used to check for installed Python libraries and install
-    packages that are not already installed. The packages are not malicious
-    in any way and can easily be found by searching their names online.
-    However, if you are uncomfortable with this file installing the packages,
-    please answer 'No' below.\n"""
+    warn_msg = ("This file is used to check for installed Python libraries and install\n"
+                "packages that are not already installed. The packages are not malicious\n"
+                "in any way and can easily be found by searching their names online.\n"
+                "However, if you are uncomfortable with this file installing the packages,\n"
+                "please answer 'No' below.\n")
     print(warn_title)
     print(warn_msg)
     print(f"Required packages: {list(reqs_dict.keys())}")
