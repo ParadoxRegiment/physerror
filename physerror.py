@@ -914,6 +914,16 @@ class _InquirePrompts:
             ),
         ]
         
+        cls.datahist_normal = [
+            inquirer.List(
+                "datahist_normal",
+                message="Select Yes, No, or Cancel",
+                choices=['Yes',
+                         'No',
+                         'Cancel']
+            )
+        ]
+        
         cls.sctrplot_q = [
             inquirer.List(
                 "sctrplot",
@@ -1057,6 +1067,18 @@ class _InquirePrompts:
                                         return curr_val
                                     else:
                                         return p_color_list
+                        case 'bar':
+                            match cls.graphs_obj.dataset_check:
+                                case 1:
+                                    bar_color = input(f"Choose a color for the histogram\n")
+                                    return bar_color
+                                case 2:
+                                    bar_color = input(f"Choose 2 colors for the histograms, separated by a comma and a space.\n").split(', ')
+                                    if np.size(bar_color) > 2:
+                                        print("\nToo many colors entered, resetting to the original value.")
+                                        return curr_val
+                                    else:
+                                        return bar_color
                         case "angle" | "velocity":
                             new_val = input(f"New {val_type} value. If this is an angle, use in degrees: ")
                             try:
@@ -1163,13 +1185,26 @@ class _InquirePrompts:
                     print(f"Current size: {curr_size}")
                     cls.graphs_obj.title_size = val_change_prompt('size', curr_size)
                     return datahist_prompts()
+                case "Normal Distribution":
+                    curr_norm = cls.graphs_obj.dist_check
+                    print(f"Current selection: {curr_norm}")
+                    temp_norm = inquirer.prompt(cls.datahist_normal)['datahist_normal']
+                    if temp_norm == 'Cancel':
+                        return datahist_prompts()
+                    else:
+                        cls.graphs_obj.dist_check = temp_norm
+                        return datahist_prompts()
                 case cls._hist_color_prompt:
                     curr_hist_color = cls.graphs_obj.hist_color
                     print(f"Current color(s): {curr_hist_color}")
-                    cls.graphs_obj.hist_color = val_change_prompt('point', curr_hist_color)
+                    cls.graphs_obj.hist_color = val_change_prompt('bar', curr_hist_color)
                     return datahist_prompts()
-                case "Line Color":
-                    print("WIP")
+                case "Dataset Count":
+                    curr_count = cls.graphs_obj.dataset_check
+                    print(f"Current count: {curr_count}")
+                    temp_count = inquirer.prompt(cls.datahist_count)['datahist_count']
+                    cls.graphs_obj.dataset_check = int(temp_count)
+                    return datahist_prompts()
                 case "Run":
                     cls.graphs_obj.datahist(tempdata)
                     cont_check_prompt()
