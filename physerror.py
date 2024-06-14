@@ -16,9 +16,7 @@ class Data():
     """ An initializer and container dataclass that is initialized and reused
     by the user and other classes, as well as their methods. There are many 
     attributes that calculate common statistical errors, constants, and 
-    general error propagation methods, and one class Method to find, document, 
-    and delete any data points that exist outside the standard 2 * sigma outlier
-    "limit".
+    general error propagation methods, and two class methods.
         
     Attributes
     ----------
@@ -68,6 +66,7 @@ class Data():
     """
     user_x_data : ArrayLike = field(default_factory = lambda : [1,2,3,4,5])
     user_y_data : ArrayLike = field(default_factory = lambda : [1,2,3,4,5])
+    data_type : str = field(default_factory = lambda : 'manual')
     _x_data : np.ndarray = field(init=False)
     _y_data : np.ndarray = field(init=False)
     _df : pd.DataFrame = field(init=False)
@@ -140,25 +139,40 @@ class Data():
         str
             The name entered by the user for y_data.
         """
-
-        readcsv = input("Would you like to read in a CSV? Y/N\n")
+        reader = FileReaders()
+        match cls.data_type:
+            case 'CSV':
+                x_data, y_data = reader.csvreader()
+            case 'Excel':
+                x_data, y_data = reader.excelreader()
+            case 'manual':
+                if type(xdata) == np.ndarray:
+                    x_data = xdata
+                    y_data = ydata
+                else:
+                    x_data = np.array(xdata)
+                    y_data = np.array(xdata)
+            case _:
+                sys.exit("WIP Section, please restart.")
         
-        # Calls for the csvreader function if the user enters a yes(-adjecent) input
-        if readcsv.lower() == "y" or readcsv.lower() == "yes":
-            x_data, y_data = csvreader()
+        # readcsv = input("Would you like to read in a CSV? Y/N\n")
+        
+        # # Calls for the csvreader function if the user enters a yes(-adjecent) input
+        # if readcsv.lower() == "y" or readcsv.lower() == "yes":
+        #     x_data, y_data = csvreader()
             
-        # Assumes the user's passed in arguments are the desired data and passes them
-        # into new variables                                                                             
-        elif readcsv.lower() == "n" or readcsv.lower() == "no":
-            if type(xdata) == np.ndarray:
-                x_data = xdata
-                y_data = ydata
-            else:
-                x_data = np.array(xdata)
-                y_data = np.array(xdata)
-        else:
-            print("Unknown input, please restart.")
-            exit()
+        # # Assumes the user's passed in arguments are the desired data and passes them
+        # # into new variables                                                                             
+        # elif readcsv.lower() == "n" or readcsv.lower() == "no":
+        #     if type(xdata) == np.ndarray:
+        #         x_data = xdata
+        #         y_data = ydata
+        #     else:
+        #         x_data = np.array(xdata)
+        #         y_data = np.array(xdata)
+        # else:
+        #     print("Unknown input, please restart.")
+        #     exit()
         
         # Stacks the arrays to be turned into a pandas DataFrame
         temparray = np.stack((x_data, y_data))
@@ -551,9 +565,6 @@ class Graphs:
         # Calls for and runs the histcheck function
         check = cls.dataset_check
         
-        ### For this entire method I'm not quite sure how to get both histograms to show the ###
-        ### gaussian line when the user chooses to show both histograms at once. ###
-        
         # Creates a continuous loop that breaks only if an accepted input is given
         while True:                                                                                                         
             
@@ -600,6 +611,7 @@ class Graphs:
             
             # Checks if the histcheck instance is equal to 2
             elif check == 2:
+                cls.hist_color = ['green', 'red']
                 # Creates a subplot which is 1 graph wide and 2 graphs tall
                 fig, axes = plt.subplots(nrows = 2, ncols = 1)
                 for i in range(check):
@@ -1021,8 +1033,8 @@ class _InquirePrompts:
         """
         # data_ans will later be used to check what type of data file will be
         # read into the Data class
-        data_ans = inquirer.prompt(cls.data_q)
-        tempdata = Data()
+        data_ans = inquirer.prompt(cls.data_q)['data']
+        tempdata = Data(data_type=data_ans)
         
         def cont_check_prompt():
             """Used to verify whether or not the user wants to keep the program
@@ -1397,63 +1409,146 @@ class _InquirePrompts:
             
         func_prompts()
 
-# External function that can be called by the user if they wish to. Is used only inside Data
-def csvreader():
-    """Reads in a csv file selected via a tkinter file explorer window.
-    Assumes there is no header row or index column. Data should be organized
-    into columns rather than rows.
-
-    Returns
-    -------
-    ndarray : x data read in from the selected csv file
-    
-    ndarray : y data read in from the selected csv file OR an array of zeroes
-    the same size as the x data array.
+class FileReaders():
+    """Container class for methods that read in and parse data files.
     """
-    print("Please choose a csv file:")
-    tk = Tk()
-    tk.withdraw()
-    
-    # Opens a File Explorer window where the user can visually select a csv file
-    path = askopenfilename(title="Select file", filetypes=(("CSV Files", '*.csv'),))
-    
-    # Prints the file path
-    print(path)
-    
-    # Converts the csv file into a pandas DataFrame   
-    # Assumes no header or index has been set in the csv file
-    datafile = pd.read_csv(path, header = None, index_col = None)
-    
-    # Saves column count for later use
-    colcount = len(datafile.axes[1])
-    
-    # Converts the df into a numpy array
-    dataarray = np.array(datafile)
+    def _file_reader(cls, path : str, head_check : str):
+        """Private method that is used to read data into a Pandas DataFrame
 
-    # Checks if the dimension of the array is equal to 1
-    if np.ndim(dataarray) == 1:
+        Parameters
+        ----------
+        path : str
+            File path for the desired data file
         
-        # Assumes given data is for the x_data and passes it into the x_data variable
-        print("csv read into x_data")
-        x_data = dataarray
-        print("Note: y_data set to np.zeros_like(x_data)")
-        y_data = np.zeros_like(x_data)
-    
-    # Checks if the array's dimensions are greater than 1
-    elif np.ndim(dataarray) > 1:
+        head_check : str
+            Header check for data files. Determines if header = None or 0.
+            Accepts only 'y' | 'yes' and 'n' | 'no' in any capitalization.
+            Any other passed in value defaults to 'yes'.
+
+        Returns
+        -------
+        x_data : ndarray
+            A NumPy array containing the data in the leftmost column of the
+            passed in data file.
         
-        # Repeats the above steps if colcount is equal to 1
-        if colcount == 1:
-            print("csv read into x_data")
-            x_data = dataarray[:,0]
+        y_data : ndarray
+            A NumPy array containing the data in the second column of the
+            passed in data file.
+        """
+        if path.endswith('csv'):
+            print("CSV file")
+        elif path.endswith('xlsx'):
+            print('Excel file')
+        # Converts the file into a pandas DataFrame
+        if path.endswith('csv'):
+            match head_check.lower():
+                case 'no' | 'n':
+                    header = None
+                case 'yes' | 'y':
+                    header = 0
+                case _:
+                    print("Invalid input, defaulting to 'yes'.")
+                    header = 0
+            datafile = pd.read_csv(path, header = header, index_col = None)
+        elif path.endswith('xlsx'):
+            match head_check.lower():
+                case 'no' | 'n':
+                    header = None
+                case 'yes' | 'y':
+                    header = 0
+                case _:
+                    print("Invalid input, defaulting to 'yes'.")
+                    header = 0
+            datafile = pd.read_excel(path, header = header, index_col=None)
         
-        # Passes the first two columns into x_data and y_data if colcount is greater than 1
-        elif colcount > 1:
-            x_data = dataarray[:,0]
-            y_data = dataarray[:,1]
-    
-    # Returns x_data and y_data
-    return x_data, y_data
+        # Saves column count for later use
+        colcount = len(datafile.axes[1])
+        
+        # Converts the df into a numpy array
+        dataarray = np.array(datafile)
+
+        # Checks if the dimension of the array is equal to 1
+        if np.ndim(dataarray) == 1:
+            
+            # Assumes given data is for the x_data and passes it into the x_data variable
+            print("Data read into x_data")
+            x_data = dataarray
+            print("Note: y_data set to np.zeros_like(x_data)")
+            y_data = np.zeros_like(x_data)
+        
+        # Checks if the array's dimensions are greater than 1
+        elif np.ndim(dataarray) > 1:
+            
+            # Repeats the above steps if colcount is equal to 1
+            if colcount == 1:
+                print("csv read into x_data")
+                x_data = dataarray[:,0]
+            
+            # Passes the first two columns into x_data and y_data if colcount is greater than 1
+            elif colcount > 1:
+                x_data = dataarray[:,0]
+                y_data = dataarray[:,1]
+        
+        # Returns x_data and y_data
+        return x_data, y_data
+
+    # External function that can be called by the user if they wish to. Is used only inside Data
+    def csvreader(cls):
+        """Reads in a csv file selected via a tkinter file explorer window.
+        Assumes there is no index column. Data should be organized into columns
+        rather than rows.
+
+        Returns
+        -------
+        x_data : ndarray
+            A NumPy array containing the data in the leftmost column of the
+            passed in data file.
+        
+        y_data : ndarray
+            A NumPy array containing the data in the second column of the
+            passed in data file.
+        """
+        print("Please choose a csv file:")
+        tk = Tk()
+        tk.withdraw()
+        
+        # Opens a File Explorer window where the user can visually select a csv file
+        path = askopenfilename(title="Select file", filetypes=(("CSV Files", '*.csv'),))
+        header_check = input("Is there a header line? Y/N\n")
+        # Prints the file path
+        print('\n' + path)
+        
+        x_data, y_data = cls._file_reader(path=path, head_check=header_check)
+        return x_data, y_data
+
+    def excelreader(cls):
+        """Reads in an Excel Workbook selected via a tkinter file explorer window.
+        Assumes there is no index column. Data should be organized into columns
+        rather than rows.
+
+        Returns
+        -------
+        x_data : ndarray
+            A NumPy array containing the data in the leftmost column of the
+            passed in data file.
+        
+        y_data : ndarray
+            A NumPy array containing the data in the second column of the
+            passed in data file.
+        """
+        print("Please choose an Excel Workbook:")
+        tk = Tk()
+        tk.withdraw()
+        
+        # Opens a File Explorer window where the user can visually select a csv file
+        path = askopenfilename(title="Select file", filetypes=(("Excel Workbook", '*.xlsx'),))
+        header_check = input("Is there a header line? Y/N\n")
+        print('\n')
+        # Prints the file path
+        print(path)
+        
+        x_data, y_data = cls._file_reader(path=path, head_check=header_check)
+        return x_data, y_data
 
 def _user_cli():
     """Initializes and calls the command-line-interface menus that can be used to
