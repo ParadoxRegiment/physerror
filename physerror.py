@@ -153,26 +153,7 @@ class Data():
                     x_data = np.array(xdata)
                     y_data = np.array(xdata)
             case _:
-                sys.exit("WIP Section, please restart.")
-        
-        # readcsv = input("Would you like to read in a CSV? Y/N\n")
-        
-        # # Calls for the csvreader function if the user enters a yes(-adjecent) input
-        # if readcsv.lower() == "y" or readcsv.lower() == "yes":
-        #     x_data, y_data = csvreader()
-            
-        # # Assumes the user's passed in arguments are the desired data and passes them
-        # # into new variables                                                                             
-        # elif readcsv.lower() == "n" or readcsv.lower() == "no":
-        #     if type(xdata) == np.ndarray:
-        #         x_data = xdata
-        #         y_data = ydata
-        #     else:
-        #         x_data = np.array(xdata)
-        #         y_data = np.array(xdata)
-        # else:
-        #     print("Unknown input, please restart.")
-        #     exit()
+                sys.exit("Unknown data type or WIP Section, please restart.")
         
         # Stacks the arrays to be turned into a pandas DataFrame
         temparray = np.stack((x_data, y_data))
@@ -552,7 +533,7 @@ class Graphs:
                     plt.plot(x, p, 'k', linewidth = 2)
                 else:
                     ax.plot(x, p, 'k', linewidth = 2)
-                plt.title(cls.graph_title)
+                # plt.title(cls.graph_title)
                 
             # Passes the if statement if the user entered a no(-adjecent) input
             elif stdcheck.lower() == "n" or stdcheck.lower() == "no":                                   
@@ -579,8 +560,8 @@ class Graphs:
                     if histnum == user_data._colname1:                                                                        
                         
                         # If the above is true, creates a histogram from the first column of the user_data DataFrame
-                        datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,                              
-                                                column = columns[0], color = 'green', density = True)
+                        datafile.hist(bins = len(datafile.index), grid = False, rwidth = .9,                              
+                                    column = columns[0], color = 'green', density = True)
                         
                         # Runs stdcheckfunc to create a standard distribution graph (if user entered yes earlier)
                         stdcheckfunc()
@@ -611,16 +592,21 @@ class Graphs:
             
             # Checks if the histcheck instance is equal to 2
             elif check == 2:
-                cls.hist_color = ['green', 'red']
+                if np.size(cls.hist_color) == 1:
+                    local_hist_color = ['green', 'red']
+                else:
+                    local_hist_color = cls.hist_color
+
                 # Creates a subplot which is 1 graph wide and 2 graphs tall
                 fig, axes = plt.subplots(nrows = 2, ncols = 1)
+                fig.suptitle(cls.graph_title, ha='center', va='center')
                 for i in range(check):
                     ax = axes[i]
-                    
-                    # Attaches the data from the first column of the df to the top plot                                      
-                    datafile.hist(bins = len(datafile.axes[i]), grid = False, rwidth = .9,
-                                            column = columns[i], color = cls.hist_color[i], ax = ax,
-                                            density = True)
+
+                    # Attaches the data from the first column of the df to the top plot
+                    datafile.hist(bins = len(datafile.axes[0]), grid = False, rwidth = .9,
+                                column = columns[i], color = local_hist_color[i], ax = ax,
+                                density = True)
                     if i == 0:
                         # Runs stdcheckfunc to create a standard distribution graph (if user entered yes earlier)
                         stdcheckfunc(ax=ax, index = i)
@@ -1427,11 +1413,11 @@ class FileReaders():
 
         Returns
         -------
-        x_data : ndarray
+        ndarray
             A NumPy array containing the data in the leftmost column of the
             passed in data file.
         
-        y_data : ndarray
+        ndarray
             A NumPy array containing the data in the second column of the
             passed in data file.
         """
@@ -1500,11 +1486,11 @@ class FileReaders():
 
         Returns
         -------
-        x_data : ndarray
+        ndarray
             A NumPy array containing the data in the leftmost column of the
             passed in data file.
         
-        y_data : ndarray
+        ndarray
             A NumPy array containing the data in the second column of the
             passed in data file.
         """
@@ -1528,11 +1514,11 @@ class FileReaders():
 
         Returns
         -------
-        x_data : ndarray
+        ndarray
             A NumPy array containing the data in the leftmost column of the
             passed in data file.
         
-        y_data : ndarray
+        ndarray
             A NumPy array containing the data in the second column of the
             passed in data file.
         """
