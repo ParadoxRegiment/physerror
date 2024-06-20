@@ -46,7 +46,8 @@ html_sidebars = {
 }
 # sidebar_header = 'physerror'
 autodoc_type_aliases = {
-   'ArrayLike' : 'ArrayLike'
+   'ArrayLike[int | float]' : 'ArrayLike'
    }
 
-autodoc_typehints = 'description'
+autodoc_preserve_defaults = True
+autodoc_inherit_docstrings = True

@@ -1,4 +1,4 @@
 API Reference
 =============
 .. automodule:: physerror
-    :members:
+    :members: Data, Graphs, FileReaders

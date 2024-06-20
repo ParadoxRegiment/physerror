@@ -1,6 +1,6 @@
 # API Reference
 
-### *class* physerror.Data(user_x_data=<factory>, user_y_data=<factory>, data_type=<factory>)
+### *class* physerror.Data(user_x_data: ~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]] | ~numpy._typing._nested_sequence._NestedSequence[~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]]] | bool | int | float | complex | str | bytes | ~numpy._typing._nested_sequence._NestedSequence[bool | int | float | complex | str | bytes] = <factory>, user_y_data: ~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]] | ~numpy._typing._nested_sequence._NestedSequence[~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]]] | bool | int | float | complex | str | bytes | ~numpy._typing._nested_sequence._NestedSequence[bool | int | float | complex | str | bytes] = <factory>, data_type: str = <factory>)
 
 An initializer and container dataclass that is initialized and reused
 by the user and other classes, as well as their methods. There are many
@@ -122,7 +122,6 @@ general error propagation methods, and two class methods.
 * **Parameters:**
   * **user_x_data** (*ArrayLike*) – []
   * **user_y_data** (*ArrayLike*) – []
-  * **data_type** (*str*) – 
 
 #### NOTE
 Will update this soon-ish
@@ -278,7 +277,7 @@ function’s trace line color. Defaults to “black”.
 * **Type:**
   str = “black”
 
-#### datahist(user_data)
+#### datahist(user_data: [Data](#physerror.Data))
 
 Generates a histogram of one or two sets of data pulled
 from the Data class using pandas’ DataFrame.hist method.
@@ -287,7 +286,7 @@ from the Data class using pandas’ DataFrame.hist method.
   **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
   Data to make use of the user’s data.
 
-#### dbl_pend(theta_0, phi_0, theta_dot_0=0, phi_dot_0=0, anim_type=0)
+#### dbl_pend(theta_0: float, phi_0: float, theta_dot_0=0, phi_dot_0=0, anim_type=0)
 
 Generates either a point mass or bar mass double pendulum
 animation based on the pass in initial values. Angles are read
@@ -307,7 +306,7 @@ matplotlib’s documentation:
     pendulum that will be used. Defaults to 0 for Point Mass,
     accepts 1 for Bar Mass.
 
-#### errbargraph(user_data)
+#### errbargraph(user_data: [Data](#physerror.Data))
 
 Uses the x data and y data from Data to create a point-based
 with error bars on each point. Error size is the sigma_x value
@@ -317,7 +316,7 @@ calculated in Data.
   **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
   Data to make use of the user’s data.
 
-#### linreg(user_data)
+#### linreg(user_data: [Data](#physerror.Data))
 
 Uses the given x_data and y_data arrays to create a linear
 regression plot.
@@ -326,7 +325,7 @@ regression plot.
   **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
   Data to make use of the user’s data.
 
-#### resid(user_data)
+#### resid(user_data: [Data](#physerror.Data))
 
 Uses user_data._df to create a residuals scatter plot
 via the seaborn sns.residplot method. The graph’s title
@@ -336,7 +335,7 @@ can optionally be customized.
   **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
   Data to make use of the user’s data.
 
-#### sctrplot(user_data)
+#### sctrplot(user_data: [Data](#physerror.Data))
 
 Uses the given x_data and y_data to create a scatter plot
 via matplot.pyplot’s scatter method. Customization options
