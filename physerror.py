@@ -55,9 +55,11 @@ class Data():
     
     Parameters
     ----------
-    user_x_data : ArrayLike
+    user_x_data : ArrayLike = [1,2,3,4,5]
         []
-    user_y_data : ArrayLike
+    user_y_data : ArrayLike = [1,2,3,4,5]
+        []
+    data_type : str = 'manual'
         []
     
     Note

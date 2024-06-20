@@ -29,6 +29,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+from numpy.typing import ArrayLike
 
 html_theme = 'sphinx_rtd_theme'
 # html_theme_options = 
@@ -45,9 +46,3 @@ html_sidebars = {
    'using/windows': ['windowssidebar.html', 'searchbox.html'],
 }
 # sidebar_header = 'physerror'
-autodoc_type_aliases = {
-   'ArrayLike[int | float]' : 'ArrayLike'
-   }
-
-autodoc_preserve_defaults = True
-autodoc_inherit_docstrings = True
