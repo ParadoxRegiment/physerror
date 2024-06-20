@@ -1,13 +1,11 @@
 # API Reference
 
-### *class* physerror.Data(user_x_data: ~collections.abc.Buffer | ~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]] | ~numpy._typing._nested_sequence._NestedSequence[~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]]] | bool | int | float | complex | str | bytes | ~numpy._typing._nested_sequence._NestedSequence[bool | int | float | complex | str | bytes] = <factory>, user_y_data: ~collections.abc.Buffer | ~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]] | ~numpy._typing._nested_sequence._NestedSequence[~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]]] | bool | int | float | complex | str | bytes | ~numpy._typing._nested_sequence._NestedSequence[bool | int | float | complex | str | bytes] = <factory>)
+### *class* physerror.Data(user_x_data=<factory>, user_y_data=<factory>, data_type=<factory>)
 
 An initializer and container dataclass that is initialized and reused
 by the user and other classes, as well as their methods. There are many
 attributes that calculate common statistical errors, constants, and
-general error propagation methods, and one class Method to find, document,
-and delete any data points that exist outside the standard 2 \* sigma outlier
-“limit”.
+general error propagation methods, and two class methods.
 
 #### delta
 
@@ -122,8 +120,9 @@ and delete any data points that exist outside the standard 2 \* sigma outlier
   float
 
 * **Parameters:**
-  * **user_x_data** (*ArrayLike* *[**float* *|* *int* *]*) – []
-  * **user_y_data** (*ArrayLike* *[**float* *|* *int* *]*) – []
+  * **user_x_data** (*ArrayLike*) – []
+  * **user_y_data** (*ArrayLike*) – []
+  * **data_type** (*str*) – 
 
 #### NOTE
 Will update this soon-ish
@@ -146,6 +145,34 @@ the standard 2 \* sigma outlier “limit”.
   * *np.ndarray* – An array that contains either the outliers that were found
     in the user’s y_data, or a string stating no outliers were
     found.
+
+### *class* physerror.FileReaders
+
+Container class for methods that read in and parse data files.
+
+#### csvreader()
+
+Reads in a csv file selected via a tkinter file explorer window.
+Assumes there is no index column. Data should be organized into columns
+rather than rows.
+
+* **Returns:**
+  * *ndarray* – A NumPy array containing the data in the leftmost column of the
+    passed in data file.
+  * *ndarray* – A NumPy array containing the data in the second column of the
+    passed in data file.
+
+#### excelreader()
+
+Reads in an Excel Workbook selected via a tkinter file explorer window.
+Assumes there is no index column. Data should be organized into columns
+rather than rows.
+
+* **Returns:**
+  * *ndarray* – A NumPy array containing the data in the leftmost column of the
+    passed in data file.
+  * *ndarray* – A NumPy array containing the data in the second column of the
+    passed in data file.
 
 ### *class* physerror.Graphs
 
@@ -251,7 +278,7 @@ function’s trace line color. Defaults to “black”.
 * **Type:**
   str = “black”
 
-#### datahist(user_data: [Data](#physerror.Data))
+#### datahist(user_data)
 
 Generates a histogram of one or two sets of data pulled
 from the Data class using pandas’ DataFrame.hist method.
@@ -260,7 +287,7 @@ from the Data class using pandas’ DataFrame.hist method.
   **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
   Data to make use of the user’s data.
 
-#### dbl_pend(theta_0: float, phi_0: float, theta_dot_0=0, phi_dot_0=0, anim_type=0)
+#### dbl_pend(theta_0, phi_0, theta_dot_0=0, phi_dot_0=0, anim_type=0)
 
 Generates either a point mass or bar mass double pendulum
 animation based on the pass in initial values. Angles are read
@@ -280,17 +307,17 @@ matplotlib’s documentation:
     pendulum that will be used. Defaults to 0 for Point Mass,
     accepts 1 for Bar Mass.
 
-#### errbargraph(user_data: [Data](#physerror.Data))
+#### errbargraph(user_data)
 
 Uses the x data and y data from Data to create a point-based
 with error bars on each point. Error size is the sigma_x value
 calculated in Data.
 
-> user_data
-> : Requires the user to pass in an instance of
->   Data to make use of the user’s data.
+* **Parameters:**
+  **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
+  Data to make use of the user’s data.
 
-#### linreg(user_data: [Data](#physerror.Data))
+#### linreg(user_data)
 
 Uses the given x_data and y_data arrays to create a linear
 regression plot.
@@ -299,7 +326,7 @@ regression plot.
   **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
   Data to make use of the user’s data.
 
-#### resid(user_data: [Data](#physerror.Data))
+#### resid(user_data)
 
 Uses user_data._df to create a residuals scatter plot
 via the seaborn sns.residplot method. The graph’s title
@@ -309,7 +336,7 @@ can optionally be customized.
   **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
   Data to make use of the user’s data.
 
-#### sctrplot(user_data: [Data](#physerror.Data))
+#### sctrplot(user_data)
 
 Uses the given x_data and y_data to create a scatter plot
 via matplot.pyplot’s scatter method. Customization options
@@ -318,14 +345,3 @@ are available, similar to the original pyplot method.
 * **Parameters:**
   **user_data** ([*Data*](#physerror.Data)) – Requires the user to pass in an instance of
   Data to make use of the user’s data.
-
-### physerror.csvreader()
-
-Reads in a csv file selected via a tkinter file explorer window.
-Assumes there is no header row or index column. Data should be organized
-into columns rather than rows.
-
-* **Returns:**
-  * **ndarray** (*x data read in from the selected csv file*)
-  * **ndarray** (*y data read in from the selected csv file OR an array of zeroes*)
-  * *the same size as the x data array.*

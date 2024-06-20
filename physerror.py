@@ -55,9 +55,9 @@ class Data():
     
     Parameters
     ----------
-    user_x_data : ArrayLike[float | int]
+    user_x_data : ArrayLike
         []
-    user_y_data : ArrayLike[float | int]
+    user_y_data : ArrayLike
         []
     
     Note
@@ -457,11 +457,11 @@ class Graphs:
         with error bars on each point. Error size is the sigma_x value
         calculated in Data.
             
-            Parameters
-            ----------
-            user_data : Data
-                Requires the user to pass in an instance of
-                Data to make use of the user's data.
+        Parameters
+        ----------
+        user_data : Data
+            Requires the user to pass in an instance of
+            Data to make use of the user's data.
         """
         
         # New df for ease of use

@@ -20,8 +20,8 @@ your data, pull calculated values, and generate graphs.
   * [Usage](getstart.md#usage)
 * [API Reference](api_reference.md)
   * [`Data`](api_reference.md#physerror.Data)
+  * [`FileReaders`](api_reference.md#physerror.FileReaders)
   * [`Graphs`](api_reference.md#physerror.Graphs)
-  * [`csvreader()`](api_reference.md#physerror.csvreader)
 
 ## Contributing
 

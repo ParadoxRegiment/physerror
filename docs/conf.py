@@ -45,3 +45,8 @@ html_sidebars = {
    'using/windows': ['windowssidebar.html', 'searchbox.html'],
 }
 # sidebar_header = 'physerror'
+autodoc_type_aliases = {
+   'ArrayLike' : 'ArrayLike'
+   }
+
+autodoc_typehints = 'description'
