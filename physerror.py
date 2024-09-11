@@ -842,7 +842,7 @@ class _InquirePrompts:
                 inquirer.List(
                     "data",
                     message="Select a data file type",
-                    choices=["CSV", "Excel", "JSON - WIP"],
+                    choices=["CSV", "Excel"],
                     ),
         ]
         
@@ -1014,13 +1014,14 @@ class _InquirePrompts:
                 ),
         ]
         
-    def inq_prompt(cls):
+    def inq_prompt(cls, cls_obj : object):
         """Large set of inquiry prompt functions that interconnect to create
         a smooth, cohesive command-line-interface for ease of use, particularly
         for users with little to no coding experience.
         """
         # data_ans will later be used to check what type of data file will be
         # read into the Data class
+        _stored_values = cls_obj
         data_ans = inquirer.prompt(cls.data_q)['data']
         tempdata = Data(data_type=data_ans)
         
@@ -1367,6 +1368,7 @@ class _InquirePrompts:
                     sys.exit("Closing program...")
         
         def func_prompts():
+            print(_stored_values._theta_0)
             funcs_ans = inquirer.prompt(cls.funcs_q)
             match funcs_ans["function"]:
                 case "Export Data":
@@ -1394,7 +1396,8 @@ class _InquirePrompts:
                     return restart.inq_prompt()
                 case "Exit/Quit":
                     sys.exit("Closing program...")
-            
+        
+        # print(_stored_values._theta_0)
         func_prompts()
 
 class FileReaders():
@@ -1428,25 +1431,17 @@ class FileReaders():
         elif path.endswith('xlsx'):
             print('Excel file')
         # Converts the file into a pandas DataFrame
+        match head_check.lower():
+            case 'no' | 'n':
+                header = None
+            case 'yes' | 'y':
+                header = 0
+            case _:
+                print("Invalid input, defaulting to 'yes'.")
+                header = 0
         if path.endswith('csv'):
-            match head_check.lower():
-                case 'no' | 'n':
-                    header = None
-                case 'yes' | 'y':
-                    header = 0
-                case _:
-                    print("Invalid input, defaulting to 'yes'.")
-                    header = 0
             datafile = pd.read_csv(path, header = header, index_col = None)
         elif path.endswith('xlsx'):
-            match head_check.lower():
-                case 'no' | 'n':
-                    header = None
-                case 'yes' | 'y':
-                    header = 0
-                case _:
-                    print("Invalid input, defaulting to 'yes'.")
-                    header = 0
             datafile = pd.read_excel(path, header = header, index_col=None)
         
         # Saves column count for later use
@@ -1543,7 +1538,7 @@ def _user_cli():
     make preset modifications and run functions.
     """
     inq = _InquirePrompts()
-    inq.inq_prompt()
+    inq.inq_prompt(inq)
 
 if __name__ == "__main__":
     _user_cli()
